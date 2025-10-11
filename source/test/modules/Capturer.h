@@ -5,10 +5,8 @@
 #define VIDEO_CAPTURER_H
 
 #include "Configuration.h"
-#include "../Buffering/Buffer.h"
 #include <opencv2/videoio.hpp>
-#include "../Error/Result.h"
-
+#include <weave/error/Result.h>
 
 namespace test
 {
@@ -20,7 +18,7 @@ namespace test
 			explicit Capturer(const CapturerConfiguration& configuration);
 			// TODO Further constructors missing
 			~Capturer();
-			Error::Result getFrame(cv::Mat& frameBuffer, uint32_t* frameID = nullptr) noexcept;
+			weave::error::Result getFrame(cv::Mat& frameBuffer, uint32_t* frameID = nullptr) noexcept;
 
 		private:
 			cv::VideoCapture _videoCapture;

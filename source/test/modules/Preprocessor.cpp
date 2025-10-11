@@ -1,11 +1,10 @@
 // Copyright (c) 2025, Michel Heusser
 // All rights reserved
 // https://github.com/michheusser
-#include "../Modules/Preprocessor.h"
-#include "../../Profiling/Macros.h"
+#include "Preprocessor.h"
 #include <opencv2/imgproc.hpp>
-
-#include "../../Application/SignalManager.h"
+#include <weave/error/Result.h>
+#include "Configuration.h"
 
 namespace test
 {
@@ -18,10 +17,10 @@ namespace test
 		Preprocessor::~Preprocessor()
 		{}
 
-		Error::Result Preprocessor::preprocessFrame(const cv::Mat& sourceFrame, cv::Mat& destinationFrame) const noexcept
+		weave::error::Result Preprocessor::preprocessFrame(const cv::Mat& sourceFrame, cv::Mat& destinationFrame) const noexcept
 		{
 			cv::resize(sourceFrame, destinationFrame, _destinationSize); // If throws error, terminates due to noexcept (fatal error in hot path)
-			return Error::Result::success();
+			return weave::error::Result::success();
 		}
 	} // Video
 }

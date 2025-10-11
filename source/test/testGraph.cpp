@@ -2,13 +2,15 @@
 // All rights reserved
 // https://github.com/michheusser
 
-#include "../Builder.h"
+#include <weave/core/Builder.h>
 
-#include "../../Processing/Worker/Constants.h"
-#include "../../IO/Constants.h"
-#include "../../Processing//Modules/Preprocessor.h"
-#include "../../Error/Exception.h"
-#include "../../Processing/Worker/Worker.h"
+#include "modules/Constants.h"
+#include "modules/Configuration.h"
+#include "modules/Context.h"
+
+#include "buffer//Constants.h"
+#include "buffer/Configuration.h"
+#include "buffer/Context.h"
 
 #include "UserSpecializations.h"
 
@@ -17,40 +19,36 @@ using namespace test;
 int main()
 {
 	// Nodes
-	IO::CapturerConfiguration capturerConfiguration;
-	capturerConfiguration.cameraID = IO::Constants::CAMERA_ID;
-	capturerConfiguration.captureAPI = IO::Constants::OPENCV_VIDEO_CAPTURE_API;
-	Processing::Worker::Module::Context<Processing::Worker::Constants::Module::Capturer> capturerContext = {capturerConfiguration};
+	module::Context<module::constants::ModuleType::ImageCapturer> imageCapturerContext;
+	imageCapturerContext.capturerConfiguration.cameraID = module::constants::CAMERA_ID;
+	imageCapturerContext.capturerConfiguration.captureAPI = module::constants::OPENCV_VIDEO_CAPTURE_API;
 
-	Processing::PreprocessorConfiguration preprocessorConfiguration;
-	preprocessorConfiguration.destinationWidth = Processing::Constants::FRAME_WIDTH;
-	preprocessorConfiguration.destinationHeight = Processing::Constants::FRAME_HEIGHT;
-	Processing::Worker::Module::Context<Processing::Worker::Constants::Module::ImageProcessor> preprocessorContext = {preprocessorConfiguration};
+	module::Context<module::constants::ModuleType::ImageNormalizer> imageNormalizerContext;
+	imageNormalizerContext.processorConfiguration.destinationWidth = module::constants::FRAME_WIDTH;
+	imageNormalizerContext.processorConfiguration.destinationHeight = module::constants::FRAME_HEIGHT;
 
-	IO::DisplayerConfiguration displayerConfiguration;
-	displayerConfiguration.title = std::string(IO::Constants::DEFAULT_DISPLAY_TITLE);
-	Processing::Worker::Module::Context<Processing::Worker::Constants::Module::Displayer> displayerContext = {displayerConfiguration};
-
+	module::Context<module::constants::ModuleType::ImageDisplayer> imageDisplayerContext;
+	imageDisplayerContext.displayerConfiguration.title = std::string(module::constants::DEFAULT_DISPLAY_TITLE);
 
 	// Edges
-	Processing::ImageBufferConfiguration rawImageBufferConfiguration;
-	rawImageBufferConfiguration.frameHeight = Processing::Constants::RAW_FRAME_HEIGHT;
-	rawImageBufferConfiguration.frameWidth = Processing::Constants::RAW_FRAME_WIDTH;
-	rawImageBufferConfiguration.frameType = Processing::Constants::RAW_FRAME_TYPE;
+	buffer::Context<buffer::constants::BufferType::Image> rawImageBufferContext;
+	rawImageBufferContext.configuration.frameHeight = buffer::constants::RAW_FRAME_HEIGHT;
+	rawImageBufferContext.configuration.frameWidth = buffer::constants::RAW_FRAME_WIDTH;
+	rawImageBufferContext.configuration.frameType = buffer::constants::RAW_FRAME_TYPE;
 
-	Processing::ImageBufferConfiguration processedImageBufferConfiguration;
-	processedImageBufferConfiguration.frameHeight = Processing::Constants::FRAME_HEIGHT;
-	processedImageBufferConfiguration.frameWidth = Processing::Constants::FRAME_WIDTH;
-	processedImageBufferConfiguration.frameType = Processing::Constants::FRAME_TYPE;
+	buffer::Context<buffer::constants::BufferType::Image> processedImageBufferContext;
+	rawImageBufferContext.configuration.frameHeight = buffer::constants::FRAME_HEIGHT;
+	rawImageBufferContext.configuration.frameWidth = buffer::constants::FRAME_WIDTH;
+	rawImageBufferContext.configuration.frameType = buffer::constants::FRAME_TYPE;
 
 	// Build
-	auto pipeline = Graph::Builder()
-		                .addNode<ImageCapturer, 0, 1>(capturerContext)
-		                .addNode<ImageProcessor, 1, 1>(preprocessorContext)
-		                .addNode<ImageDisplayer, 1, 0>(displayerContext)
-		                .addEdge<ImageData, ImageCapturer, ImageProcessor>(rawImageBufferConfiguration)
-						.addEdge<ImageData, ImageProcessor, ImageDisplayer>(processedImageBufferConfiguration)
-		                .build();
+	auto pipeline = weave::core::Builder()
+	                .addNode<ImageCapturer, 0, 1>(imageCapturerContext)
+	                .addNode<ImageProcessor, 1, 1>(imageNormalizerContext)
+	                .addNode<ImageDisplayer, 1, 0>(imageDisplayerContext)
+	                .addEdge<ImageData, ImageCapturer, ImageProcessor>(rawImageBufferContext)
+					.addEdge<ImageData, ImageProcessor, ImageDisplayer>(processedImageBufferContext)
+	                .build();
 
 	//pipeline.start();
 	return 0;

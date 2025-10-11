@@ -1,27 +1,33 @@
-add_library(user STATIC
+add_library(test STATIC
         modules/Capturer.cpp
         modules/Capturer.h
         modules/Configuration.h
-        modules/Constants.h
-        modules/DisplayBridge.cpp
-        modules/DisplayBridge.h
+        modules/constants.h
+        modules/Context.h
+        utilities/DisplayBridge.cpp
+        utilities/DisplayBridge.h
         modules/Displayer.cpp
         modules/Displayer.h
         modules/Preprocessor.cpp
         modules/Preprocessor.h
+
+        buffer/Context.h
+        buffer/Configuration.h
+        buffer/Constants.h
+
+        UserSpecializations.h
 )
 
-target_include_directories(weave PUBLIC ${OpenCV_INCLUDE_DIRS})
-target_link_libraries(weave PUBLIC ${OpenCV_LIBS})
+target_include_directories(test PUBLIC ${OpenCV_INCLUDE_DIRS})
+target_link_libraries(test PUBLIC ${OpenCV_LIBS} core error logging utilities profiling)
 
 if (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     message(STATUS "Detected macOS")
 
-    # Client
-    add_executable(test MACOSX_BUNDLE testGraph.cpp)
-    set(MACOSX_BUNDLE_BUNDLE_NAME "test")
-    set(MACOSX_BUNDLE_INFO_PLIST ${CMAKE_SOURCE_DIR}/source/Info.plist)
-    set_target_properties(test PROPERTIES
+    add_executable(testGraph MACOSX_BUNDLE testGraph.cpp)
+    set(MACOSX_BUNDLE_BUNDLE_NAME "testGraph")
+    set(MACOSX_BUNDLE_INFO_PLIST ${CMAKE_SOURCE_DIR}/source/test/Info.plist)
+    set_target_properties(testGraph PROPERTIES
             MACOSX_BUNDLE TRUE
             MACOSX_BUNDLE_INFO_PLIST ${MACOSX_BUNDLE_INFO_PLIST}
     )
@@ -33,4 +39,4 @@ else ()
     message(FATAL_ERROR "Unknown platform: ${CMAKE_SYSTEM_NAME}")
 endif ()
 
-target_link_libraries(test PRIVATE weave)
+target_link_libraries(testGraph PRIVATE test)
