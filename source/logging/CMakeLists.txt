@@ -3,7 +3,7 @@ add_library(logging STATIC
         include/weave/logging/Logger.h
         include/weave/logging/Macros.h
         include/weave/logging/Constants.h
-        Logger.cpp
+        source/Logger.cpp
 )
 
 target_include_directories(logging PUBLIC include)

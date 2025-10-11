@@ -22,3 +22,4 @@ if(ENABLE_LOGGING)
 endif()
 
 add_subdirectory(source)
+add_subdirectory(test)

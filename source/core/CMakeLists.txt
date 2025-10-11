@@ -8,8 +8,8 @@ add_library(core STATIC
         include/weave/core/Node.h
         include/weave/core/NodeDescriptor.h
         include/weave/core/Utilities.h
-        Dummy.cpp
-        Dummy.h
+        source/Dummy.cpp
+        source/Dummy.h
 )
 
 target_include_directories(core PUBLIC include)

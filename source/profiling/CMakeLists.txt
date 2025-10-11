@@ -1,33 +1,33 @@
 add_library(profiling STATIC
-        Configuration.h
-        ConfigurationCollector.cpp
+        source/Configuration.h
+        source/ConfigurationCollector.cpp
         include/weave/profiling/ConfigurationCollector.h
-        ConfigurationContext.cpp
+        source/ConfigurationContext.cpp
         include/weave/profiling/ConfigurationContext.h
-        ConfigurationDataBuilder.cpp
+        source/ConfigurationDataBuilder.cpp
         include/weave/profiling/ConfigurationDataBuilder.h
         include/weave/profiling/ConfigurationDataNode.h
-        ConfigurationPrinter.cpp
-        ConfigurationPrinter.h
+        source/ConfigurationPrinter.cpp
+        source/ConfigurationPrinter.h
         include/weave/profiling/ConfigurationSerialization.h
         include/weave/profiling/Constants.h
         include/weave/profiling/Macros.h
-        MetricsCollector.cpp
+        source/MetricsCollector.cpp
         include/weave/profiling/MetricsCollector.h
-        MetricsContext.cpp
+        source/MetricsContext.cpp
         include/weave/profiling/MetricsContext.h
-        MetricsPrinter.cpp
-        MetricsPrinter.h
-        MetricsSpan.cpp
+        source/MetricsPrinter.cpp
+        source/MetricsPrinter.h
+        source/MetricsSpan.cpp
         include/weave/profiling/MetricsSpan.h
         include/weave/profiling/MetricsSpanData.h
-        TraceCollector.cpp
+        source/TraceCollector.cpp
         include/weave/profiling/TraceCollector.h
-        TraceContext.cpp
+        source/TraceContext.cpp
         include/weave/profiling/TraceContext.h
-        TracePrinter.cpp
-        TracePrinter.h
-        TraceSpan.cpp
+        source/TracePrinter.cpp
+        source/TracePrinter.h
+        source/TraceSpan.cpp
         include/weave/profiling/TraceSpan.h
         include/weave/profiling/TraceSpanDataNode.h
 )

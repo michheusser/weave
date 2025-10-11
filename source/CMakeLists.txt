@@ -4,5 +4,3 @@ add_subdirectory(profiling)
 add_subdirectory(logging)
 add_subdirectory(utilities)
 add_subdirectory(user)
-
-add_subdirectory(test)

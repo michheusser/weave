@@ -2,7 +2,7 @@ add_library(test STATIC
         modules/Capturer.cpp
         modules/Capturer.h
         modules/Configuration.h
-        modules/constants.h
+        modules/Constants.h
         modules/Context.h
         utilities/DisplayBridge.cpp
         utilities/DisplayBridge.h
@@ -26,7 +26,7 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
 
     add_executable(testGraph MACOSX_BUNDLE testGraph.cpp)
     set(MACOSX_BUNDLE_BUNDLE_NAME "testGraph")
-    set(MACOSX_BUNDLE_INFO_PLIST ${CMAKE_SOURCE_DIR}/source/test/Info.plist)
+    set(MACOSX_BUNDLE_INFO_PLIST ${CMAKE_SOURCE_DIR}/test/Info.plist)
     set_target_properties(testGraph PROPERTIES
             MACOSX_BUNDLE TRUE
             MACOSX_BUNDLE_INFO_PLIST ${MACOSX_BUNDLE_INFO_PLIST}

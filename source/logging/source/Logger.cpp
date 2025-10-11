@@ -5,7 +5,7 @@
 #include <vector>
 #include <iostream>
 #include <weave/utilities/Executable.h>
-#include "include/weave/logging/Constants.h"
+#include <weave/logging/Constants.h>
 #endif
 
 namespace weave
