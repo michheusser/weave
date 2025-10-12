@@ -27,7 +27,7 @@ namespace weave
 			std::string _sessionDescription;
 			std::vector<std::shared_ptr<MetricsSpanData>> _metricsSpans;
 		};
-	} // profiling
-} // weave
+	}
+}
 
 #endif

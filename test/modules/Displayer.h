@@ -20,7 +20,7 @@ namespace test
 		private:
 			std::string _title;
 		};
-	} // IO
+	}
 }
 
 #endif

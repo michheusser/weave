@@ -37,7 +37,7 @@ namespace weave
 			std::string _sessionDescription;
 			std::vector<std::shared_ptr<TraceSpanDataNode>> _traceSpanTrees;
 		};
-	} // profiling
-} // weave
+	}
+}
 
 #endif

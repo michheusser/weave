@@ -21,6 +21,6 @@ namespace test
 		private:
 			const cv::Size _destinationSize;
 		};
-	} // Video
+	}
 }
 #endif //VIDEO_PREPROCESSOR_H

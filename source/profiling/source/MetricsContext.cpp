@@ -82,5 +82,5 @@ namespace weave
 		{
 			return MetricsSpan(name, type, count);
 		}
-	} // profiling
-} // weave
+	}
+}

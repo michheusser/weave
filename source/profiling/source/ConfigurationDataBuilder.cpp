@@ -9,5 +9,5 @@ namespace weave
 	{
 		ConfigurationDataBuilder::ConfigurationDataBuilder()
 		{}
-	} // profiling
-} // weave
+	}
+}

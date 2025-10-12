@@ -33,7 +33,7 @@ namespace weave
 			std::string _sessionDescription;
 			std::vector<std::shared_ptr<ConfigurationDataNode>> _configDataTrees;
 		};
-	} // profiling
-} // weave
+	}
+}
 
 #endif

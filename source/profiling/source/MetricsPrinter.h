@@ -18,7 +18,7 @@ namespace weave
 			static std::string print(const std::string& sessionName, const std::string& sessionDescription, std::vector<std::shared_ptr<MetricsSpanData>>& metricsSpanTrees);
 			static void dumpToCsv(const std::string& filename, std::vector<std::shared_ptr<MetricsSpanData>>& metricsSpanTrees);
 		};
-	} // profiling
-} // weave
+	}
+}
 
 #endif

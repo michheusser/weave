@@ -2,7 +2,7 @@
 // All rights reserved
 // https://github.com/michheusser
 
-#include <weave/core/Builder.h>
+#include <weave/graph/Builder.h>
 
 #include "modules/Constants.h"
 #include "modules/Configuration.h"
@@ -42,7 +42,7 @@ int main()
 	rawImageBufferContext.configuration.frameType = buffer::constants::FRAME_TYPE;
 
 	// Build
-	auto pipeline = weave::core::Builder()
+	auto pipeline = weave::graph::Builder()
 	                .addNode<ImageCapturer, 0, 1>(imageCapturerContext)
 	                .addNode<ImageProcessor, 1, 1>(imageNormalizerContext)
 	                .addNode<ImageDisplayer, 1, 0>(imageDisplayerContext)

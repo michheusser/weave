@@ -20,7 +20,7 @@ namespace weave
 			static void _signalHandler(int signal);
 			static std::atomic<bool> _shutdownRequested;
 		};
-	} // Application
-} // LatencyLens
+	}
+}
 
 #endif

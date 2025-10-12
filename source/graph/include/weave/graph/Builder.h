@@ -7,17 +7,17 @@
 
 #include <cstdlib>
 #include <tuple>
-#include <weave/core/GraphDescriptor.h>
-#include <weave/core/NodeDescriptor.h>
-#include <weave/core/EdgeDescriptor.h>
-#include <weave/core/Graph.h>
-#include <weave/core/Utilities.h>
+#include <weave/graph/GraphDescriptor.h>
+#include <weave/graph/NodeDescriptor.h>
+#include <weave/graph/EdgeDescriptor.h>
+#include <weave/graph/Graph.h>
+#include <weave/graph/Utilities.h>
 #include <weave/user/Module.h>
 #include <weave/user/BufferData.h>
 
 namespace weave
 {
-	namespace core
+	namespace graph
 	{
 		template<typename NodeDescriptorListType = NodeDescriptorList<>, typename EdgeDescriptorListType = EdgeDescriptorList<> >
 		class Builder

@@ -7,7 +7,7 @@
 
 namespace weave
 {
-	namespace core
+	namespace graph
 	{
 		template<typename EdgeDescriptorType>
 		class Edge
@@ -26,7 +26,7 @@ namespace weave
 			}
 
 			// TODO Later substitute by multiplexer with several buffers!
-			weave::Buffering::Buffer<ExtractEdgeDescriptorParams<EdgeDescriptorType>::Tag, Buffering::Constants::PolicyType::Lossless> _buffer;
+			weave::buffer::Buffer<ExtractEdgeDescriptorParams<EdgeDescriptorType>::Tag, buffer::Constants::PolicyType::Lossless> _buffer;
 		};
 	}
 }

@@ -34,5 +34,5 @@ namespace weave
 				_shutdownRequested.store(true, std::memory_order_relaxed);
 			}
 		}
-	} // Application
-} // LatencyLens
+	}
+}

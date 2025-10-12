@@ -31,5 +31,5 @@ namespace test
 			}
 			return weave::error::Result::success();
 		}
-	} // IO
+	}
 }

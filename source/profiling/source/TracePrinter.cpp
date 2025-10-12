@@ -204,5 +204,5 @@ namespace weave
 				throw error::Exception("Failed.");
 			}
 		}
-	} // profiling
-} // weave
+	}
+}

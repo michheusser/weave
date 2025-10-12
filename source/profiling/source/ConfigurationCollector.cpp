@@ -27,5 +27,5 @@ namespace weave
 			const std::string fileName = directory + "/" + _sessionName + "_CONFIG.json";
 			ConfigurationPrinter::dumpToJson(fileName, _configDataTrees);
 		}
-	} // profiling
-} // weave
+	}
+}

@@ -18,7 +18,7 @@ namespace weave
 		private:
 			std::shared_ptr<MetricsSpanData> _data;
 		};
-	} // profiling
-} // weave
+	}
+}
 
 #endif

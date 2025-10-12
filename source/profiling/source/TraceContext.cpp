@@ -94,5 +94,5 @@ namespace weave
 		{
 			return TraceSpan(name);
 		}
-	} // profiling
-} // weave
+	}
+}

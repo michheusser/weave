@@ -23,7 +23,7 @@ namespace weave
 			static std::string formatDuration(double durationMs);
 			static std::vector<std::shared_ptr<TraceSpanDataNode>> serializeTraceSpanTrees(std::vector<std::shared_ptr<TraceSpanDataNode>>& traceSpanTrees);
 		};
-	} // profiling
-} // weave
+	}
+}
 
 #endif

@@ -35,5 +35,5 @@ namespace weave
 			std::string informationString = TracePrinter::print(_traceSpanTrees);
 			LOG_INFO(informationString);
 		}
-	} // profiling
-} // weave
+	}
+}

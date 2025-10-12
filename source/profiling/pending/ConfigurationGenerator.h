@@ -8,7 +8,7 @@
 #include "../Application/Configuration.h"
 #include "../Profiling/Configuration.h"
 
-namespace LatencyLens
+namespace weave
 {
 	namespace Configuration
 	{
@@ -22,7 +22,7 @@ namespace LatencyLens
 		private:
 			static std::string _getDateString();
 		};
-	} // Configuration
-} // LatencyLens
+	}
+}
 
 #endif

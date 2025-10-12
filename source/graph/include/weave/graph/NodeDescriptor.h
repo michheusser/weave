@@ -9,7 +9,7 @@
 
 namespace weave
 {
-	namespace core
+	namespace graph
 	{
 		template<typename ModuleTag, uint64_t numInputs, uint64_t numOutputs>
 		class NodeDescriptor

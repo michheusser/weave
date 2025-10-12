@@ -34,7 +34,7 @@ namespace test
 			static std::condition_variable conditionVariable;
 			static std::mutex _mutex;
 		};
-	} // IO
+	}
 }
 
 #endif

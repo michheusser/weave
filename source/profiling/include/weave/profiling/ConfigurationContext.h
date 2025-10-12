@@ -29,7 +29,7 @@ namespace weave
 			static std::shared_mutex _mutex;
 			static std::shared_ptr<ConfigurationCollector> _configurationCollector;
 		};
-	} // profiling
-} // weave
+	}
+}
 
 #endif

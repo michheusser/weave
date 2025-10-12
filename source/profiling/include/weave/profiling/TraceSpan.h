@@ -30,7 +30,7 @@ namespace weave
 			// TODO Consider if it's semantically meaningful for this to be a member variable. Also create documentation for this one.
 			thread_local static std::shared_ptr<TraceSpanDataNode> _currentTraceSpanDataNode;
 		};
-	} // profiling
-} // weave
+	}
+}
 
 #endif

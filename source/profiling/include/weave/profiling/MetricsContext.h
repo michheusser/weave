@@ -29,7 +29,7 @@ namespace weave
 		};
 
 		MetricsSpan metric(const std::string name, const std::string& type, const int count);
-	} // profiling
-} // weave
+	}
+}
 
 #endif

@@ -15,7 +15,7 @@ namespace weave
 			static void executeDefaultServerSession(); // TODO Maybe add TRACE_META/METRICS_META To macros?
 			static void executeDefaultClientSession();
 		};
-	} // profiling
-} // weave
+	}
+}
 
 #endif

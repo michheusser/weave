@@ -11,7 +11,7 @@
 
 namespace weave
 {
-	namespace core
+	namespace graph
 	{
 		// TODO MAYBE ITS TIME TO START FRESH AND TRANSPORT EVERYTHING TO NEW REPOSITORY!!!
 		template<typename NodeDescriptorType>
@@ -27,7 +27,7 @@ namespace weave
 			{
 				// TODO
 			}
-			weave::Processing::Worker::Worker<ExtractNodeDescriptorParams<NodeDescriptorType>::Tag> _worker;
+			weave::worker::Worker::Worker<ExtractNodeDescriptorParams<NodeDescriptorType>::Tag> _worker;
 		};
 	}
 }

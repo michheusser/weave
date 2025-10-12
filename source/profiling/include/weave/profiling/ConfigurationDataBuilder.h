@@ -96,7 +96,7 @@ namespace weave
 		private:
 			std::vector<std::shared_ptr<ConfigurationDataNode>> _dataTrees;
 		};
-	} // profiling
-} // weave
+	}
+}
 
 #endif

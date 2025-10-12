@@ -46,7 +46,7 @@ namespace weave
 		 * @return
 		 */
 		TraceSpan trace(const std::string& name);
-	} // profiling
-} // weave
+	}
+}
 
 #endif

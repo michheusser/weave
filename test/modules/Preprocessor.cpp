@@ -22,5 +22,5 @@ namespace test
 			cv::resize(sourceFrame, destinationFrame, _destinationSize); // If throws error, terminates due to noexcept (fatal error in hot path)
 			return weave::error::Result::success();
 		}
-	} // Video
+	}
 }

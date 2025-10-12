@@ -7,7 +7,7 @@
 #include "../Streaming/Constants.h"
 #include "../IO/Constants.h"
 
-namespace LatencyLens
+namespace weave
 {
 	namespace Configuration
 	{
@@ -44,43 +44,43 @@ namespace LatencyLens
 			clientConfiguration.displayerConfiguration.title = IO::Constants::DEFAULT_DISPLAY_TITLE;
 
 			// Buffers
-			clientConfiguration.clientOrchestratorConfiguration.encodedSendFrameBufferConfiguration.bufferSize = Processing::Constants::BUFFER_SIZE;
-			clientConfiguration.clientOrchestratorConfiguration.encodedReceiveFrameBufferConfiguration.bufferSize = Processing::Constants::BUFFER_SIZE;
+			clientConfiguration.clientOrchestratorConfiguration.encodedSendFrameBufferConfiguration.bufferSize = worker::Constants::BUFFER_SIZE;
+			clientConfiguration.clientOrchestratorConfiguration.encodedReceiveFrameBufferConfiguration.bufferSize = worker::Constants::BUFFER_SIZE;
 
 			// Encoder
-			clientConfiguration.clientOrchestratorConfiguration.encoderConfiguration.encodingFormat = std::string(Processing::Constants::ENCODING_FORMAT);
+			clientConfiguration.clientOrchestratorConfiguration.encoderConfiguration.encodingFormat = std::string(worker::Constants::ENCODING_FORMAT);
 			clientConfiguration.clientOrchestratorConfiguration.encoderConfiguration.encodingParameters = {
-				Processing::Constants::COMPRESSION_IMWRITE_PARAM, Processing::Constants::COMPRESSION_LEVEL
+				worker::Constants::COMPRESSION_IMWRITE_PARAM, worker::Constants::COMPRESSION_LEVEL
 			};
 
 			// Decoder
-			clientConfiguration.clientOrchestratorConfiguration.decoderConfiguration.flags = Processing::Constants::DECODER_FLAGS;
+			clientConfiguration.clientOrchestratorConfiguration.decoderConfiguration.flags = worker::Constants::DECODER_FLAGS;
 
-			clientConfiguration.clientOrchestratorConfiguration.pipelineConfiguration.bufferConfiguration.inputFrameBufferConfiguration.frameHeight = Processing::Constants::RAW_FRAME_HEIGHT;
-			clientConfiguration.clientOrchestratorConfiguration.pipelineConfiguration.bufferConfiguration.inputFrameBufferConfiguration.frameWidth = Processing::Constants::RAW_FRAME_WIDTH;
-			clientConfiguration.clientOrchestratorConfiguration.pipelineConfiguration.bufferConfiguration.inputFrameBufferConfiguration.frameType = Processing::Constants::RAW_FRAME_TYPE;
+			clientConfiguration.clientOrchestratorConfiguration.pipelineConfiguration.bufferConfiguration.inputFrameBufferConfiguration.frameHeight = worker::Constants::RAW_FRAME_HEIGHT;
+			clientConfiguration.clientOrchestratorConfiguration.pipelineConfiguration.bufferConfiguration.inputFrameBufferConfiguration.frameWidth = worker::Constants::RAW_FRAME_WIDTH;
+			clientConfiguration.clientOrchestratorConfiguration.pipelineConfiguration.bufferConfiguration.inputFrameBufferConfiguration.frameType = worker::Constants::RAW_FRAME_TYPE;
 
-			clientConfiguration.clientOrchestratorConfiguration.pipelineConfiguration.bufferConfiguration.sendFrameBufferConfiguration.frameHeight = Processing::Constants::FRAME_HEIGHT;
-			clientConfiguration.clientOrchestratorConfiguration.pipelineConfiguration.bufferConfiguration.sendFrameBufferConfiguration.frameWidth = Processing::Constants::FRAME_WIDTH;
-			clientConfiguration.clientOrchestratorConfiguration.pipelineConfiguration.bufferConfiguration.sendFrameBufferConfiguration.frameType = Processing::Constants::FRAME_TYPE;
+			clientConfiguration.clientOrchestratorConfiguration.pipelineConfiguration.bufferConfiguration.sendFrameBufferConfiguration.frameHeight = worker::Constants::FRAME_HEIGHT;
+			clientConfiguration.clientOrchestratorConfiguration.pipelineConfiguration.bufferConfiguration.sendFrameBufferConfiguration.frameWidth = worker::Constants::FRAME_WIDTH;
+			clientConfiguration.clientOrchestratorConfiguration.pipelineConfiguration.bufferConfiguration.sendFrameBufferConfiguration.frameType = worker::Constants::FRAME_TYPE;
 
 
-			clientConfiguration.clientOrchestratorConfiguration.pipelineConfiguration.bufferConfiguration.receiveFrameBufferConfiguration.frameHeight = Processing::Constants::FRAME_HEIGHT;
-			clientConfiguration.clientOrchestratorConfiguration.pipelineConfiguration.bufferConfiguration.receiveFrameBufferConfiguration.frameWidth = Processing::Constants::FRAME_WIDTH;
-			clientConfiguration.clientOrchestratorConfiguration.pipelineConfiguration.bufferConfiguration.receiveFrameBufferConfiguration.frameType = Processing::Constants::FRAME_TYPE;
+			clientConfiguration.clientOrchestratorConfiguration.pipelineConfiguration.bufferConfiguration.receiveFrameBufferConfiguration.frameHeight = worker::Constants::FRAME_HEIGHT;
+			clientConfiguration.clientOrchestratorConfiguration.pipelineConfiguration.bufferConfiguration.receiveFrameBufferConfiguration.frameWidth = worker::Constants::FRAME_WIDTH;
+			clientConfiguration.clientOrchestratorConfiguration.pipelineConfiguration.bufferConfiguration.receiveFrameBufferConfiguration.frameType = worker::Constants::FRAME_TYPE;
 
-			clientConfiguration.clientOrchestratorConfiguration.pipelineConfiguration.bufferConfiguration.outputFrameBufferConfiguration.frameHeight = Processing::Constants::RAW_FRAME_HEIGHT;
-			clientConfiguration.clientOrchestratorConfiguration.pipelineConfiguration.bufferConfiguration.outputFrameBufferConfiguration.frameWidth = Processing::Constants::RAW_FRAME_WIDTH;
-			clientConfiguration.clientOrchestratorConfiguration.pipelineConfiguration.bufferConfiguration.outputFrameBufferConfiguration.frameType = Processing::Constants::RAW_FRAME_TYPE;
+			clientConfiguration.clientOrchestratorConfiguration.pipelineConfiguration.bufferConfiguration.outputFrameBufferConfiguration.frameHeight = worker::Constants::RAW_FRAME_HEIGHT;
+			clientConfiguration.clientOrchestratorConfiguration.pipelineConfiguration.bufferConfiguration.outputFrameBufferConfiguration.frameWidth = worker::Constants::RAW_FRAME_WIDTH;
+			clientConfiguration.clientOrchestratorConfiguration.pipelineConfiguration.bufferConfiguration.outputFrameBufferConfiguration.frameType = worker::Constants::RAW_FRAME_TYPE;
 
 			// Modules
 			// Preprocessor
-			clientConfiguration.clientOrchestratorConfiguration.pipelineConfiguration.moduleConfiguration.preprocessorConfiguration.destinationHeight = Processing::Constants::FRAME_HEIGHT;
-			clientConfiguration.clientOrchestratorConfiguration.pipelineConfiguration.moduleConfiguration.preprocessorConfiguration.destinationWidth = Processing::Constants::FRAME_WIDTH;
+			clientConfiguration.clientOrchestratorConfiguration.pipelineConfiguration.moduleConfiguration.preprocessorConfiguration.destinationHeight = worker::Constants::FRAME_HEIGHT;
+			clientConfiguration.clientOrchestratorConfiguration.pipelineConfiguration.moduleConfiguration.preprocessorConfiguration.destinationWidth = worker::Constants::FRAME_WIDTH;
 
 			// Postprocessor
-			clientConfiguration.clientOrchestratorConfiguration.pipelineConfiguration.moduleConfiguration.postprocessorConfiguration.destinationHeight = Processing::Constants::RAW_FRAME_HEIGHT;
-			clientConfiguration.clientOrchestratorConfiguration.pipelineConfiguration.moduleConfiguration.postprocessorConfiguration.destinationWidth = Processing::Constants::RAW_FRAME_WIDTH;
+			clientConfiguration.clientOrchestratorConfiguration.pipelineConfiguration.moduleConfiguration.postprocessorConfiguration.destinationHeight = worker::Constants::RAW_FRAME_HEIGHT;
+			clientConfiguration.clientOrchestratorConfiguration.pipelineConfiguration.moduleConfiguration.postprocessorConfiguration.destinationWidth = worker::Constants::RAW_FRAME_WIDTH;
 
 			// Streaming Configuration
 			// Client
@@ -97,59 +97,59 @@ namespace LatencyLens
 			Application::ServerConfiguration serverConfiguration;
 
 			// Buffers
-			serverConfiguration.serverOrchestratorConfiguration.encodedReceiveFrameBufferConfiguration.bufferSize = Processing::Constants::BUFFER_SIZE;
-			serverConfiguration.serverOrchestratorConfiguration.encodedSendFrameBufferConfiguration.bufferSize = Processing::Constants::BUFFER_SIZE;
+			serverConfiguration.serverOrchestratorConfiguration.encodedReceiveFrameBufferConfiguration.bufferSize = worker::Constants::BUFFER_SIZE;
+			serverConfiguration.serverOrchestratorConfiguration.encodedSendFrameBufferConfiguration.bufferSize = worker::Constants::BUFFER_SIZE;
 			// Decoder
-			serverConfiguration.serverOrchestratorConfiguration.decoderConfiguration.flags = Processing::Constants::DECODER_FLAGS;
+			serverConfiguration.serverOrchestratorConfiguration.decoderConfiguration.flags = worker::Constants::DECODER_FLAGS;
 			// Encoder
-			serverConfiguration.serverOrchestratorConfiguration.encoderConfiguration.encodingFormat = std::string(Processing::Constants::ENCODING_FORMAT);
+			serverConfiguration.serverOrchestratorConfiguration.encoderConfiguration.encodingFormat = std::string(worker::Constants::ENCODING_FORMAT);
 			serverConfiguration.serverOrchestratorConfiguration.encoderConfiguration.encodingParameters = {
-				Processing::Constants::COMPRESSION_IMWRITE_PARAM, Processing::Constants::COMPRESSION_LEVEL
+				worker::Constants::COMPRESSION_IMWRITE_PARAM, worker::Constants::COMPRESSION_LEVEL
 			};
 
-			serverConfiguration.serverOrchestratorConfiguration.pipelineConfiguration.bufferConfiguration.receiveFrameBufferConfiguration.frameHeight = Processing::Constants::FRAME_HEIGHT;
-			serverConfiguration.serverOrchestratorConfiguration.pipelineConfiguration.bufferConfiguration.receiveFrameBufferConfiguration.frameWidth = Processing::Constants::FRAME_WIDTH;
-			serverConfiguration.serverOrchestratorConfiguration.pipelineConfiguration.bufferConfiguration.receiveFrameBufferConfiguration.frameType = Processing::Constants::FRAME_TYPE;
+			serverConfiguration.serverOrchestratorConfiguration.pipelineConfiguration.bufferConfiguration.receiveFrameBufferConfiguration.frameHeight = worker::Constants::FRAME_HEIGHT;
+			serverConfiguration.serverOrchestratorConfiguration.pipelineConfiguration.bufferConfiguration.receiveFrameBufferConfiguration.frameWidth = worker::Constants::FRAME_WIDTH;
+			serverConfiguration.serverOrchestratorConfiguration.pipelineConfiguration.bufferConfiguration.receiveFrameBufferConfiguration.frameType = worker::Constants::FRAME_TYPE;
 
-			serverConfiguration.serverOrchestratorConfiguration.pipelineConfiguration.bufferConfiguration.inferenceInputTensorBufferConfiguration.height = Processing::Constants::TENSOR_HEIGHT;
-			serverConfiguration.serverOrchestratorConfiguration.pipelineConfiguration.bufferConfiguration.inferenceInputTensorBufferConfiguration.width = Processing::Constants::TENSOR_WIDTH;
+			serverConfiguration.serverOrchestratorConfiguration.pipelineConfiguration.bufferConfiguration.inferenceInputTensorBufferConfiguration.height = worker::Constants::TENSOR_HEIGHT;
+			serverConfiguration.serverOrchestratorConfiguration.pipelineConfiguration.bufferConfiguration.inferenceInputTensorBufferConfiguration.width = worker::Constants::TENSOR_WIDTH;
 			serverConfiguration.serverOrchestratorConfiguration.pipelineConfiguration.bufferConfiguration.inferenceInputTensorBufferConfiguration.tensorAllocatorType =
-				Processing::Constants::TENSOR_ALLOCATOR_TYPE;
+				worker::Constants::TENSOR_ALLOCATOR_TYPE;
 			serverConfiguration.serverOrchestratorConfiguration.pipelineConfiguration.bufferConfiguration.inferenceInputTensorBufferConfiguration.tensorMemoryType =
-				Processing::Constants::TENSOR_MEMORY_TYPE;
+				worker::Constants::TENSOR_MEMORY_TYPE;
 
 
-			serverConfiguration.serverOrchestratorConfiguration.pipelineConfiguration.bufferConfiguration.sendFrameBufferConfiguration.frameHeight = Processing::Constants::FRAME_HEIGHT;
-			serverConfiguration.serverOrchestratorConfiguration.pipelineConfiguration.bufferConfiguration.sendFrameBufferConfiguration.frameWidth = Processing::Constants::FRAME_WIDTH;
-			serverConfiguration.serverOrchestratorConfiguration.pipelineConfiguration.bufferConfiguration.sendFrameBufferConfiguration.frameType = Processing::Constants::FRAME_TYPE;
+			serverConfiguration.serverOrchestratorConfiguration.pipelineConfiguration.bufferConfiguration.sendFrameBufferConfiguration.frameHeight = worker::Constants::FRAME_HEIGHT;
+			serverConfiguration.serverOrchestratorConfiguration.pipelineConfiguration.bufferConfiguration.sendFrameBufferConfiguration.frameWidth = worker::Constants::FRAME_WIDTH;
+			serverConfiguration.serverOrchestratorConfiguration.pipelineConfiguration.bufferConfiguration.sendFrameBufferConfiguration.frameType = worker::Constants::FRAME_TYPE;
 
 
-			serverConfiguration.serverOrchestratorConfiguration.pipelineConfiguration.bufferConfiguration.receiveFrameBufferConfiguration.frameHeight = Processing::Constants::FRAME_HEIGHT;
-			serverConfiguration.serverOrchestratorConfiguration.pipelineConfiguration.bufferConfiguration.receiveFrameBufferConfiguration.frameWidth = Processing::Constants::FRAME_WIDTH;
-			serverConfiguration.serverOrchestratorConfiguration.pipelineConfiguration.bufferConfiguration.receiveFrameBufferConfiguration.frameType = Processing::Constants::FRAME_TYPE;
+			serverConfiguration.serverOrchestratorConfiguration.pipelineConfiguration.bufferConfiguration.receiveFrameBufferConfiguration.frameHeight = worker::Constants::FRAME_HEIGHT;
+			serverConfiguration.serverOrchestratorConfiguration.pipelineConfiguration.bufferConfiguration.receiveFrameBufferConfiguration.frameWidth = worker::Constants::FRAME_WIDTH;
+			serverConfiguration.serverOrchestratorConfiguration.pipelineConfiguration.bufferConfiguration.receiveFrameBufferConfiguration.frameType = worker::Constants::FRAME_TYPE;
 
 			// Modules
 
 			// InferenceInputProcessor
-			serverConfiguration.serverOrchestratorConfiguration.pipelineConfiguration.moduleConfiguration.inferenceInputProcessorConfiguration.rtype = Processing::Constants::INPUT_FRAME_RTYPE;
-			serverConfiguration.serverOrchestratorConfiguration.pipelineConfiguration.moduleConfiguration.inferenceInputProcessorConfiguration.alpha = Processing::Constants::INPUT_FRAME_ALPHA;
-			serverConfiguration.serverOrchestratorConfiguration.pipelineConfiguration.moduleConfiguration.inferenceInputProcessorConfiguration.inputWidth = Processing::Constants::INPUT_FRAME_WIDTH;
-			serverConfiguration.serverOrchestratorConfiguration.pipelineConfiguration.moduleConfiguration.inferenceInputProcessorConfiguration.inputHeight = Processing::Constants::INPUT_FRAME_HEIGHT;
-			serverConfiguration.serverOrchestratorConfiguration.pipelineConfiguration.moduleConfiguration.inferenceInputProcessorConfiguration.mean = Processing::Constants::INPUT_FRAME_MEAN;
-			serverConfiguration.serverOrchestratorConfiguration.pipelineConfiguration.moduleConfiguration.inferenceInputProcessorConfiguration.std = Processing::Constants::INPUT_FRAME_STD;
+			serverConfiguration.serverOrchestratorConfiguration.pipelineConfiguration.moduleConfiguration.inferenceInputProcessorConfiguration.rtype = worker::Constants::INPUT_FRAME_RTYPE;
+			serverConfiguration.serverOrchestratorConfiguration.pipelineConfiguration.moduleConfiguration.inferenceInputProcessorConfiguration.alpha = worker::Constants::INPUT_FRAME_ALPHA;
+			serverConfiguration.serverOrchestratorConfiguration.pipelineConfiguration.moduleConfiguration.inferenceInputProcessorConfiguration.inputWidth = worker::Constants::INPUT_FRAME_WIDTH;
+			serverConfiguration.serverOrchestratorConfiguration.pipelineConfiguration.moduleConfiguration.inferenceInputProcessorConfiguration.inputHeight = worker::Constants::INPUT_FRAME_HEIGHT;
+			serverConfiguration.serverOrchestratorConfiguration.pipelineConfiguration.moduleConfiguration.inferenceInputProcessorConfiguration.mean = worker::Constants::INPUT_FRAME_MEAN;
+			serverConfiguration.serverOrchestratorConfiguration.pipelineConfiguration.moduleConfiguration.inferenceInputProcessorConfiguration.std = worker::Constants::INPUT_FRAME_STD;
 
 			// Inference Model
-			serverConfiguration.serverOrchestratorConfiguration.pipelineConfiguration.moduleConfiguration.inferenceModelConfiguration.loggingLevel = Processing::Constants::ONNX_ENV_LOGGING_LEVEL;
-			serverConfiguration.serverOrchestratorConfiguration.pipelineConfiguration.moduleConfiguration.inferenceModelConfiguration.logid = Processing::Constants::ONNX_ENV_LOGID;
-			serverConfiguration.serverOrchestratorConfiguration.pipelineConfiguration.moduleConfiguration.inferenceModelConfiguration.modelPath = Processing::Constants::ONNX_MODEL_PATH;
-			serverConfiguration.serverOrchestratorConfiguration.pipelineConfiguration.moduleConfiguration.inferenceModelConfiguration.modelFile = Processing::Constants::ONNX_MODEL_FILE;
-			serverConfiguration.serverOrchestratorConfiguration.pipelineConfiguration.moduleConfiguration.inferenceModelConfiguration.outputImageType = Processing::Constants::OUTPUT_IMAGE_TYPE;
-			serverConfiguration.serverOrchestratorConfiguration.pipelineConfiguration.moduleConfiguration.inferenceModelConfiguration.width = Processing::Constants::OUTPUT_IMAGE_WIDTH;
-			serverConfiguration.serverOrchestratorConfiguration.pipelineConfiguration.moduleConfiguration.inferenceModelConfiguration.height = Processing::Constants::OUTPUT_IMAGE_HEIGHT;
-			serverConfiguration.serverOrchestratorConfiguration.pipelineConfiguration.moduleConfiguration.inferenceModelConfiguration.normalizedAlpha = Processing::Constants::OUTPUT_NORM_ALPHA;
-			serverConfiguration.serverOrchestratorConfiguration.pipelineConfiguration.moduleConfiguration.inferenceModelConfiguration.normalizedBeta = Processing::Constants::OUTPUT_NORM_BETA;
-			serverConfiguration.serverOrchestratorConfiguration.pipelineConfiguration.moduleConfiguration.inferenceModelConfiguration.normalizeType = Processing::Constants::OUTPUT_NORM_TYPE;
-			serverConfiguration.serverOrchestratorConfiguration.pipelineConfiguration.moduleConfiguration.inferenceModelConfiguration.normalizeDType = Processing::Constants::OUTPUT_NORM_DTYPE;
+			serverConfiguration.serverOrchestratorConfiguration.pipelineConfiguration.moduleConfiguration.inferenceModelConfiguration.loggingLevel = worker::Constants::ONNX_ENV_LOGGING_LEVEL;
+			serverConfiguration.serverOrchestratorConfiguration.pipelineConfiguration.moduleConfiguration.inferenceModelConfiguration.logid = worker::Constants::ONNX_ENV_LOGID;
+			serverConfiguration.serverOrchestratorConfiguration.pipelineConfiguration.moduleConfiguration.inferenceModelConfiguration.modelPath = worker::Constants::ONNX_MODEL_PATH;
+			serverConfiguration.serverOrchestratorConfiguration.pipelineConfiguration.moduleConfiguration.inferenceModelConfiguration.modelFile = worker::Constants::ONNX_MODEL_FILE;
+			serverConfiguration.serverOrchestratorConfiguration.pipelineConfiguration.moduleConfiguration.inferenceModelConfiguration.outputImageType = worker::Constants::OUTPUT_IMAGE_TYPE;
+			serverConfiguration.serverOrchestratorConfiguration.pipelineConfiguration.moduleConfiguration.inferenceModelConfiguration.width = worker::Constants::OUTPUT_IMAGE_WIDTH;
+			serverConfiguration.serverOrchestratorConfiguration.pipelineConfiguration.moduleConfiguration.inferenceModelConfiguration.height = worker::Constants::OUTPUT_IMAGE_HEIGHT;
+			serverConfiguration.serverOrchestratorConfiguration.pipelineConfiguration.moduleConfiguration.inferenceModelConfiguration.normalizedAlpha = worker::Constants::OUTPUT_NORM_ALPHA;
+			serverConfiguration.serverOrchestratorConfiguration.pipelineConfiguration.moduleConfiguration.inferenceModelConfiguration.normalizedBeta = worker::Constants::OUTPUT_NORM_BETA;
+			serverConfiguration.serverOrchestratorConfiguration.pipelineConfiguration.moduleConfiguration.inferenceModelConfiguration.normalizeType = worker::Constants::OUTPUT_NORM_TYPE;
+			serverConfiguration.serverOrchestratorConfiguration.pipelineConfiguration.moduleConfiguration.inferenceModelConfiguration.normalizeDType = worker::Constants::OUTPUT_NORM_DTYPE;
 
 			// Streaming Configuration
 			// Server
@@ -169,5 +169,5 @@ namespace LatencyLens
 
 			return oss.str();
 		}
-	} // Configuration
-} // LatencyLens
+	}
+}

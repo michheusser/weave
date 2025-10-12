@@ -5,13 +5,13 @@
 #ifndef UTILITIES_H_2025_10_08_15_01_16
 #define UTILITIES_H_2025_10_08_15_01_16
 
-#include <weave/core/GraphDescriptor.h>
+#include <weave/graph/GraphDescriptor.h>
 #include <weave/user/Module.h>
 #include <weave/user/BufferData.h>
 
 namespace weave
 {
-	namespace core
+	namespace graph
 	{
 		// AppendToList Metaprogramming Function
 		template<typename DescriptorListType, typename NewDescriptor>

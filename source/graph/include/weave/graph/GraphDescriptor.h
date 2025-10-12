@@ -7,7 +7,7 @@
 
 namespace weave
 {
-	namespace core
+	namespace graph
 	{
 		template<typename... NodeDescriptors>
 		struct NodeDescriptorList

@@ -65,5 +65,5 @@ namespace weave
 				// a further throw will call std::terminate() stopping the stack unwind.
 			}
 		}
-	} // profiling
-} // weave
+	}
+}

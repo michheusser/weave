@@ -19,7 +19,7 @@ add_library(test STATIC
 )
 
 target_include_directories(test PUBLIC ${OpenCV_INCLUDE_DIRS})
-target_link_libraries(test PUBLIC ${OpenCV_LIBS} core error logging utilities profiling)
+target_link_libraries(test PUBLIC ${OpenCV_LIBS} graph error logging utilities profiling)
 
 if (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     message(STATUS "Detected macOS")

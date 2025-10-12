@@ -23,7 +23,7 @@ namespace weave
 			std::weak_ptr<TraceSpanDataNode> parent;
 			std::vector<std::shared_ptr<TraceSpanDataNode>> children;
 		};
-	} // profiling
-} // weave
+	}
+}
 
 #endif

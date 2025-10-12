@@ -160,5 +160,5 @@ namespace weave
 				// No re-throwing
 			}
 		}
-	} // profiling
-} // weave
+	}
+}
