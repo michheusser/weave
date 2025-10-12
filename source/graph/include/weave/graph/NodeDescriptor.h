@@ -11,11 +11,11 @@ namespace weave
 {
 	namespace graph
 	{
-		template<typename ModuleTag, uint64_t numInputs, uint64_t numOutputs>
+		template<typename NodeTag, uint64_t numInputs, uint64_t numOutputs>
 		class NodeDescriptor
 		{
 		public:
-			using Tag = ModuleTag;
+			using Tag = NodeTag;
 			static constexpr uint64_t inputs = numInputs;
 			static constexpr uint64_t outputs = numOutputs;
 		};

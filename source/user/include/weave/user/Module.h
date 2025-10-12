@@ -9,7 +9,7 @@ namespace weave
 {
 	namespace user
 	{
-		template<typename ModuleTag>
+		template<typename NodeTag>
 		class Module; // User must specialize this class for their use!
 	}
 }

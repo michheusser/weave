@@ -9,13 +9,13 @@ namespace weave
 {
 	namespace graph
 	{
-		template<typename BufferDataTag, typename FromModuleTag, typename ToModuleTag>
+		template<typename EdgeTag, typename FromNodeTag, typename ToNodeTag>
 		class EdgeDescriptor
 		{
 		public:
-			using Tag = BufferDataTag; // TODO Maybe I should have tags for the edges and nodes and not Modules?
-			using FromModule = FromModuleTag;
-			using ToModule = ToModuleTag;
+			using Tag = EdgeTag;
+			using FromModule = FromNodeTag;
+			using ToModule = ToNodeTag;
 		};
 	}
 }

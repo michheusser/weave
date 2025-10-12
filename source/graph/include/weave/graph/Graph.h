@@ -15,15 +15,17 @@ namespace weave
 		class Graph
 		{
 		public:
+			using NodeContextTuple = typename GraphDescriptorToContextTuples<GraphDescriptorType>::NodeContextTuple;
+			using EdgeContextTuple = typename GraphDescriptorToContextTuples<GraphDescriptorType>::EdgeContextTuple;
 			using NodesTuple = typename GraphDescriptorToGraphTuples<GraphDescriptorType>::NodesTuple;
 			using EdgesTuple = typename GraphDescriptorToGraphTuples<GraphDescriptorType>::EdgesTuple;
 
-			Graph(NodesTuple& nodeContexts, EdgesTuple& edgeContexts) : _nodes(_constructTuple<NodesTuple>(nodeContexts, std::make_index_sequence<std::tuple_size_v<NodesTuple> >{})),
-			                                                            _edges(_constructTuple<EdgesTuple>(edgeContexts, std::make_index_sequence<std::tuple_size_v<EdgesTuple> >{}))
+			Graph(NodeContextTuple& nodeContexts, EdgeContextTuple& edgeContexts) : _nodes(_constructTuple<NodesTuple>(nodeContexts, std::make_index_sequence<std::tuple_size_v<NodesTuple> >{})),
+			                                                                        _edges(_constructTuple<EdgesTuple>(edgeContexts, std::make_index_sequence<std::tuple_size_v<EdgesTuple> >{}))
 			{}
 			void start()
 			{
-				_startNodes(std::make_index_sequence<std::tuple_size_v<NodesTuple> >{}); // Arguments: 0, 1, 2, ...
+				//_startNodes(std::make_index_sequence<std::tuple_size_v<NodesTuple> >{}); // Arguments: 0, 1, 2, ...
 			}
 
 		private:
@@ -33,13 +35,12 @@ namespace weave
 				(std::get<Is>(_nodes).start(), ...);
 			}
 
-			template<typename Tuple, typename ContextTuple, std::size_t... Is>
-			static Tuple _constructTuple(ContextTuple& contexts, std::index_sequence<Is...>)
+			template<typename Tuple, typename ContextTuple, std::size_t... Indices>
+			static Tuple _constructTuple(ContextTuple& contexts, std::index_sequence<Indices...>)
 			{
-				Tuple tuple = {std::tuple_element_t<Is, Tuple>(std::get<Is>(contexts))...};
+				Tuple tuple = {std::tuple_element_t<Indices, Tuple>(std::get<Indices>(contexts))...};
 				return tuple;
 			}
-
 			NodesTuple _nodes;
 			EdgesTuple _edges;
 		};

@@ -15,7 +15,7 @@
 
 // USER DEFINED SPECIALIZATIONS!
 
-// Module Tags
+// Node Tags (Module)
 struct ImageCapturer
 {};
 
@@ -50,7 +50,7 @@ public:
 };
 
 
-// Buffer Tags
+// Edge Tags (Buffer)
 struct ImageData
 {};
 

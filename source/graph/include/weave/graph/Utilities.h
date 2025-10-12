@@ -8,6 +8,8 @@
 #include <weave/graph/GraphDescriptor.h>
 #include <weave/user/Module.h>
 #include <weave/user/BufferData.h>
+#include <weave/graph/Node.h>
+#include <weave/graph/Edge.h>
 
 namespace weave
 {
@@ -63,31 +65,8 @@ namespace weave
 		template<typename... NodeDescriptors, typename... EdgeDescriptors>
 		struct GraphDescriptorToGraphTuples<GraphDescriptor<NodeDescriptorList<NodeDescriptors...>, EdgeDescriptorList<EdgeDescriptors...> > >
 		{
-			using NodesTuple = std::tuple<typename user::Module<typename NodeDescriptors::Tag>::ContextType...>;
-			using EdgesTuple = std::tuple<typename user::BufferData<typename EdgeDescriptors::Tag>::ContextType...>;
-		};
-
-		//
-		template<typename NodeDescriptorType>
-		struct ExtractNodeDescriptorParams;
-
-		template<typename ModuleTag, uint64_t NumInputs, uint64_t NumOutputs>
-		struct ExtractNodeDescriptorParams<NodeDescriptor<ModuleTag, NumInputs, NumOutputs> >
-		{
-			using Tag = ModuleTag;
-			static constexpr uint64_t inputs = NumInputs;
-			static constexpr uint64_t outputs = NumOutputs;
-		};
-
-		template<typename NodeDescriptorType>
-		struct ExtractEdgeDescriptorParams;
-
-		template<typename BufferDataTag, typename FromModuleTag, typename ToModuleTag>
-		struct ExtractEdgeDescriptorParams<EdgeDescriptor<BufferDataTag, FromModuleTag, ToModuleTag> >
-		{
-			using Tag = BufferDataTag;
-			using FromModule = FromModuleTag;
-			using ToModule = ToModuleTag;
+			using NodesTuple = std::tuple<Node<NodeDescriptors>...>;
+			using EdgesTuple = std::tuple<Edge<EdgeDescriptors>...>;
 		};
 	}
 }

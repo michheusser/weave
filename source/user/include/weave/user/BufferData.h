@@ -9,7 +9,7 @@ namespace weave
 {
 	namespace user
 	{
-		template<typename BufferDataTag>
+		template<typename EdgeTag>
 		class BufferData;
 	}
 }
