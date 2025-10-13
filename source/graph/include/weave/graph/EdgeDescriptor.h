@@ -14,8 +14,8 @@ namespace weave
 		{
 		public:
 			using Tag = EdgeTag;
-			using FromModule = FromNodeTag;
-			using ToModule = ToNodeTag;
+			using FromNode = FromNodeTag;
+			using ToNode = ToNodeTag;
 		};
 	}
 }

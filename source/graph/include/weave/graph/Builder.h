@@ -19,6 +19,39 @@ namespace weave
 {
 	namespace graph
 	{
+		// AppendToList Metaprogramming Function
+		template<typename DescriptorListType, typename NewDescriptor>
+		struct AppendToList;
+
+		template<typename... NodeDescriptors, typename NewNodeDescriptor>
+		struct AppendToList<NodeDescriptorList<NodeDescriptors...>, NewNodeDescriptor>
+		{
+			using NewDescriptorListType = NodeDescriptorList<NodeDescriptors..., NewNodeDescriptor>;
+		};
+
+		template<typename... EdgeDescriptors, typename NewEdgeDescriptor>
+		struct AppendToList<EdgeDescriptorList<EdgeDescriptors...>, NewEdgeDescriptor>
+		{
+			using NewDescriptorListType = EdgeDescriptorList<EdgeDescriptors..., NewEdgeDescriptor>;
+		};
+
+		// DescriptorListToContextTuple Metaprogramming Function
+		template<typename DescriptorListType>
+		struct DescriptorListToContextTuple;
+
+		template<typename... NodeDescriptors>
+		struct DescriptorListToContextTuple<NodeDescriptorList<NodeDescriptors...> >
+		{
+			using ContextTuple = std::tuple<typename user::Module<typename NodeDescriptors::Tag>::ContextType...>;
+		};
+
+		template<typename... EdgeDescriptors>
+		struct DescriptorListToContextTuple<EdgeDescriptorList<EdgeDescriptors...> >
+		{
+			using ContextTuple = std::tuple<typename user::BufferData<typename EdgeDescriptors::Tag>::ContextType...>;
+		};
+
+		// Builder
 		template<typename NodeDescriptorListType = NodeDescriptorList<>, typename EdgeDescriptorListType = EdgeDescriptorList<> >
 		class Builder
 		{

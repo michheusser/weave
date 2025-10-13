@@ -5,6 +5,8 @@
 #ifndef NODE_H_2025_10_05_14_42_39
 #define NODE_H_2025_10_05_14_42_39
 
+#include <weave/user/Module.h>
+
 namespace weave
 {
 	namespace graph
@@ -20,17 +22,18 @@ namespace weave
 			static constexpr uint64_t outputs = NumOutputs;
 		};
 
-		// TODO MAYBE ITS TIME TO START FRESH AND TRANSPORT EVERYTHING TO NEW REPOSITORY!!!
 		template<typename NodeDescriptorType>
 		class Node
 		{
 		public:
 			// TODO Move worker class with generic tags to Graph
-			explicit Node(typename user::Module<typename ExtractNodeDescriptorParams<NodeDescriptorType>::Tag>::ContextType context) // : _worker(context)
+			explicit Node(typename user::Module<typename ExtractNodeDescriptorParams<NodeDescriptorType>::Tag>::ContextType context) // : _worker(context) // TODO
 			{
 				// TODO
 			}
-			void start()
+
+			template<typename InEdgesTuple, typename OutEdgesTuple>
+			void start(InEdgesTuple& inEdges, OutEdgesTuple& outEdges)
 			{
 				// TODO
 			}

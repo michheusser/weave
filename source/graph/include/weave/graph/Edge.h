@@ -5,6 +5,8 @@
 #ifndef EDGE_H_2025_10_05_14_42_57
 #define EDGE_H_2025_10_05_14_42_57
 
+#include <weave/user/BufferData.h>
+
 namespace weave
 {
 	namespace graph
@@ -16,8 +18,8 @@ namespace weave
 		struct ExtractEdgeDescriptorParams<EdgeDescriptor<EdgeTag, FromNodeTag, ToNodeTag> >
 		{
 			using Tag = EdgeTag;
-			using FromModule = FromNodeTag;
-			using ToModule = ToNodeTag;
+			using FromNode = FromNodeTag;
+			using ToNode = ToNodeTag;
 		};
 
 		template<typename EdgeDescriptorType>

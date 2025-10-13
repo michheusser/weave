@@ -9,11 +9,11 @@ namespace weave
 {
 	namespace graph
 	{
-		template<typename... NodeDescriptors>
+		template<typename... NodeDescriptorTypes>
 		struct NodeDescriptorList
 		{};
 
-		template<typename... EdgeDescriptors>
+		template<typename... EdgeDescriptorTypes>
 		struct EdgeDescriptorList
 		{};
 

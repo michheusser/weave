@@ -50,6 +50,6 @@ int main()
 					.addEdge<ImageData, ImageProcessor, ImageDisplayer>(processedImageBufferContext)
 	                .build();
 
-	//pipeline.start();
+	pipeline.start();
 	return 0;
 }
