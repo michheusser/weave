@@ -6,9 +6,7 @@
 #define POLICY_H_2025_09_29_16_42_01
 
 #include <cstdint>
-
 #include <weave/buffer/Constants.h>
-#include "../Processing/Worker/Constants.h>
 
 namespace weave
 {
@@ -16,45 +14,45 @@ namespace weave
 	{
 		// TODO Deal with the following dilemma: Is policy only concerning either reader/writer? There seems to be a coupling by making the policy part of the buffer, but
 		// reader/writer policy might mean different things?
-		template <Constants::PolicyType type>
+		template <constants::PolicyType type>
 		struct Policy; // Never instantiated as generic
 
 		template <>
-		struct Policy<Constants::PolicyType::Lossless> // Creates backpressure, but everything gets processed eventually
+		struct Policy<constants::PolicyType::Lossless> // Creates backpressure, but everything gets processed eventually
 		{
-			static constexpr Constants::CongestionStrategy congestion = Constants::CongestionStrategy::Backpressure;
-			static constexpr Constants::TimeoutStrategy timeout = Constants::TimeoutStrategy::Infinite;
+			static constexpr constants::CongestionStrategy congestion = constants::CongestionStrategy::Backpressure;
+			static constexpr constants::TimeoutStrategy timeout = constants::TimeoutStrategy::Infinite;
 		};
 
 		template <>
-		struct Policy<Constants::PolicyType::Realtime> // Drops old, "stale" data
+		struct Policy<constants::PolicyType::Realtime> // Drops old, "stale" data
 		{
-			static constexpr Constants::CongestionStrategy congestion = Constants::CongestionStrategy::DropOldest;
-			static constexpr Constants::TimeoutStrategy timeout = Constants::TimeoutStrategy::Timed;
+			static constexpr constants::CongestionStrategy congestion = constants::CongestionStrategy::DropOldest;
+			static constexpr constants::TimeoutStrategy timeout = constants::TimeoutStrategy::Timed;
 		};
 
 		template <>
-		struct Policy<Constants::PolicyType::Attempts> // Drops old, "stale" data with attempts
+		struct Policy<constants::PolicyType::Attempts> // Drops old, "stale" data with attempts
 		{
-			static constexpr Constants::CongestionStrategy congestion = Constants::CongestionStrategy::DropOldest;
-			static constexpr Constants::TimeoutStrategy timeout = Constants::TimeoutStrategy::Attempts;
+			static constexpr constants::CongestionStrategy congestion = constants::CongestionStrategy::DropOldest;
+			static constexpr constants::TimeoutStrategy timeout = constants::TimeoutStrategy::Attempts;
 			static constexpr uint64_t timeoutMS = 100;
 			static constexpr std::uint64_t numAttempts = 1;
 		};
 
 		template <>
-		struct Policy<Constants::PolicyType::LiveStream> // Drops old, "stale" data but timed
+		struct Policy<constants::PolicyType::LiveStream> // Drops old, "stale" data but timed
 		{
-			static constexpr Constants::CongestionStrategy congestion = Constants::CongestionStrategy::DropOldest;
-			static constexpr Constants::TimeoutStrategy timeout = Constants::TimeoutStrategy::Timed;
+			static constexpr constants::CongestionStrategy congestion = constants::CongestionStrategy::DropOldest;
+			static constexpr constants::TimeoutStrategy timeout = constants::TimeoutStrategy::Timed;
 			static constexpr uint64_t timeoutMS = 100;
 		};
 
 		template <>
-		struct Policy<Constants::PolicyType::Throttled> // Respects "committed" data and rejects new incoming one
+		struct Policy<constants::PolicyType::Throttled> // Respects "committed" data and rejects new incoming one
 		{
-			static constexpr Constants::CongestionStrategy congestion = Constants::CongestionStrategy::DropNewest;
-			static constexpr Constants::TimeoutStrategy timeout = Constants::TimeoutStrategy::Timed;
+			static constexpr constants::CongestionStrategy congestion = constants::CongestionStrategy::DropNewest;
+			static constexpr constants::TimeoutStrategy timeout = constants::TimeoutStrategy::Timed;
 		};
 	}
 }

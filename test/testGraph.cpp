@@ -2,7 +2,14 @@
 // All rights reserved
 // https://github.com/michheusser
 
+//#include "Specializations/BufferDataSpecializations.h" // TODO Remove
+#include "Specializations/ModuleSpecializations.h"
+#include "Specializations/SlotSpecialization.h"
+#include "Specializations/RingBufferTraitsSpecialization.h"
+#include "Specializations/EdgeTraitsSpecialization.h"
+
 #include <weave/graph/Builder.h>
+
 
 #include "modules/Constants.h"
 #include "modules/Configuration.h"
@@ -12,7 +19,7 @@
 #include "buffer/Configuration.h"
 #include "buffer/Context.h"
 
-#include "UserSpecializations.h"
+
 
 using namespace test;
 
@@ -43,11 +50,11 @@ int main()
 
 	// Build
 	auto pipeline = weave::graph::Builder()
-	                .addNode<ImageCapturer, 0, 1>(imageCapturerContext)
-	                .addNode<ImageProcessor, 1, 1>(imageNormalizerContext)
-	                .addNode<ImageDisplayer, 1, 0>(imageDisplayerContext)
-	                .addEdge<ImageData, ImageCapturer, ImageProcessor>(rawImageBufferContext)
-					.addEdge<ImageData, ImageProcessor, ImageDisplayer>(processedImageBufferContext)
+	                .addNode<FirstImageCapturer, 0, 1>(imageCapturerContext)
+	                .addNode<FirstImageProcessor, 1, 1>(imageNormalizerContext)
+	                .addNode<FirstImageDisplayer, 1, 0>(imageDisplayerContext)
+	                .addEdge<FirstImageEdge, FirstImageCapturer, FirstImageProcessor>(rawImageBufferContext)
+					.addEdge<SecondImageEdge, FirstImageProcessor, FirstImageDisplayer>(processedImageBufferContext)
 	                .build();
 
 	pipeline.start();

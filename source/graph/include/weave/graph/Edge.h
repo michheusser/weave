@@ -5,13 +5,16 @@
 #ifndef EDGE_H_2025_10_05_14_42_57
 #define EDGE_H_2025_10_05_14_42_57
 
-#include <weave/user/BufferData.h>
+// #include <weave/user/BufferData.h> // TODO Remove
+#include <weave/buffer/Channel.h>
+#include <weave/buffer/Constants.h>
+#include <weave/user/EdgeTraits.h>
 
 namespace weave
 {
 	namespace graph
 	{
-		template<typename NodeDescriptorType>
+		template<typename EdgeDescriptorType>
 		struct ExtractEdgeDescriptorParams;
 
 		template<typename EdgeTag, typename FromNodeTag, typename ToNodeTag>
@@ -22,16 +25,17 @@ namespace weave
 			using ToNode = ToNodeTag;
 		};
 
+		template<typename T>
+		struct ShowType;
+
 		template<typename EdgeDescriptorType>
 		class Edge
 		{
-			// TODO MAYBE ITS TIME TO START FRESH AND TRANSPORT EVERYTHING TO NEW REPOSITORY!!!
 		public:
-			// TODO Move buffer class with generic tags to Graph
-			explicit Edge(typename user::BufferData<typename ExtractEdgeDescriptorParams<EdgeDescriptorType>::Tag>::ContextType context)// : _buffer(context)
-			{
-				// TODO
-			}
+			using EdgeTag = typename ExtractEdgeDescriptorParams<EdgeDescriptorType>::Tag;
+			using ChannelTag = typename user::EdgeTraits<EdgeTag>::ChannelTag;
+			explicit Edge(typename user::EdgeTraits<typename ExtractEdgeDescriptorParams<EdgeDescriptorType>::Tag>::ContextType& context) : _channel(context)
+			{}
 
 			void start()
 			{
@@ -39,7 +43,7 @@ namespace weave
 			}
 
 			// TODO Later substitute by multiplexer with several buffers!
-			//weave::buffer::Buffer<ExtractEdgeDescriptorParams<EdgeDescriptorType>::Tag, buffer::Constants::PolicyType::Lossless> _buffer;
+			buffer::Channel<ChannelTag, buffer::constants::PolicyType::Lossless> _channel;
 		};
 	}
 }

@@ -7,32 +7,29 @@
 
 namespace weave
 {
-	worker
+	namespace Worker
 	{
-		namespace Worker
+		namespace Constants
 		{
-			namespace Constants
+			enum class Type
 			{
-				enum class Type
-				{
-					Source,
-					Process,
-					Sink
-				};
+				Source,
+				Process,
+				Sink
+			};
 
-				enum class Module
-				{
-					Capturer,
-					Displayer,
-					ImageProcessor,
-					ImageToTensor,
-					Inference,
-					ClientSender,
-					ClientReceiver,
-					ServerSender,
-					ServerReceiver
-				};
-			}
+			enum class Module
+			{
+				Capturer,
+				Displayer,
+				ImageProcessor,
+				ImageToTensor,
+				Inference,
+				ClientSender,
+				ClientReceiver,
+				ServerSender,
+				ServerReceiver
+			};
 		}
 	}
 }

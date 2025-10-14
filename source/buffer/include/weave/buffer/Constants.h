@@ -5,14 +5,14 @@ namespace weave
 {
 	namespace buffer
 	{
-		namespace Constants
+		namespace constants
 		{
-			enum class BufferType
+			/*enum class BufferType // TODO Remove
 			{
 				Image,
 				Network,
 				Inference
-			};
+			};*/
 
 			enum class BufferState
 			{

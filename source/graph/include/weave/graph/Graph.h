@@ -7,13 +7,15 @@
 
 #include <weave/graph/Node.h>
 #include <weave/graph/Edge.h>
-#include <weave/user/BufferData.h>
+// #include <weave/user/BufferData.h> // TODO Remove
+#include <weave/user/EdgeTraits.h>
 #include <weave/user/Module.h>
 
 namespace weave
 {
 	namespace graph
 	{
+		// TODO MAKE SURE THAT ALL BUFFERS ARE REALLY PASSED BY REFERENCE! (It will be anyways clear if the pipeline is broke)
 		template<typename GraphDescriptorType>
 		struct GraphDescriptionToTuples;
 		template<typename... NodeDescriptorTypes, typename... EdgeDescriptorTypes>
@@ -22,7 +24,7 @@ namespace weave
 			using NodeTuple = std::tuple<Node<NodeDescriptorTypes>...>;
 			using NodeContextTuple = std::tuple<typename user::Module<typename NodeDescriptorTypes::Tag>::ContextType...>;
 			using EdgeTuple = std::tuple<Edge<EdgeDescriptorTypes>...>;
-			using EdgeContextTuple = std::tuple<typename user::BufferData<typename EdgeDescriptorTypes::Tag>::ContextType...>;
+			using EdgeContextTuple = std::tuple<typename user::EdgeTraits<typename EdgeDescriptorTypes::Tag>::ContextType...>;
 		};
 
 		template<typename NodeType>
@@ -35,7 +37,7 @@ namespace weave
 			static constexpr uint64_t outputs = numOutputs;
 		};
 
-		template<typename NodeType>
+		template<typename EdgeType>
 		struct ExtractDescriptorParamsFromEdge;
 		template<typename EdgeTag, typename FromNodeTag, typename ToNodeTag>
 		struct ExtractDescriptorParamsFromEdge<Edge<EdgeDescriptor<EdgeTag, FromNodeTag, ToNodeTag> > >
@@ -74,7 +76,7 @@ namespace weave
 			{
 				// We pass a dummy object to deduce the indices (not the nicest, but seems to be used a lot). Passing it as template parameter requires too many helper constructs.
 				TupleType tuple = {std::tuple_element_t<Indices, TupleType>(std::get<Indices>(contexts))...};
-				return tuple;
+				return std::move(tuple); // Channel needs custom move assignment/constructor, the default one doesn't work because of non-moveable objects (mutexes/condition variables)
 			}
 
 			template<std::size_t... EdgeIndices>
@@ -150,7 +152,6 @@ namespace weave
 					return tuple;
 				}
 			}
-
 			NodeTuple _nodes;
 			EdgeTuple _edges;
 		};
@@ -158,113 +159,3 @@ namespace weave
 }
 
 #endif
-
-/*
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
-		template<typename GraphDescriptorType>
-		class Graph
-		{
-		public:
-			using NodeContextTuple = typename GraphDescriptorToContextTuples<GraphDescriptorType>::NodeContextTuple;
-			using EdgeContextTuple = typename GraphDescriptorToContextTuples<GraphDescriptorType>::EdgeContextTuple;
-			using NodesTuple = typename GraphDescriptorToGraphTuples<GraphDescriptorType>::NodesTuple;
-			using EdgesTuple = typename GraphDescriptorToGraphTuples<GraphDescriptorType>::EdgesTuple;
-
-			Graph(NodeContextTuple& nodeContexts, EdgeContextTuple& edgeContexts) : _nodes(_constructTuple<NodesTuple>(nodeContexts, std::make_index_sequence<std::tuple_size_v<NodesTuple> >{})),
-			                                                                        _edges(_constructTuple<EdgesTuple>(edgeContexts, std::make_index_sequence<std::tuple_size_v<EdgesTuple> >{}))
-			{}
-			void start()
-			{
-				_startNodes(std::make_index_sequence<std::tuple_size_v<NodesTuple> >{}); // Arguments: 0, 1, 2, ...
-			}
-
-		private:
-			template<std::size_t... NodeIndices>
-			void _startNodes(std::index_sequence<NodeIndices...>)
-			{
-				(_startNodeAtIndex<NodeIndices>(), ...);
-			}
-
-			template<std::size_t NodeIndex, std::size_t EdgeIndex>
-			auto _conditionalInEdges()
-			{
-				using NodeType = std::tuple_element_t<NodeIndex, NodesTuple>;
-				using EdgeType = std::tuple_element_t<EdgeIndex, EdgesTuple>;
-
-				if constexpr (EdgeFromNode<EdgeType, NodeType>::value)
-				{
-					return std::make_tuple(std::get<EdgeIndex>(_edges)); // TODO Pass by reference?
-				}
-				else
-				{
-					return std::tuple<>();
-				}
-			}
-
-			template<std::size_t NodeIndex, std::size_t... EdgeIndices>
-			auto _getInEdgesForNode(std::index_sequence<EdgeIndices...>)
-			{
-				auto inEdges = std::tuple_cat(_conditionalInEdges<NodeIndex, EdgeIndices>);
-				return inEdges;
-			}
-
-			template<std::size_t NodeIndex, std::size_t... EdgeIndices>
-			auto _getOutEdgesForNode(std::index_sequence<EdgeIndices...>)
-			{
-				auto outEdges = std::tuple_cat(_conditionalOutEdges<NodeIndex, EdgeIndices>);
-				return outEdges;
-			}
-
-			template<std::size_t NodeIndex>
-			void _startNodeAtIndex()
-			{
-				constexpr std::size_t numEdges = std::tuple_size_v<EdgesTuple>;
-				auto inEdges = _getInEdgesForNode<NodeIndex>(std::make_index_sequence<numEdges>{});
-				auto outEdges = _getOutEdgesForNode<NodeIndex>(std::make_index_sequence<numEdges>{});
-				std::get<NodeIndex>(_nodes).start(inEdges, outEdges);
-			}
-
-			template<typename Tuple, typename ContextTuple, std::size_t... Indices>
-			static Tuple _constructTuple(ContextTuple& contexts, std::index_sequence<Indices...>)
-			{
-				Tuple tuple = {std::tuple_element_t<Indices, Tuple>(std::get<Indices>(contexts))...};
-				return tuple;
-			}
-			NodesTuple _nodes;
-			EdgesTuple _edges;
-		};
-
-
-
-
- */

@@ -27,7 +27,7 @@ namespace weave
 		{
 		public:
 			// TODO Move worker class with generic tags to Graph
-			explicit Node(typename user::Module<typename ExtractNodeDescriptorParams<NodeDescriptorType>::Tag>::ContextType context) // : _worker(context) // TODO
+			explicit Node(typename user::Module<typename ExtractNodeDescriptorParams<NodeDescriptorType>::Tag>::ContextType context) //: _worker(context) // TODO
 			{
 				// TODO
 			}

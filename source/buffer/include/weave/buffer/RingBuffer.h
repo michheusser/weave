@@ -2,31 +2,34 @@
 // All rights reserved
 // https://github.com/michheusser
 
-#ifndef QUEUEBUFFER_H_2025_10_01_11_47_31
-#define QUEUEBUFFER_H_2025_10_01_11_47_31
+#ifndef RINGBUFFER_H_2025_10_01_11_47_31
+#define RINGBUFFER_H_2025_10_01_11_47_31
 
-#include <weave/buffer/Constants.h>
-#include <weave/buffer/Traits.h>
-#include <weave/buffer/InternalData.h>
+#include <cstdint>
+#include <cassert>
+#include <array>
+#include <weave/user/Slot.h>
+#include <weave/user/RingBufferTraits.h>
 
 namespace weave
 {
 	namespace buffer
 	{
-		template <Constants::BufferType type>
-		class QueueBuffer
+		template <typename RingBufferTag>
+		class RingBuffer
 		{
 		public:
+			using SlotTag = typename user::RingBufferTraits<RingBufferTag>::SlotTag;
 			// We do not throw errors, but rather have contracts (assert), since we have the invariant that reader and writer will
-			// only exist when the QueueBuffer is not empty and not full respectively. Thus, we do not return error codes.
-			QueueBuffer()
+			// only exist when the RingBuffer is not empty and not full respectively. Thus, we do not return error codes.
+			RingBuffer() // TODO Initialize variables
 			{}
 
-			void initialize(const typename Traits<type>::ConfigurationType& configuration)
+			void initialize(const typename user::RingBufferTraits<RingBufferTag>::ContextType& context)
 			{
-				for (InternalData<type>& curData : _dataArray)
+				for (user::Slot<SlotTag>& curSlot : _slotArray)
 				{
-					curData.initialize(configuration);
+					curSlot.initialize(context); // TODO Still pending
 				}
 			}
 
@@ -50,10 +53,10 @@ namespace weave
 				return used() == NUM_SLOTS;
 			}
 
-			typename InternalData<type>::StorageType& newSlot() noexcept
+			typename user::Slot<SlotTag>::StorageType& newSlot() noexcept
 			{
 				assert(!full());
-				return _dataArray[_head].data();
+				return _slotArray[_head].data();
 			}
 
 			void pop() noexcept
@@ -71,16 +74,16 @@ namespace weave
 				++_usedCount;
 			}
 
-			typename InternalData<type>::StorageType& front() noexcept
+			typename user::Slot<SlotTag>::StorageType& front() noexcept
 			{
 				assert(!empty());
-				return _dataArray[_tail].data();
+				return _slotArray[_tail].data();
 			}
 
-			const typename InternalData<type>::StorageType& front() const noexcept
+			const typename user::Slot<SlotTag>::StorageType& front() const noexcept
 			{
 				assert(!empty());
-				return _dataArray[_tail].data();
+				return _slotArray[_tail].data();
 			}
 
 			uint32_t frontFrame() const noexcept
@@ -94,7 +97,7 @@ namespace weave
 
 
 			static constexpr uint64_t NUM_SLOTS = 16; // TODO Needs to come from the traits.
-			std::array<InternalData<type>, NUM_SLOTS> _dataArray;
+			std::array<user::Slot<SlotTag>, NUM_SLOTS> _slotArray;
 			std::array<uint32_t, NUM_SLOTS> _frameIDs;
 			uint64_t _usedCount;
 			uint64_t _head; // Writes/pushes happen here

@@ -2,31 +2,30 @@
 // All rights reserved
 // https://github.com/michheusser
 
-#ifndef USERSPECIALIZATIONS_H_2025_10_08_15_40_19
-#define USERSPECIALIZATIONS_H_2025_10_08_15_40_19
+#ifndef MODULESPECIALIZATIONS_H_2025_10_08_15_40_19
+#define MODULESPECIALIZATIONS_H_2025_10_08_15_40_19
 
-#include "modules/Capturer.h"
-#include "modules/Context.h"
-#include "modules/Preprocessor.h"
-#include "modules/Displayer.h"
+#include "../modules/Capturer.h"
+#include "../modules/Context.h"
+#include "../modules/Preprocessor.h"
+#include "../modules/Displayer.h"
 
 #include <weave/user/Module.h>
-#include <weave/user/BufferData.h>
 
 // USER DEFINED SPECIALIZATIONS!
 
 // Node Tags (Module)
-struct ImageCapturer
+struct FirstImageCapturer
 {};
 
-struct ImageProcessor
+struct FirstImageProcessor
 {};
 
-struct ImageDisplayer
+struct FirstImageDisplayer
 {};
 
 template <>
-class weave::user::Module<ImageCapturer>
+class weave::user::Module<FirstImageCapturer>
 {
 public:
 	using ModuleType = test::module::Capturer;
@@ -34,7 +33,7 @@ public:
 };
 
 template <>
-class weave::user::Module<ImageProcessor>
+class weave::user::Module<FirstImageProcessor>
 {
 public:
 	using ModuleType = test::module::Preprocessor;
@@ -42,25 +41,10 @@ public:
 };
 
 template <>
-class weave::user::Module<ImageDisplayer>
+class weave::user::Module<FirstImageDisplayer>
 {
 public:
 	using ModuleType = test::module::Displayer;
 	using ContextType = test::module::Context<test::module::constants::ModuleType::ImageDisplayer>;
 };
-
-
-// Edge Tags (Buffer)
-struct ImageData
-{};
-
-
-template <>
-class weave::user::BufferData<ImageData>
-{
-	// TODO Buffer stuff
-public:
-	using ContextType = test::buffer::Context<test::buffer::constants::BufferType::Image>;
-};
-
 #endif
