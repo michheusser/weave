@@ -7,7 +7,6 @@
 
 #include <weave/graph/Node.h>
 #include <weave/graph/Edge.h>
-// #include <weave/user/BufferData.h> // TODO Remove
 #include <weave/user/EdgeTraits.h>
 #include <weave/user/Module.h>
 
@@ -22,7 +21,7 @@ namespace weave
 		struct GraphDescriptionToTuples<GraphDescriptor<NodeDescriptorList<NodeDescriptorTypes...>, EdgeDescriptorList<EdgeDescriptorTypes...> > >
 		{
 			using NodeTuple = std::tuple<Node<NodeDescriptorTypes>...>;
-			using NodeContextTuple = std::tuple<typename user::Module<typename NodeDescriptorTypes::Tag>::ContextType...>;
+			using NodeContextTuple = std::tuple<typename user::NodeTraits<typename NodeDescriptorTypes::Tag>::ContextType...>;
 			using EdgeTuple = std::tuple<Edge<EdgeDescriptorTypes>...>;
 			using EdgeContextTuple = std::tuple<typename user::EdgeTraits<typename EdgeDescriptorTypes::Tag>::ContextType...>;
 		};

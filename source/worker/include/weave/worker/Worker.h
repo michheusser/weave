@@ -5,16 +5,29 @@
 #ifndef WORKER_H_2025_09_20_13_44_55
 #define WORKER_H_2025_09_20_13_44_55
 
+#include <thread>
+//#include <weave/worker/Synchronizer.h>
+#include <weave/error/Result.h>
+#include <weave/error/Exception.h>
+#include <weave/logging/Macros.h>
+#include <weave/user/WorkerTraits.h>
+#include <weave/utilities/SignalManager.h>
 
 namespace weave
 {
-	namespace Worker
+	namespace worker
 	{
-		template<Constants::Module module>
+		template<typename WorkerTag>
 		class Worker
 		{
 		public:
-			explicit Worker(const typename Module::Context<module>& context) : _synchronizer(context)
+			// TODO Strategy: tuple of in channels, and tuple of outchannels?
+			using SynchronizerTag = typename user::WorkerTraits<WorkerTag>::SynchronizerTag;
+			explicit Worker(const typename user::WorkerTraits<WorkerTag>::ContextType& context) // : _synchronizer(context)  // TODO PUT BACK!
+			{}
+
+			// Custom move, only copies synchronizer, otherwise no default move constructor! (threads can't be moved)
+			Worker(Worker&& other) //: _synchronizer(std::move(other._synchronizer)) // TODO PUT BACK!
 			{}
 
 			~Worker()
@@ -23,53 +36,53 @@ namespace weave
 				{
 					_thread.join();
 				}
-				LOG_INFO("Module: " + std::string(Module::Traits<module>::name) + ", shutdown.");
+				LOG_INFO("Worker shutdown.");
 			}
 
-			template<typename... BufferRefs>
-			void start(BufferRefs&... buffers)
+			template<typename InChannelTupleType, typename OutChannelTupleType> // TODO Make sure tuple contains references
+			void start(InChannelTupleType& inChannelTuple, OutChannelTupleType& outChannelTuple)
 			{
-				LOG_INFO("Module: " + std::string(Module::Traits<module>::name) + ", starting...");
-				_thread = std::thread(&Worker::_run<BufferRefs...>, this, std::ref(buffers)...);
+				LOG_INFO("Starting worker...");
+				_thread = std::thread(&Worker::_run<InChannelTupleType, OutChannelTupleType>, this, std::ref(inChannelTuple), std::ref(outChannelTuple)); // TODO std::ref or not?
 			}
 
 		private:
-			template<typename... BufferRefs>
-			void _run(BufferRefs&... buffers)
+			template<typename InChannelTupleType, typename OutChannelTupleType> // TODO Make sure tuple contains references
+			void _run(InChannelTupleType& inChannelTuple, OutChannelTupleType& outChannelTuple)
 			{
 				try
 				{
-					_synchronizer.initialize();
-					Error::Result result = _cycle(buffers...);
+					//_synchronizer.initialize(); // TODO PUT BACK!
+					error::Result result = _cycle(inChannelTuple, outChannelTuple);
 					if (!result.ok())
 					{
-						throw Error::Exception("Error in cycle");
+						throw error::Exception("Error in cycle");
 					}
 				}
-				catch (Error::Exception& exception)
+				catch (error::Exception& exception)
 				{
 					LOG_ERROR(exception.what());
 				}
 			}
 
-			template<typename... BufferRefs>
-			Error::Result _cycle(BufferRefs&... buffers) noexcept
+			template<typename InChannelTupleType, typename OutChannelTupleType> // TODO Make sure tuple contains references
+			error::Result _cycle(InChannelTupleType& inChannelTuple, OutChannelTupleType& outChannelTuple) noexcept
 			{
-				while (!Application::SignalManager::shutdownRequested())
+				while (!utilities::SignalManager::shutdownRequested())
 				{
-					Error::Result result = _synchronizer.cycle(buffers...);
-					if (!result.ok())
+					//error::Result result = _synchronizer.cycle(inChannelTuple, outChannelTuple);  // TODO PUT BACK!
+					//if (!result.ok()) // TODO PUT BACK!
 					{
 						LOG_ERROR("Cycle: Error in cycle.");
-						return {Error::Type::Cycle, 0}; // Right now a failed iteration shuts down the worker. Strategy might change in the future
+						return {error::Type::Cycle, 0}; // Right now a failed iteration shuts down the worker. Strategy might change in the future
 					}
 				}
-				return Error::Result::success();
+				return error::Result::success();
 			}
 
 		private:
 			std::thread _thread;
-			Synchronizer<module> _synchronizer;
+			//Synchronizer<SynchronizerTag> _synchronizer;  // TODO PUT BACK!
 		};
 	}
 }

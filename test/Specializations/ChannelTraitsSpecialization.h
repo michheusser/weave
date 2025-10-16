@@ -22,7 +22,7 @@ namespace weave
 		struct ChannelTraits<DefaultImageChannel>
 		{
 			using RingBufferTag = DefaultImageRingBuffer;
-			using ContextType = test::buffer::Context<test::buffer::constants::BufferType::Image>; // TODO Harmonize Configuration/Context inheritance
+			using ContextType = RingBufferTraits<RingBufferTag>::ContextType;
 		};
 	}
 }

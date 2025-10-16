@@ -5,10 +5,27 @@
 #ifndef SYNCHRONIZER_H_2025_09_20_15_53_09
 #define SYNCHRONIZER_H_2025_09_20_15_53_09
 
+#include <weave/user/Processor.h>
+#include <weave/user/SynchronizerTraits.h>
+
 namespace weave
 {
-	namespace Worker
+	namespace worker
 	{
+		template <typename SynchronizerTag>
+		class Synchronizer
+		{
+		public:
+			// TODO Strategy: Make generic, list of inbuffers, list of outbuffers and then assert for maximum one of each and at least one of either (static_assert)
+			explicit Synchronizer(const typename user::SynchronizerTraits<SynchronizerTag>::)
+
+			user::Processor<>
+
+		};
+
+
+
+/*
 		template<Constants::Module module, Constants::Type type>
 		class SynchronizerImpl; // Never instanciated as generic
 
@@ -166,7 +183,7 @@ namespace weave
 		};
 
 		template<Constants::Module module>
-		using Synchronizer = SynchronizerImpl<module, Module::Traits<module>::type>;
+		using Synchronizer = SynchronizerImpl<module, Module::Traits<module>::type>;*/
 	}
 }
 

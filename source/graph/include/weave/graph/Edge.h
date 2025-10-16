@@ -5,7 +5,6 @@
 #ifndef EDGE_H_2025_10_05_14_42_57
 #define EDGE_H_2025_10_05_14_42_57
 
-// #include <weave/user/BufferData.h> // TODO Remove
 #include <weave/buffer/Channel.h>
 #include <weave/buffer/Constants.h>
 #include <weave/user/EdgeTraits.h>
@@ -16,7 +15,6 @@ namespace weave
 	{
 		template<typename EdgeDescriptorType>
 		struct ExtractEdgeDescriptorParams;
-
 		template<typename EdgeTag, typename FromNodeTag, typename ToNodeTag>
 		struct ExtractEdgeDescriptorParams<EdgeDescriptor<EdgeTag, FromNodeTag, ToNodeTag> >
 		{
@@ -34,8 +32,14 @@ namespace weave
 		public:
 			using EdgeTag = typename ExtractEdgeDescriptorParams<EdgeDescriptorType>::Tag;
 			using ChannelTag = typename user::EdgeTraits<EdgeTag>::ChannelTag;
+			static constexpr buffer::constants::PolicyType policy = buffer::constants::PolicyType::Lossless;
 			explicit Edge(typename user::EdgeTraits<typename ExtractEdgeDescriptorParams<EdgeDescriptorType>::Tag>::ContextType& context) : _channel(context)
 			{}
+
+			buffer::Channel<ChannelTag, policy>& getChannel() // TODO Decide if this is the best solution
+			{
+				return _channel;
+			}
 
 			void start()
 			{
@@ -43,7 +47,7 @@ namespace weave
 			}
 
 			// TODO Later substitute by multiplexer with several buffers!
-			buffer::Channel<ChannelTag, buffer::constants::PolicyType::Lossless> _channel;
+			buffer::Channel<ChannelTag, policy> _channel;
 		};
 	}
 }

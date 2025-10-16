@@ -7,18 +7,18 @@
 
 namespace weave
 {
-	namespace Worker
+	namespace worker
 	{
 		namespace Constants
 		{
-			enum class Type
+			/*enum class Type
 			{
 				Source,
 				Process,
 				Sink
-			};
+			};*/
 
-			enum class Module
+			/*enum class Module // TODO Remove
 			{
 				Capturer,
 				Displayer,
@@ -29,7 +29,7 @@ namespace weave
 				ClientReceiver,
 				ServerSender,
 				ServerReceiver
-			};
+			};*/
 		}
 	}
 }

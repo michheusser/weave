@@ -2,15 +2,16 @@
 // All rights reserved
 // https://github.com/michheusser
 
-#ifndef BUFFERDATA_H_2025_10_07_16_31_30
-#define BUFFERDATA_H_2025_10_07_16_31_30
+#ifndef NODETRAITS_H_2025_10_14_18_18_19
+#define NODETRAITS_H_2025_10_14_18_18_19
 
 namespace weave
 {
 	namespace user
 	{
-		template<typename EdgeTag>
-		class BufferData;
+		template<typename NodeTag>
+		struct NodeTraits;
 	}
 }
+
 #endif

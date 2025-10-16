@@ -15,17 +15,24 @@ add_library(test STATIC
         buffer/Configuration.h
         buffer/Constants.h
 
-        # Specializations/BufferDataSpecializations.h # TODO Remove
-        Specializations/ModuleSpecializations.h
+        worker/Context.h
+
+        Specializations/ModuleSpecialization.h
         Specializations/SlotSpecialization.h
-        Specializations/SlotSpecializations.cpp
+        Specializations/SlotSpecialization.cpp
         Specializations/EdgeTraitsSpecialization.h
         Specializations/ChannelTraitsSpecialization.h
         Specializations/RingBufferTraitsSpecialization.h
+        Specializations/ProcessorSpecialization.cpp
+        Specializations/ProcessorSpecialization.h
+        Specializations/ProcessorTraitsSpecialization.h
+        Specializations/WorkerTraitsSpecialization.h
+        Specializations/NodeTraitsSpecialization.h
+        Specializations/SynchronizerTraitsSpecialization.h
 )
 
 target_include_directories(test PUBLIC ${OpenCV_INCLUDE_DIRS})
-target_link_libraries(test PUBLIC ${OpenCV_LIBS} graph error logging utilities profiling user)
+target_link_libraries(test PUBLIC ${OpenCV_LIBS} graph error logging utilities user)
 
 if (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     message(STATUS "Detected macOS")

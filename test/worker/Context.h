@@ -4,10 +4,10 @@
 
 #ifndef INITIALIZATIONARTIFACT_H_2025_09_24_11_39_17
 #define INITIALIZATIONARTIFACT_H_2025_09_24_11_39_17
-
+/*
 namespace weave
 {
-	namespace Worker
+	namespace worker
 	{
 		namespace Module
 		{
@@ -82,5 +82,5 @@ namespace weave
 		}
 	}
 }
-
+*/
 #endif

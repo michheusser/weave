@@ -5,9 +5,12 @@
 #ifndef TRAITS_H_2025_09_20_09_38_04
 #define TRAITS_H_2025_09_20_09_38_04
 
+#include <array>
+#include <cstdint>
+
 namespace weave
 {
-	namespace Worker
+	namespace worker
 	{
 		namespace Type
 		{

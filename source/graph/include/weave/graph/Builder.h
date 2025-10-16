@@ -13,7 +13,6 @@
 #include <weave/graph/Graph.h>
 #include <weave/graph/Utilities.h>
 #include <weave/user/Module.h>
-// #include <weave/user/BufferData.h> // TODO Remove
 #include <weave/user/EdgeTraits.h>
 
 namespace weave
@@ -43,7 +42,7 @@ namespace weave
 		template<typename... NodeDescriptors>
 		struct DescriptorListToContextTuple<NodeDescriptorList<NodeDescriptors...> >
 		{
-			using ContextTuple = std::tuple<typename user::Module<typename NodeDescriptors::Tag>::ContextType...>;
+			using ContextTuple = std::tuple<typename user::NodeTraits<typename NodeDescriptors::Tag>::ContextType...>;
 		};
 
 		template<typename... EdgeDescriptors>
@@ -66,7 +65,7 @@ namespace weave
 
 			// TODO Optimize for moving contexts instead of copying it everytime.
 			template<typename NodeTag, uint64_t numInputs, uint64_t numOutputs>
-			Builder<typename AppendToList<NodeDescriptorListType, NodeDescriptor<NodeTag, numInputs, numOutputs> >::NewDescriptorListType, EdgeDescriptorListType> addNode(const typename user::Module<NodeTag>::ContextType& context)
+			Builder<typename AppendToList<NodeDescriptorListType, NodeDescriptor<NodeTag, numInputs, numOutputs> >::NewDescriptorListType, EdgeDescriptorListType> addNode(const typename user::NodeTraits<NodeTag>::ContextType& context)
 			{
 				Builder<typename AppendToList<NodeDescriptorListType, NodeDescriptor<NodeTag, numInputs, numOutputs> >::NewDescriptorListType, EdgeDescriptorListType> newBuilder(std::tuple_cat(_nodeContexts, std::make_tuple(context)), _edgeContexts);
 				return newBuilder;

@@ -24,14 +24,14 @@ namespace weave
 		struct EdgeTraits<FirstImageEdge>
 		{
 			using ChannelTag = DefaultImageChannel;
-			using ContextType = test::buffer::Context<test::buffer::constants::BufferType::Image>;
+			using ContextType = ChannelTraits<ChannelTag>::ContextType;
 		};
 
 		template<>
 		struct EdgeTraits<SecondImageEdge>
 		{
 			using ChannelTag = DefaultImageChannel;
-			using ContextType = test::buffer::Context<test::buffer::constants::BufferType::Image>;
+			using ContextType = ChannelTraits<ChannelTag>::ContextType;
 		};
 
 	}

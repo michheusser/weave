@@ -13,4 +13,4 @@ add_library(graph STATIC
 )
 
 target_include_directories(graph PUBLIC include)
-target_link_libraries(graph PUBLIC error user buffer)
+target_link_libraries(graph PUBLIC error user buffer worker utilities)

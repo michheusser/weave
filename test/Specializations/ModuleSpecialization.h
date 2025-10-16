@@ -5,6 +5,7 @@
 #ifndef MODULESPECIALIZATIONS_H_2025_10_08_15_40_19
 #define MODULESPECIALIZATIONS_H_2025_10_08_15_40_19
 
+/*
 #include "../modules/Capturer.h"
 #include "../modules/Context.h"
 #include "../modules/Preprocessor.h"
@@ -47,4 +48,6 @@ public:
 	using ModuleType = test::module::Displayer;
 	using ContextType = test::module::Context<test::module::constants::ModuleType::ImageDisplayer>;
 };
+
+*/
 #endif

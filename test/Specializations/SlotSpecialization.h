@@ -5,7 +5,6 @@
 #ifndef SLOTSPECIALIZATION_H_2025_10_13_18_14_08
 #define SLOTSPECIALIZATION_H_2025_10_13_18_14_08
 
-#include <vector>
 #include <opencv2/core/mat.hpp>
 #include <weave/user/Slot.h>
 #include "../buffer/Context.h"

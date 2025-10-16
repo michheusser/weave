@@ -4,7 +4,7 @@
 
 #ifndef MODULE_H_2025_10_06_20_15_24
 #define MODULE_H_2025_10_06_20_15_24
-
+/*
 namespace weave
 {
 	namespace user
@@ -13,5 +13,5 @@ namespace weave
 		class Module; // User must specialize this class for their use!
 	}
 }
-
+*/
 #endif

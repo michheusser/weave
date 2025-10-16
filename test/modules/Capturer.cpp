@@ -10,7 +10,7 @@
 #include<opencv2/opencv.hpp>
 #include <weave/error/Result.h>
 #include <weave/logging/Macros.h>
-#include <weave/profiling/Macros.h>
+//#include <weave/profiling/Macros.h> // TODO Put back
 
 namespace test
 {
@@ -40,7 +40,7 @@ namespace test
 			{
 				*frameID = nextFrameID;
 			}
-			TRACE_SET_FRAME(nextFrameID);
+			//TRACE_SET_FRAME(nextFrameID);
 			++nextFrameID;
 			return weave::error::Result::success();
 		}

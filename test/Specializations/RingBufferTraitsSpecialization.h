@@ -21,7 +21,7 @@ namespace weave
 		struct RingBufferTraits<DefaultImageRingBuffer>
 		{
 			using SlotTag = ImageSlot;
-			using ContextType = test::buffer::Context<test::buffer::constants::BufferType::Image>;
+			using ContextType =  Slot<SlotTag>::ContextType;
 		};
 
 	}
