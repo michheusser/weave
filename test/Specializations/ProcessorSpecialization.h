@@ -16,7 +16,7 @@ namespace weave
 {
 	namespace user
 	{
-		// TODO Make generic, same as slot
+		// TODO Make generic, same as slot. Module is then selected in the ProcessorTraits. Here, the tuple unpacking happens (maybe)
 		template<>
 		class Processor<DefaultCapturerProcessor>
 		{

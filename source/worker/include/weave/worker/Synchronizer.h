@@ -7,183 +7,127 @@
 
 #include <weave/user/Processor.h>
 #include <weave/user/SynchronizerTraits.h>
+#include <weave/error/Result.h>
 
 namespace weave
 {
 	namespace worker
 	{
-		template <typename SynchronizerTag>
+		/*template<typename ChannelTupleType> // TODO Probably can be deleted
+		struct UnpackChannelTuple;
+		template<typename... Channels>
+		struct UnpackChannelTuple<std::tuple<Channels...> >
+		{
+			using ChannelPack = Channels;
+		};*/
+
+		template<typename ChannelsTupleType>
+		struct ChannelsTupleToDataAccessTuple;
+		template<typename... Channels>
+		struct ChannelsTupleToDataAccessTuple<std::tuple<Channels&...> >
+		{
+			using ReaderTuple = std::tuple<buffer::Reader<typename Channels::Tag, Channels::policyType>...>;
+			using WriterTuple = std::tuple<buffer::Writer<typename Channels::Tag, Channels::policyType>...>;
+			using ReaderDataTuple = std::tuple<typename buffer::Reader<typename Channels::Tag, Channels::policyType>::StorageType...>;
+			using WriterDataTuple = std::tuple<typename buffer::Writer<typename Channels::Tag, Channels::policyType>::StorageType...>;
+		};
+
+		template<typename SynchronizerTag>
 		class Synchronizer
 		{
 		public:
 			// TODO Strategy: Make generic, list of inbuffers, list of outbuffers and then assert for maximum one of each and at least one of either (static_assert)
-			explicit Synchronizer(const typename user::SynchronizerTraits<SynchronizerTag>::)
-
-			user::Processor<>
-
-		};
-
-
-
-/*
-		template<Constants::Module module, Constants::Type type>
-		class SynchronizerImpl; // Never instanciated as generic
-
-		template<Constants::Module module>
-		class SynchronizerImpl<module, Constants::Type::Source>
-		{
-		public:
-			explicit SynchronizerImpl(const typename Module::Context<module>& context): _processor(context)
+			using ProcessorTag = typename user::SynchronizerTraits<SynchronizerTag>::ProcessorTag;
+			explicit Synchronizer(const typename user::SynchronizerTraits<SynchronizerTag>::ContextType& context) //  : _processor(context) // TODO PUT BACK
 			{}
 
 			void initialize()
 			{
-				try
-				{
-					LOG_TRACE("Module: " + std::string(Module::Traits<module>::name) + ", initializing...");
-					_processor.initialize();
-				}
-				catch (Error::Exception& exception)
-				{
-					LOG_ERROR(exception.what());
-					throw Error::Exception("Failed.");
-				}
+				//_processor.initialize(); // TODO PUT BACK
 			}
 
-			template<typename... BufferRefs>
-			Error::Result cycle(BufferRefs&... buffers) noexcept
+			template<typename InChannelTupleType, typename OutChannelTupleType> // TODO Make sure tuple contains references
+			error::Result cycle(InChannelTupleType& inChannelTuple, OutChannelTupleType& outChannelTuple) noexcept
 			{
-				TRACE_FUNCTION("Module: " + std::string(Module::Traits<module>::name));
-				METRICS_FRAME("Module: " + std::string(Module::Traits<module>::name));
-				LOG_TRACE("Module: " + std::string(Module::Traits<module>::name) + ", starting cycle...");
-				auto bufferTuple = std::tie(buffers...); // TODO Use static_assert to ensure types and numBuffers match
-				buffer::Buffer<Module::Traits<module>::buffers[0], Module::Traits<module>::bufferPolicies[0]>& outputBuffer = std::get<0>(bufferTuple);
-				buffer::Writer<Module::Traits<module>::buffers[0], Module::Traits<module>::bufferPolicies[0]> outputWriter = outputBuffer.writer();
-				if (outputWriter.active())
+				using ReadersTupleType = typename ChannelsTupleToDataAccessTuple<InChannelTupleType>::ReaderTuple;
+				using WritersTupleType = typename ChannelsTupleToDataAccessTuple<OutChannelTupleType>::WriterTuple;
+
+				using ReadersDataTupleType = typename ChannelsTupleToDataAccessTuple<InChannelTupleType>::ReaderDataTuple;
+				using WritersDataTupleType = typename ChannelsTupleToDataAccessTuple<OutChannelTupleType>::WriterDataTuple;
+
+				ReadersTupleType inputReaders = _getChannelsTupleReaders<ReadersTupleType>(inChannelTuple, std::make_index_sequence<std::tuple_size_v<InChannelTupleType> >());
+				WritersTupleType outputWriters = _getChannelsTupleWriters<WritersTupleType>(outChannelTuple, std::make_index_sequence<std::tuple_size_v<OutChannelTupleType> >());
+
+				ReadersDataTupleType inputReadersDataTuple = _getReadersTupleData<ReadersDataTupleType>(inputReaders, std::make_index_sequence<std::tuple_size_v<ReadersTupleType> >());
+				WritersDataTupleType outputWritersDataTuple = _getWritersTupleData<WritersDataTupleType>(outputWriters, std::make_index_sequence<std::tuple_size_v<WritersTupleType> >());
+
+				bool inputReadersActive = _active(inputReaders, std::make_index_sequence<std::tuple_size_v<ReadersTupleType> >());
+				bool outputWritersActive = _active(outputWriters, std::make_index_sequence<std::tuple_size_v<WritersTupleType> >());
+				if (inputReadersActive && outputWritersActive) // TODO Really necessary?
 				{
-					uint32_t frameID;
-					Error::Result result = _processor.process(outputWriter.data(), &frameID);
-					if (!result.ok())
+					//error::Result result = _processor.process(inputReadersDataTuple, outputWritersDataTuple); // TODO PUT BACK!
+					/*if (!result.ok()) // TODO PUT BACK
 					{
-						LOG_ERROR("Synchronizer: Error in processing.");
-						return {Error::Type::Processing, 0};
-					}
-					TRACE_SET_FRAME(frameID);
-					outputWriter.publish(frameID);
+						return {error::Type::Processing, 0};
+					}*/
+					_release(inputReaders, std::make_index_sequence<std::tuple_size_v<ReadersTupleType> >());
+					_publish(outputWriters, std::make_index_sequence<std::tuple_size_v<WritersTupleType> >());
 				}
-				LOG_TRACE("Module: " + std::string(Module::Traits<module>::name) + ", cycle finished.");
-				return Error::Result::success();
+				return error::Result::success();
 			}
 
-			Processor<module> _processor;
+		private:
+			// TODO Optimize and see if possible not to pass object, but just do with template
+			template<typename ReadersTupleType, typename ChannelTupleType, size_t... Indices>
+			ReadersTupleType _getChannelsTupleReaders(ChannelTupleType& channelTuple, std::index_sequence<Indices...> sequence)
+			{
+				ReadersTupleType readersTuple = {std::get<Indices>(channelTuple).reader()...};
+				return readersTuple;
+			}
+
+			template<typename WritersTupleType, typename ChannelTupleType, size_t... Indices>
+			WritersTupleType _getChannelsTupleWriters(ChannelTupleType& channelTuple, std::index_sequence<Indices...> sequence)
+			{
+				WritersTupleType writersTuple = {std::get<Indices>(channelTuple).writer()...};
+				return writersTuple;
+			}
+
+			template<typename ReadersDataTupleType, typename ReadersTupleType, size_t... Indices>
+			ReadersDataTupleType _getReadersTupleData(ReadersTupleType& readersTuple, std::index_sequence<Indices...> sequence)
+			{
+				ReadersDataTupleType dataTuple = {std::get<Indices>(readersTuple).data()...};
+				return dataTuple;
+			}
+
+			template<typename WritersDataTupleType, typename WritersTupleType, size_t... Indices>
+			WritersDataTupleType _getWritersTupleData(WritersTupleType& writersTuple, std::index_sequence<Indices...> sequence)
+			{
+				WritersDataTupleType dataTuple = {std::get<Indices>(writersTuple).data()...};
+				return dataTuple;
+			}
+
+			template<typename TupleType, size_t... Indices>
+			bool _active(TupleType& tuple, std::index_sequence<Indices...> sequence)
+			{
+				bool allActive = (std::get<Indices>(tuple).active() && ...);
+				return allActive;
+			}
+
+			template<typename TupleType, size_t... Indices>
+			void _release(TupleType& tuple, std::index_sequence<Indices...> sequence)
+			{
+				(std::get<Indices>(tuple).release(), ...);
+			}
+
+			template<typename TupleType, size_t... Indices>
+			void _publish(TupleType& tuple, std::index_sequence<Indices...> sequence)
+			{
+				int frameID = 0; // TODO Deal with frame
+				(std::get<Indices>(tuple).publish(frameID), ...);
+			}
+
+			//user::Processor<ProcessorTag> _processor; // TODO PUT BACK!
 		};
-
-		template<Constants::Module module>
-		class SynchronizerImpl<module, Constants::Type::Process>
-		{
-		public:
-			explicit SynchronizerImpl(const typename Module::Context<module>& context): _processor(context)
-			{}
-
-			void initialize()
-			{
-				try
-				{
-					LOG_TRACE("Module: " + std::string(Module::Traits<module>::name) + ", initializing...");
-					_processor.initialize();
-				}
-				catch (Error::Exception& exception)
-				{
-					LOG_ERROR(exception.what());
-					throw Error::Exception("Failed.");
-				}
-			}
-
-			template<typename... BufferRefs>
-			Error::Result cycle(BufferRefs&... buffers) noexcept
-			{
-				TRACE_FUNCTION("Module: " + std::string(Module::Traits<module>::name));
-				METRICS_FRAME("Module: " + std::string(Module::Traits<module>::name));
-				LOG_TRACE("Module: " + std::string(Module::Traits<module>::name) + ", starting cycle...");
-				auto bufferTuple = std::tie(buffers...);
-				buffer::Buffer<Module::Traits<module>::buffers[0], Module::Traits<module>::bufferPolicies[0]>& inputBuffer = std::get<0>(bufferTuple);
-				buffer::Buffer<Module::Traits<module>::buffers[1], Module::Traits<module>::bufferPolicies[1]>& outputBuffer = std::get<1>(bufferTuple);
-				buffer::Reader<Module::Traits<module>::buffers[0], Module::Traits<module>::bufferPolicies[0]> inputReader = inputBuffer.reader();
-				buffer::Writer<Module::Traits<module>::buffers[1], Module::Traits<module>::bufferPolicies[1]> outputWriter = outputBuffer.writer();
-
-				if (inputReader.active() && outputWriter.active())
-				{
-					Error::Result result = _processor.process(inputReader.data(), outputWriter.data());
-					if (!result.ok())
-					{
-						LOG_ERROR("Synchronizer: Error in processing.");
-						return {Error::Type::Processing, 0};
-					}
-					uint32_t frameID = inputReader.getFrame();
-					TRACE_SET_FRAME(frameID);
-					inputReader.release();
-					outputWriter.publish(frameID);
-				}
-				LOG_TRACE("Module: " + std::string(Module::Traits<module>::name) + ", cycle finished.");
-				return Error::Result::success();
-			}
-			Processor<module> _processor;
-		};
-
-		template<Constants::Module module>
-		class SynchronizerImpl<module, Constants::Type::Sink>
-		{
-		public:
-			explicit SynchronizerImpl(const typename Module::Context<module>& context) : _processor(context)
-			{}
-
-			void initialize()
-			{
-				try
-				{
-					LOG_TRACE("Module: " + std::string(Module::Traits<module>::name) + ", initializing...");
-					_processor.initialize();
-				}
-				catch (Error::Exception& exception)
-				{
-					LOG_ERROR(exception.what());
-					throw Error::Exception("Failed.");
-				}
-			}
-
-			template<typename... BufferRefs>
-			Error::Result cycle(BufferRefs&... buffers) noexcept
-			{
-				TRACE_FUNCTION("Module: " + std::string(Module::Traits<module>::name));
-				METRICS_FRAME("Module: " + std::string(Module::Traits<module>::name));
-				LOG_TRACE("Module: " + std::string(Module::Traits<module>::name) + ", starting cycle...");
-				auto bufferTuple = std::tie(buffers...);
-				buffer::Buffer<Module::Traits<module>::buffers[0], Module::Traits<module>::bufferPolicies[0]>& inputBuffer = std::get<0>(bufferTuple);
-				buffer::Reader<Module::Traits<module>::buffers[0], Module::Traits<module>::bufferPolicies[0]> inputReader = inputBuffer.reader();
-				if (inputReader.active())
-				{
-					// A pattern that appears in pipeline/sequential kind of frameworks: One of the operations happens in one step (client send/receive, or here set frameID/publish)
-					// and the counterpart is split since it happens at the beginning and end (server send/receive, or here getFrame, and release).
-					uint32_t frameID = inputReader.getFrame();
-					TRACE_SET_FRAME(frameID);
-					Error::Result result = _processor.process(inputReader.data(), frameID);
-					if (!result.ok())
-					{
-						LOG_ERROR("Synchronizer: Error in processing.");
-						return {Error::Type::Processing, 0};
-					}
-					inputReader.release(); // Frame "dies" here since it's a sink. Return value not used
-				}
-				LOG_TRACE("Module: " + std::string(Module::Traits<module>::name) + ", cycle finished.");
-
-				return Error::Result::success();
-			}
-
-			Processor<module> _processor;
-		};
-
-		template<Constants::Module module>
-		using Synchronizer = SynchronizerImpl<module, Module::Traits<module>::type>;*/
 	}
 }
 

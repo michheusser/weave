@@ -22,6 +22,8 @@ namespace weave
 		class Channel
 		{
 		public:
+			using Tag = ChannelTag;
+			static constexpr constants::PolicyType policyType = policy;
 			using RingBufferTag = typename user::ChannelTraits<ChannelTag>::RingBufferTag;
 			explicit Channel(const typename user::ChannelTraits<ChannelTag>::ContextType& context)
 			{

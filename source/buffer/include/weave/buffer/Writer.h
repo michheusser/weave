@@ -20,8 +20,9 @@ namespace weave
 		class Writer
 		{
 		public:
-			using RingBufferTag = user::ChannelTraits<ChannelTag>::RingBufferTag;
-			using SlotTag = user::RingBufferTraits<RingBufferTag>::SlotTag;
+			using RingBufferTag = typename user::ChannelTraits<ChannelTag>::RingBufferTag;
+			using SlotTag = typename user::RingBufferTraits<RingBufferTag>::SlotTag;
+			using StorageType = typename user::Slot<SlotTag>::StorageType;
 
 			explicit Writer(std::shared_mutex& mutex, std::condition_variable_any& conditionVariableRead, std::condition_variable_any& conditionVariableWrite,
 			                RingBuffer<RingBufferTag>& queueBuffer) noexcept : _mutex(mutex), _conditionVariableRead(conditionVariableRead), _conditionVariableWrite(conditionVariableWrite), _queueBuffer(queueBuffer), _state(constants::WriterState::Discarded)
@@ -42,7 +43,7 @@ namespace weave
 				return _state == constants::WriterState::Active;
 			}
 
-			typename user::Slot<SlotTag>::StorageType& data(error::Result* error = nullptr) noexcept
+			StorageType& data(error::Result* error = nullptr) noexcept
 			{
 				if (error)
 				{

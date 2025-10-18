@@ -66,9 +66,6 @@ namespace weave
 			template<typename InEdgesTupleType, typename OutEdgesTupleType>
 			void start(InEdgesTupleType inEdges, OutEdgesTupleType outEdges)
 			{
-				// TODO Unpack tuples to be tuple of channels!
-				// ...
-
 				using InChannelTupleType = typename EdgeTupleToChannelTuple<InEdgesTupleType>::ChannelTuple;
 				using OutChannelTupleType = typename EdgeTupleToChannelTuple<OutEdgesTupleType>::ChannelTuple;
 

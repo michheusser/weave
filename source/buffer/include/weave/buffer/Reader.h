@@ -18,8 +18,9 @@ namespace weave
 		class Reader
 		{
 		public:
-			using RingBufferTag = user::ChannelTraits<ChannelTag>::RingBufferTag;
-			using SlotTag = user::RingBufferTraits<RingBufferTag>::SlotTag;
+			using RingBufferTag = typename user::ChannelTraits<ChannelTag>::RingBufferTag;
+			using SlotTag = typename user::RingBufferTraits<RingBufferTag>::SlotTag;
+			using StorageType = typename user::Slot<SlotTag>::StorageType;
 
 			explicit Reader(std::shared_mutex& mutex, std::condition_variable_any& conditionVariableRead, std::condition_variable_any& conditionVariableWrite,
 			                RingBuffer<RingBufferTag>& queueBuffer) noexcept : _mutex(mutex), _conditionVariableRead(conditionVariableRead), _conditionVariableWrite(conditionVariableWrite),
@@ -42,7 +43,7 @@ namespace weave
 				return _state == constants::ReaderState::Active;
 			}
 
-			const typename user::Slot<SlotTag>::StorageType& data(error::Result* error = nullptr) noexcept
+			const StorageType& data(error::Result* error = nullptr) noexcept
 			{
 				if (error)
 				{

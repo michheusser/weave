@@ -40,7 +40,7 @@ namespace test
 			{
 				*frameID = nextFrameID;
 			}
-			//TRACE_SET_FRAME(nextFrameID);
+			//TRACE_SET_FRAME(nextFrameID); // TODO Put back
 			++nextFrameID;
 			return weave::error::Result::success();
 		}
