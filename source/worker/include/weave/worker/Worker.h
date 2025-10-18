@@ -42,12 +42,12 @@ namespace weave
 			void start(InChannelTupleType& inChannelTuple, OutChannelTupleType& outChannelTuple) // TODO Think if references are really needed (references of objects are inside tuples)
 			{
 				LOG_INFO("Starting worker...");
-				_thread = std::thread(&Worker::_run<InChannelTupleType, OutChannelTupleType>, this, std::ref(inChannelTuple), std::ref(outChannelTuple)); // TODO std::ref or not?
+				_thread = std::thread(&Worker::_run<InChannelTupleType, OutChannelTupleType>, this, inChannelTuple, outChannelTuple); // TODO std::ref or not?
 			}
 
 		private:
 			template<typename InChannelTupleType, typename OutChannelTupleType>
-			void _run(InChannelTupleType& inChannelTuple, OutChannelTupleType& outChannelTuple) // TODO Think if references are really needed (references of objects are inside tuples)
+			void _run(InChannelTupleType inChannelTuple, OutChannelTupleType outChannelTuple) // TODO Think if references are really needed (references of objects are inside tuples)
 			{
 				try
 				{

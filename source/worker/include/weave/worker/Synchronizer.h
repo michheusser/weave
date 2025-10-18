@@ -5,6 +5,7 @@
 #ifndef SYNCHRONIZER_H_2025_09_20_15_53_09
 #define SYNCHRONIZER_H_2025_09_20_15_53_09
 
+#include <iostream>
 #include <weave/worker/Processor.h>
 #include <weave/user/SynchronizerTraits.h>
 #include <weave/error/Result.h>
@@ -20,8 +21,8 @@ namespace weave
 		{
 			using ReaderTuple = std::tuple<buffer::Reader<typename Channels::Tag, Channels::policyType>...>;
 			using WriterTuple = std::tuple<buffer::Writer<typename Channels::Tag, Channels::policyType>...>;
-			using ReaderDataTuple = std::tuple<typename buffer::Reader<typename Channels::Tag, Channels::policyType>::StorageType...>;
-			using WriterDataTuple = std::tuple<typename buffer::Writer<typename Channels::Tag, Channels::policyType>::StorageType...>;
+			using ReaderDataTuple = std::tuple<const typename buffer::Reader<typename Channels::Tag, Channels::policyType>::StorageType&...>;
+			using WriterDataTuple = std::tuple<typename buffer::Writer<typename Channels::Tag, Channels::policyType>::StorageType&...>;
 		};
 
 		template<typename SynchronizerTag>
@@ -35,12 +36,21 @@ namespace weave
 
 			void initialize()
 			{
-				_processor.initialize();
+				try
+				{
+					_processor.initialize();
+				}
+				catch (error::Exception& exception)
+				{
+					LOG_ERROR(exception.what());
+					throw error::Exception("Failed.");
+				}
 			}
 
 			template<typename InChannelTupleType, typename OutChannelTupleType> // TODO Make sure tuple contains references
 			error::Result cycle(InChannelTupleType& inChannelTuple, OutChannelTupleType& outChannelTuple) noexcept
 			{
+				// Readers / Writers don't need to be references (they contain references)
 				using ReadersTupleType = typename ChannelsTupleToDataAccessTuple<InChannelTupleType>::ReaderTuple;
 				using WritersTupleType = typename ChannelsTupleToDataAccessTuple<OutChannelTupleType>::WriterTuple;
 
@@ -73,14 +83,16 @@ namespace weave
 			template<typename ReadersTupleType, typename ChannelTupleType, size_t... Indices>
 			ReadersTupleType _getChannelsTupleReaders(ChannelTupleType& channelTuple, std::index_sequence<Indices...> sequence)
 			{
-				ReadersTupleType readersTuple = {std::get<Indices>(channelTuple).reader()...};
+				// return ReadersTupleType(std::get<Indices>(channelTuple).reader()...); // TODO Change to this to avoid copy
+				ReadersTupleType readersTuple = {std::get<Indices>(channelTuple).reader()...}; // Uses move semantics for correct RAII behavior.
 				return readersTuple;
 			}
 
 			template<typename WritersTupleType, typename ChannelTupleType, size_t... Indices>
 			WritersTupleType _getChannelsTupleWriters(ChannelTupleType& channelTuple, std::index_sequence<Indices...> sequence)
 			{
-				WritersTupleType writersTuple = {std::get<Indices>(channelTuple).writer()...};
+				// return WritersTupleType(std::get<Indices>(channelTuple).writer()...);  // TODO Change to this to avoid copy
+				WritersTupleType writersTuple = {std::get<Indices>(channelTuple).writer()...}; // Uses move semantics for correct RAII behavior.
 				return writersTuple;
 			}
 

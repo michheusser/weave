@@ -24,7 +24,7 @@ namespace weave
 			static constexpr uint64_t outputs = NumOutputs;
 		};
 
-		template <typename Edge>
+		template<typename Edge>
 		struct ExtractEdgeDescriptor;
 		template<typename EdgeDescriptorType>
 		struct ExtractEdgeDescriptor<Edge<EdgeDescriptorType>&>
@@ -60,27 +60,35 @@ namespace weave
 			// TODO Move worker class with generic tags to Graph
 			using NodeTag = typename ExtractNodeDescriptorParams<NodeDescriptorType>::Tag;
 			using WorkerTag = typename user::NodeTraits<NodeTag>::WorkerTag;
-			explicit Node(typename user::NodeTraits<NodeTag>::ContextType context) : _worker(context)
+			explicit Node(typename user::NodeTraits<NodeTag>::ContextType& context) : _worker(context)
 			{}
 
 			template<typename InEdgesTupleType, typename OutEdgesTupleType>
-			void start(InEdgesTupleType inEdges, OutEdgesTupleType outEdges)
+			void start(InEdgesTupleType& inEdges, OutEdgesTupleType& outEdges)
 			{
 				using InChannelTupleType = typename EdgeTupleToChannelTuple<InEdgesTupleType>::ChannelTuple;
 				using OutChannelTupleType = typename EdgeTupleToChannelTuple<OutEdgesTupleType>::ChannelTuple;
 
-				InChannelTupleType inChannels = _constructTuple<InChannelTupleType>(inEdges, std::make_index_sequence<std::tuple_size_v<InEdgesTupleType> >());
-				OutChannelTupleType outChannels = _constructTuple<OutChannelTupleType>(outEdges, std::make_index_sequence<std::tuple_size_v<OutEdgesTupleType> >());
-				_worker.start(inChannels, outChannels);
+				try
+				{
+					InChannelTupleType inChannels = _constructTuple<InChannelTupleType>(inEdges, std::make_index_sequence<std::tuple_size_v<InEdgesTupleType> >());
+					OutChannelTupleType outChannels = _constructTuple<OutChannelTupleType>(outEdges, std::make_index_sequence<std::tuple_size_v<OutEdgesTupleType> >());
+					_worker.start(inChannels, outChannels);
+				}
+				catch (error::Exception& exception)
+				{
+					LOG_ERROR(exception.what());
+					throw error::Exception("Failed");
+				}
 			}
 
 		private:
 			template<typename ChannelTupleType, typename EdgeTupleType, std::size_t... Indices>
-			ChannelTupleType _constructTuple(EdgeTupleType edges, std::index_sequence<Indices...> sequence)
+			ChannelTupleType _constructTuple(EdgeTupleType& edges, std::index_sequence<Indices...> sequence)
 			{
 				// We pass a dummy object to deduce the indices (not the nicest, but seems to be used a lot). Passing it as template parameter requires too many helper constructs.
 				ChannelTupleType tuple = {std::tuple_element_t<Indices, ChannelTupleType>(std::get<Indices>(edges).getChannel())...}; // TODO NEED to expose getChannel?
-				return std::move(tuple); // Channel needs custom move assignment/constructor, the default one doesn't work because of non-moveable objects (mutexes/condition variables)
+				return tuple; // Move is not needed here, because we're passing tuple of references!
 			}
 			worker::Worker<WorkerTag> _worker;
 		};

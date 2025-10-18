@@ -1,4 +1,3 @@
-
 #ifndef WRITER_H_2025_09_18_19_23_47
 #define WRITER_H_2025_09_18_19_23_47
 
@@ -16,7 +15,7 @@ namespace weave
 	namespace buffer
 	{
 		// TODO Expand in case it's not a SCSP but MCMP for completeness sake! Acquirers also change!
-		template <typename ChannelTag, constants::PolicyType policy>
+		template<typename ChannelTag, constants::PolicyType policy>
 		class Writer
 		{
 		public:
@@ -25,10 +24,25 @@ namespace weave
 			using StorageType = typename user::Slot<SlotTag>::StorageType;
 
 			explicit Writer(std::shared_mutex& mutex, std::condition_variable_any& conditionVariableRead, std::condition_variable_any& conditionVariableWrite,
-			                RingBuffer<RingBufferTag>& queueBuffer) noexcept : _mutex(mutex), _conditionVariableRead(conditionVariableRead), _conditionVariableWrite(conditionVariableWrite), _queueBuffer(queueBuffer), _state(constants::WriterState::Discarded)
+			                RingBuffer<RingBufferTag>& queueBuffer) noexcept : _mutex(mutex), _conditionVariableRead(conditionVariableRead), _conditionVariableWrite(conditionVariableWrite),
+			                                                                   _queueBuffer(queueBuffer), _state(constants::WriterState::Discarded)
 			{
 				WriterAcquirer<ChannelTag, policy>::acquire(_mutex, _conditionVariableWrite, _queueBuffer, _state);
 			}
+
+			// Copying is not allowed, because in a SCSP context, I cannot have two active readers or two active writers.
+			Writer(const Writer& writer) = delete;
+
+			Writer& operator=(const Writer& writer) = delete;
+
+			// Readers are movable, because they handle with references or values (otherwise mutexes/condition variables are not movable/copyable)
+			Writer(Writer&& writer) : _mutex(writer._mutex), _conditionVariableRead(writer._conditionVariableRead), _conditionVariableWrite(writer._conditionVariableWrite),
+			                          _queueBuffer(writer._queueBuffer), _state(writer._state)
+			{
+				writer._state = constants::WriterState::Discarded;
+			}
+
+			Writer& operator=(Writer&& writer) = delete;
 
 			~Writer()
 			{
@@ -47,7 +61,7 @@ namespace weave
 			{
 				if (error)
 				{
-					*error = active()? error::Result::success() : error::Result{error::Type::Processing, 0};
+					*error = active() ? error::Result::success() : error::Result{error::Type::Processing, 0};
 				}
 				return _queueBuffer.newSlot();
 			}

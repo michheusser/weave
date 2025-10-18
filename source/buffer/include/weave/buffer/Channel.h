@@ -14,6 +14,9 @@
 #include <weave/buffer/Constants.h>
 #include <weave/user/ChannelTraits.h>
 
+#include <weave/error/Exception.h>
+#include <weave/logging/Macros.h>
+
 namespace weave
 {
 	namespace buffer
@@ -31,8 +34,13 @@ namespace weave
 			}
 
 			// Custom move, only copies ringbuffer, otherwise no default move constructor! (mutexes/condition variables can't be move)
-			Channel(Channel&& other) : _ringBuffer(std::move(other._ringBuffer))
-			{}
+			/*Channel(Channel&& other) : _ringBuffer(std::move(other._ringBuffer)) // TODO WRONG THIS IS CREATING ISSUES WITH MUTEXES!
+			{}*/
+			// Channels contain synchronization artifacts and thus not copyable/movable. Even though the compiler deletes per default, we delete here explicitly to be more expressive and clear.
+			Channel(const Channel&) = delete;
+			Channel& operator=(const Channel&) = delete;
+			Channel(Channel&&) = delete;
+			Channel& operator=(Channel&&) = delete;
 
 			Reader<ChannelTag, policy> reader() noexcept
 			{
@@ -47,7 +55,15 @@ namespace weave
 		private:
 			void _initialize(const typename user::ChannelTraits<ChannelTag>::ContextType& context)
 			{
-				_ringBuffer.initialize(context);
+				try
+				{
+					_ringBuffer.initialize(context);
+				}
+				catch (error::Exception& exception)
+				{
+					LOG_ERROR(exception.what());
+					throw error::Exception("Failed");
+				}
 			}
 
 		private:

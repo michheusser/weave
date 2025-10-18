@@ -13,6 +13,9 @@ namespace weave
 {
 	namespace worker
 	{
+		template<typename T>
+		struct ShowType;
+
 		template<typename ProcessorTag>
 		class Processor
 		{
@@ -22,7 +25,15 @@ namespace weave
 			{}
 			void initialize()
 			{
-				_module.initialize();
+				try
+				{
+					_module.initialize();
+				}
+				catch (error::Exception& exception)
+				{
+					LOG_ERROR(exception.what());
+					throw error::Exception("Failed.");
+				}
 			}
 			template<typename InputDataTupleType, typename OutputDataTupleType>
 			error::Result process(InputDataTupleType& inputDataTuple, OutputDataTupleType& outputDataTuple) noexcept

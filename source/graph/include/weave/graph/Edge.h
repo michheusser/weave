@@ -36,6 +36,12 @@ namespace weave
 			explicit Edge(typename user::EdgeTraits<typename ExtractEdgeDescriptorParams<EdgeDescriptorType>::Tag>::ContextType& context) : _channel(context)
 			{}
 
+			// Edges contain channels, which contain synchronization artifacts and thus not copyable/movable. Even though the compiler deletes per default, we delete here explicitly to be more expressive and clear.
+			Edge(const Edge&) = delete;
+			Edge& operator=(const Edge&) = delete;
+			Edge(Edge&&) = delete;
+			Edge& operator=(Edge&&) = delete;
+
 			buffer::Channel<ChannelTag, policy>& getChannel() // TODO Decide if this is the best solution
 			{
 				return _channel;
@@ -43,7 +49,7 @@ namespace weave
 
 			void start()
 			{
-				// TODO
+				// TODO Decide if initialization should happen here or in constructor of Channel
 			}
 
 			// TODO Later substitute by multiplexer with several buffers!

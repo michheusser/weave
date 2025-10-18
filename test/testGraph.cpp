@@ -51,9 +51,9 @@ int main()
 	rawImageBufferContext.configuration.frameType = buffer::constants::RAW_FRAME_TYPE;
 
 	buffer::Context<buffer::constants::BufferType::Image> processedImageBufferContext;
-	rawImageBufferContext.configuration.frameHeight = buffer::constants::FRAME_HEIGHT;
-	rawImageBufferContext.configuration.frameWidth = buffer::constants::FRAME_WIDTH;
-	rawImageBufferContext.configuration.frameType = buffer::constants::FRAME_TYPE;
+	processedImageBufferContext.configuration.frameHeight = buffer::constants::FRAME_HEIGHT;
+	processedImageBufferContext.configuration.frameWidth = buffer::constants::FRAME_WIDTH;
+	processedImageBufferContext.configuration.frameType = buffer::constants::FRAME_TYPE;
 
 	// Build
 	auto pipeline = weave::graph::Builder()

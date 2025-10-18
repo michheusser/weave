@@ -64,8 +64,16 @@ namespace weave
 
 			void start()
 			{
-				_startEdges(std::make_index_sequence<std::tuple_size_v<EdgeTuple> >());
-				_startNodes(std::make_index_sequence<std::tuple_size_v<NodeTuple> >());
+				try
+				{
+					_startEdges(std::make_index_sequence<std::tuple_size_v<EdgeTuple> >());
+					_startNodes(std::make_index_sequence<std::tuple_size_v<NodeTuple> >());
+				}
+				catch (error::Exception& exception)
+				{
+					LOG_ERROR(exception.what());
+					throw error::Exception("Failed");
+				}
 			}
 
 		private:
@@ -74,28 +82,55 @@ namespace weave
 			TupleType _constructTuple(ContextTupleType& contexts, std::index_sequence<Indices...> sequence)
 			{
 				// We pass a dummy object to deduce the indices (not the nicest, but seems to be used a lot). Passing it as template parameter requires too many helper constructs.
-				TupleType tuple = {std::tuple_element_t<Indices, TupleType>(std::get<Indices>(contexts))...};
-				return std::move(tuple); // Channel needs custom move assignment/constructor, the default one doesn't work because of non-moveable objects (mutexes/condition variables)
+				/**
+				 * The Edges being created are not copyable/not moveable, so we cannot use a syntax that creates temporaries like this one:
+				 * TupleType tuple = {std::tuple_element_t<Indices, TupleType>(std::get<Indices>(contexts))...};
+				 */
+				return TupleType{std::get<Indices>(contexts)...}; // Copy-elision (C++17) allows us to by-pass the deleted copy/move contructors.
 			}
 
 			template<std::size_t... EdgeIndices>
 			void _startEdges(std::index_sequence<EdgeIndices...> sequence)
 			{
-				(std::get<EdgeIndices>(_edges).start(), ...);
+				try
+				{
+					(std::get<EdgeIndices>(_edges).start(), ...);
+				}
+				catch (error::Exception& exception)
+				{
+					LOG_ERROR(exception.what());
+					throw error::Exception("Failed");
+				}
 			}
 
 			template<std::size_t... NodeIndices>
 			void _startNodes(std::index_sequence<NodeIndices...> sequence)
 			{
-				(_startNode<NodeIndices>(), ...);
+				try
+				{
+					(_startNode<NodeIndices>(), ...);
+				}
+				catch (error::Exception& exception)
+				{
+					LOG_ERROR(exception.what());
+					throw error::Exception("Failed");
+				}
 			}
 
 			template<std::size_t NodeIndex>
 			void _startNode()
 			{
-				auto inEdges = _getInEdges<NodeIndex>(std::make_index_sequence<std::tuple_size_v<EdgeTuple> >()); // Dummy to infer edge indeces
-				auto outEdges = _getOutEdges<NodeIndex>(std::make_index_sequence<std::tuple_size_v<EdgeTuple> >()); // Idem.
-				std::get<NodeIndex>(_nodes).start(inEdges, outEdges);
+				try
+				{
+					auto inEdges = _getInEdges<NodeIndex>(std::make_index_sequence<std::tuple_size_v<EdgeTuple> >()); // Dummy to infer edge indeces
+					auto outEdges = _getOutEdges<NodeIndex>(std::make_index_sequence<std::tuple_size_v<EdgeTuple> >()); // Idem.
+					std::get<NodeIndex>(_nodes).start(inEdges, outEdges);
+				}
+				catch (error::Exception& exception)
+				{
+					LOG_ERROR(exception.what());
+					throw error::Exception("Failed");
+				}
 			}
 
 			template<std::size_t NodeIndex, std::size_t... EdgeIndeces>

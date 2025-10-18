@@ -30,6 +30,20 @@ namespace weave
 				ReaderAcquirer<ChannelTag, policy>::acquire(_mutex, _conditionVariableRead, _queueBuffer, _state);
 			}
 
+			// Copying is not allowed, because in a SCSP context, I cannot have two active readers or two active writers.
+			Reader(const Reader& reader) = delete;
+
+			Reader& operator=(const Reader& reader) = delete;
+
+			// Readers are movable, because they handle with references or values (otherwise mutexes/condition variables are not movable/copyable)
+			Reader(Reader&& reader) : _mutex(reader._mutex), _conditionVariableRead(reader._conditionVariableRead), _conditionVariableWrite(reader._conditionVariableWrite),
+						  _queueBuffer(reader._queueBuffer), _state(reader._state)
+			{
+				reader._state = constants::ReaderState::Released;
+			}
+
+			Reader& operator=(Reader&& reader) = delete;
+
 			~Reader()
 			{
 				if (_state == constants::ReaderState::Active)

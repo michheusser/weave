@@ -11,6 +11,9 @@
 #include <weave/user/Slot.h>
 #include <weave/user/RingBufferTraits.h>
 
+#include <weave/error/Exception.h>
+#include <weave/logging/Macros.h>
+
 namespace weave
 {
 	namespace buffer
@@ -27,9 +30,17 @@ namespace weave
 
 			void initialize(const typename user::RingBufferTraits<RingBufferTag>::ContextType& context)
 			{
-				for (user::Slot<SlotTag>& curSlot : _slotArray)
+				try
 				{
-					curSlot.initialize(context); // TODO Still pending
+					for (user::Slot<SlotTag>& curSlot : _slotArray)
+					{
+						curSlot.initialize(context); // TODO Still pending
+					}
+				}
+				catch (error::Exception& exception)
+				{
+					LOG_ERROR(exception.what());
+					throw error::Exception("Failed");
 				}
 			}
 
