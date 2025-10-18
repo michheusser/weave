@@ -4,7 +4,6 @@ add_library(user STATIC
         include/weave/user/RingBufferTraits.h
         include/weave/user/Module.h
         include/weave/user/Slot.h
-        include/weave/user/Processor.h
         include/weave/user/ProcessorTraits.h
         include/weave/user/NodeTraits.h
         include/weave/user/WorkerTraits.h

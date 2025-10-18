@@ -18,19 +18,19 @@ namespace test
 		template<>
 		struct Context<constants::ModuleType::ImageCapturer>
 		{
-			CapturerConfiguration capturerConfiguration;
+			CapturerConfiguration configuration;
 		};
 
 		template<>
 		struct Context<constants::ModuleType::ImageDisplayer>
 		{
-			DisplayerConfiguration displayerConfiguration;
+			DisplayerConfiguration configuration;
 		};
 
 		template<>
 		struct Context<constants::ModuleType::ImageNormalizer>
 		{
-			PreprocessorConfiguration processorConfiguration;
+			PreprocessorConfiguration configuration;
 		};
 	}
 }

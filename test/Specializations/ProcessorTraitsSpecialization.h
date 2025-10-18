@@ -7,6 +7,10 @@
 
 #include <weave/user/ProcessorTraits.h>
 #include "../modules/Context.h"
+#include "../modules/Capturer.h"
+#include "../modules/Preprocessor.h"
+#include "../modules/Displayer.h"
+
 
 struct DefaultCapturerProcessor
 {};
@@ -26,6 +30,7 @@ namespace weave
 		{
 			using ProcessorTag = DefaultCapturerProcessor;
 			using ContextType = test::module::Context<test::module::constants::ModuleType::ImageCapturer>;
+			using ModuleType = test::module::Capturer;
 		};
 
 		template<>
@@ -33,6 +38,7 @@ namespace weave
 		{
 			using ProcessorTag = DefaultDisplayerProcessor;
 			using ContextType = test::module::Context<test::module::constants::ModuleType::ImageDisplayer>;
+			using ModuleType = test::module::Displayer;
 		};
 
 		template<>
@@ -40,6 +46,7 @@ namespace weave
 		{
 			using ProcessorTag = DefaultNormalizerProcessor;
 			using ContextType = test::module::Context<test::module::constants::ModuleType::ImageNormalizer>;
+			using ModuleType = test::module::Preprocessor;
 		};
 	}
 }

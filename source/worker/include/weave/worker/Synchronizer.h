@@ -5,7 +5,7 @@
 #ifndef SYNCHRONIZER_H_2025_09_20_15_53_09
 #define SYNCHRONIZER_H_2025_09_20_15_53_09
 
-#include <weave/user/Processor.h>
+#include <weave/worker/Processor.h>
 #include <weave/user/SynchronizerTraits.h>
 #include <weave/error/Result.h>
 
@@ -13,14 +13,6 @@ namespace weave
 {
 	namespace worker
 	{
-		/*template<typename ChannelTupleType> // TODO Probably can be deleted
-		struct UnpackChannelTuple;
-		template<typename... Channels>
-		struct UnpackChannelTuple<std::tuple<Channels...> >
-		{
-			using ChannelPack = Channels;
-		};*/
-
 		template<typename ChannelsTupleType>
 		struct ChannelsTupleToDataAccessTuple;
 		template<typename... Channels>
@@ -38,12 +30,12 @@ namespace weave
 		public:
 			// TODO Strategy: Make generic, list of inbuffers, list of outbuffers and then assert for maximum one of each and at least one of either (static_assert)
 			using ProcessorTag = typename user::SynchronizerTraits<SynchronizerTag>::ProcessorTag;
-			explicit Synchronizer(const typename user::SynchronizerTraits<SynchronizerTag>::ContextType& context) //  : _processor(context) // TODO PUT BACK
+			explicit Synchronizer(const typename user::SynchronizerTraits<SynchronizerTag>::ContextType& context) : _processor(context)
 			{}
 
 			void initialize()
 			{
-				//_processor.initialize(); // TODO PUT BACK
+				_processor.initialize();
 			}
 
 			template<typename InChannelTupleType, typename OutChannelTupleType> // TODO Make sure tuple contains references
@@ -65,11 +57,11 @@ namespace weave
 				bool outputWritersActive = _active(outputWriters, std::make_index_sequence<std::tuple_size_v<WritersTupleType> >());
 				if (inputReadersActive && outputWritersActive) // TODO Really necessary?
 				{
-					//error::Result result = _processor.process(inputReadersDataTuple, outputWritersDataTuple); // TODO PUT BACK!
-					/*if (!result.ok()) // TODO PUT BACK
+					error::Result result = _processor.process(inputReadersDataTuple, outputWritersDataTuple);
+					if (!result.ok())
 					{
 						return {error::Type::Processing, 0};
-					}*/
+					}
 					_release(inputReaders, std::make_index_sequence<std::tuple_size_v<ReadersTupleType> >());
 					_publish(outputWriters, std::make_index_sequence<std::tuple_size_v<WritersTupleType> >());
 				}
@@ -126,7 +118,7 @@ namespace weave
 				(std::get<Indices>(tuple).publish(frameID), ...);
 			}
 
-			//user::Processor<ProcessorTag> _processor; // TODO PUT BACK!
+			Processor<ProcessorTag> _processor;
 		};
 	}
 }

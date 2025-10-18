@@ -21,11 +21,15 @@ namespace test
 		Displayer::~Displayer()
 		{}
 
-		weave::error::Result Displayer::showFrame(const cv::Mat& frameBuffer, const uint32_t frameID) noexcept
+		void Displayer::initialize()
+		{}
+
+		weave::error::Result Displayer::process(const cv::Mat& frameBuffer) noexcept
 		{
 			weave::error::Result result = DisplayBridge::showFrame(frameBuffer, _title, false);
 			if (!result.ok())
 			{
+				uint32_t frameID = 0; // TODO Deal with frame
 				LOG_ERROR("Error displaying frame: " + std::to_string(frameID));
 				return {weave::error::Type::Display, frameID};
 			}

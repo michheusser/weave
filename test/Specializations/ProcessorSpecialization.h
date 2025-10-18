@@ -4,7 +4,7 @@
 
 #ifndef PROCESSORSPECIALIZATIONS_H_2025_10_14_17_40_36
 #define PROCESSORSPECIALIZATIONS_H_2025_10_14_17_40_36
-
+/*
 #include <weave/user/Processor.h>
 #include <weave/error/Result.h>
 #include "ProcessorTraitsSpecialization.h"
@@ -24,6 +24,7 @@ namespace weave
 			using ProcessorTag = DefaultCapturerProcessor;
 			explicit Processor(const ProcessorTraits<ProcessorTag>::ContextType& context);
 			void initialize();
+
 			//error::Result process(buffer::Buffer<Module::Traits<moduleType>::buffers[0], Module::Traits<moduleType>::bufferPolicies[0]>::StorageType& outputBuffer, uint32_t* frameID = nullptr) noexcept;
 
 		private:
@@ -57,5 +58,5 @@ namespace weave
 		};
 	} // worker
 } // weave
-
+*/
 #endif

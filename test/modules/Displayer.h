@@ -16,7 +16,8 @@ namespace test
 		public:
 			explicit Displayer(const DisplayerConfiguration& configuration);
 			~Displayer();
-			weave::error::Result showFrame(const cv::Mat& frameBuffer, const uint32_t frameID) noexcept;
+			void initialize();
+			weave::error::Result process(const cv::Mat& frameBuffer) noexcept;
 		private:
 			std::string _title;
 		};

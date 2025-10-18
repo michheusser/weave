@@ -17,7 +17,8 @@ namespace test
 		public:
 			explicit Preprocessor(const PreprocessorConfiguration& configuration);
 			~Preprocessor();
-			weave::error::Result preprocessFrame(const cv::Mat& sourceFrame, cv::Mat& destinationFrame) const noexcept;
+			void initialize();
+			weave::error::Result process(const cv::Mat& sourceFrame, cv::Mat& destinationFrame) const noexcept;
 		private:
 			const cv::Size _destinationSize;
 		};

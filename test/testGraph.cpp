@@ -34,15 +34,15 @@ int main()
 {
 	// Nodes
 	module::Context<module::constants::ModuleType::ImageCapturer> imageCapturerContext;
-	imageCapturerContext.capturerConfiguration.cameraID = module::constants::CAMERA_ID;
-	imageCapturerContext.capturerConfiguration.captureAPI = module::constants::OPENCV_VIDEO_CAPTURE_API;
+	imageCapturerContext.configuration.cameraID = module::constants::CAMERA_ID;
+	imageCapturerContext.configuration.captureAPI = module::constants::OPENCV_VIDEO_CAPTURE_API;
 
 	module::Context<module::constants::ModuleType::ImageNormalizer> imageNormalizerContext;
-	imageNormalizerContext.processorConfiguration.destinationWidth = module::constants::FRAME_WIDTH;
-	imageNormalizerContext.processorConfiguration.destinationHeight = module::constants::FRAME_HEIGHT;
+	imageNormalizerContext.configuration.destinationWidth = module::constants::FRAME_WIDTH;
+	imageNormalizerContext.configuration.destinationHeight = module::constants::FRAME_HEIGHT;
 
 	module::Context<module::constants::ModuleType::ImageDisplayer> imageDisplayerContext;
-	imageDisplayerContext.displayerConfiguration.title = std::string(module::constants::DEFAULT_DISPLAY_TITLE);
+	imageDisplayerContext.configuration.title = std::string(module::constants::DEFAULT_DISPLAY_TITLE);
 
 	// Edges
 	buffer::Context<buffer::constants::BufferType::Image> rawImageBufferContext;

@@ -18,7 +18,8 @@ namespace test
 			explicit Capturer(const CapturerConfiguration& configuration);
 			// TODO Further constructors missing
 			~Capturer();
-			weave::error::Result getFrame(cv::Mat& frameBuffer, uint32_t* frameID = nullptr) noexcept;
+			void initialize();
+			weave::error::Result process(cv::Mat& frameBuffer) noexcept;
 
 		private:
 			cv::VideoCapture _videoCapture;

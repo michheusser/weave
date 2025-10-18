@@ -17,7 +17,10 @@ namespace test
 		Preprocessor::~Preprocessor()
 		{}
 
-		weave::error::Result Preprocessor::preprocessFrame(const cv::Mat& sourceFrame, cv::Mat& destinationFrame) const noexcept
+		void Preprocessor::initialize()
+		{}
+
+		weave::error::Result Preprocessor::process(const cv::Mat& sourceFrame, cv::Mat& destinationFrame) const noexcept
 		{
 			cv::resize(sourceFrame, destinationFrame, _destinationSize); // If throws error, terminates due to noexcept (fatal error in hot path)
 			return weave::error::Result::success();

@@ -25,7 +25,10 @@ namespace test
 		Capturer::~Capturer()
 		{}
 
-		weave::error::Result Capturer::getFrame(cv::Mat& frameBuffer, uint32_t* frameID) noexcept
+		void Capturer::initialize()
+		{}
+
+		weave::error::Result Capturer::process(cv::Mat& frameBuffer) noexcept
 		{
 			if (!_videoCapture.isOpened())
 			{
@@ -36,10 +39,10 @@ namespace test
 			LOG_DEBUG(
 				"Frame Captured. Height: " + std::to_string(static_cast<int>(_videoCapture.get(cv::CAP_PROP_FRAME_HEIGHT))) + ", Width: " + std::to_string(static_cast<int>(_videoCapture.get(cv::
 					CAP_PROP_FRAME_WIDTH))));
-			if (frameID)
+			/*if (frameID) // TODO Deal with frame
 			{
 				*frameID = nextFrameID;
-			}
+			}*/
 			//TRACE_SET_FRAME(nextFrameID); // TODO Put back
 			++nextFrameID;
 			return weave::error::Result::success();

@@ -23,8 +23,8 @@ add_library(test STATIC
         Specializations/EdgeTraitsSpecialization.h
         Specializations/ChannelTraitsSpecialization.h
         Specializations/RingBufferTraitsSpecialization.h
-        Specializations/ProcessorSpecialization.cpp
-        Specializations/ProcessorSpecialization.h
+        #Specializations/ProcessorSpecialization.cpp # TODO Remove
+        #Specializations/ProcessorSpecialization.h # TODO Remove
         Specializations/ProcessorTraitsSpecialization.h
         Specializations/WorkerTraitsSpecialization.h
         Specializations/NodeTraitsSpecialization.h
