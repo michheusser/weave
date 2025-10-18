@@ -13,7 +13,7 @@
 
 namespace test
 {
-	namespace module
+	namespace utilities
 	{
 		// TODO Race conditions. I'm passing reference to a buffer that is constantly modified!
 		class DisplayBridge

@@ -26,7 +26,7 @@ namespace test
 
 		weave::error::Result Displayer::process(const cv::Mat& frameBuffer) noexcept
 		{
-			weave::error::Result result = DisplayBridge::showFrame(frameBuffer, _title, false);
+			weave::error::Result result = utilities::DisplayBridge::showFrame(frameBuffer, _title, false);
 			if (!result.ok())
 			{
 				uint32_t frameID = 0; // TODO Deal with frame

@@ -25,7 +25,7 @@ namespace weave
 			using SlotTag = typename user::RingBufferTraits<RingBufferTag>::SlotTag;
 			// We do not throw errors, but rather have contracts (assert), since we have the invariant that reader and writer will
 			// only exist when the RingBuffer is not empty and not full respectively. Thus, we do not return error codes.
-			RingBuffer() // TODO Initialize variables
+			RingBuffer() :  _usedCount(0), _head(0), _tail(0)
 			{}
 
 			void initialize(const typename user::RingBufferTraits<RingBufferTag>::ContextType& context)

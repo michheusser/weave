@@ -86,9 +86,12 @@ namespace weave
 			template<typename ChannelTupleType, typename EdgeTupleType, std::size_t... Indices>
 			ChannelTupleType _constructTuple(EdgeTupleType& edges, std::index_sequence<Indices...> sequence)
 			{
-				// We pass a dummy object to deduce the indices (not the nicest, but seems to be used a lot). Passing it as template parameter requires too many helper constructs.
+
+				return ChannelTupleType{std::get<Indices>(edges).getChannel()...};
+
+				/*// We pass a dummy object to deduce the indices (not the nicest, but seems to be used a lot). Passing it as template parameter requires too many helper constructs.
 				ChannelTupleType tuple = {std::tuple_element_t<Indices, ChannelTupleType>(std::get<Indices>(edges).getChannel())...}; // TODO NEED to expose getChannel?
-				return tuple; // Move is not needed here, because we're passing tuple of references!
+				return tuple; // Move is not needed here, because we're passing tuple of references!*/
 			}
 			worker::Worker<WorkerTag> _worker;
 		};

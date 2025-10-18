@@ -58,8 +58,8 @@ namespace weave
 			using EdgeTuple = typename GraphDescriptionToTuples<GraphDescriptorType>::EdgeTuple;
 			using EdgeContextTuple = typename GraphDescriptionToTuples<GraphDescriptorType>::EdgeContextTuple;
 			explicit Graph(NodeContextTuple nodeContexts, EdgeContextTuple edgeContexts) :
-				_nodes(_constructTuple<NodeTuple>(nodeContexts, std::make_index_sequence<std::tuple_size_v<NodeContextTuple> >())),
-				_edges(_constructTuple<EdgeTuple>(edgeContexts, std::make_index_sequence<std::tuple_size_v<EdgeContextTuple> >()))
+				_edges(_constructTuple<EdgeTuple>(edgeContexts, std::make_index_sequence<std::tuple_size_v<EdgeContextTuple> >())),
+				_nodes(_constructTuple<NodeTuple>(nodeContexts, std::make_index_sequence<std::tuple_size_v<NodeContextTuple> >()))
 			{}
 
 			void start()
@@ -186,8 +186,8 @@ namespace weave
 					return tuple;
 				}
 			}
-			NodeTuple _nodes;
 			EdgeTuple _edges;
+			NodeTuple _nodes;
 		};
 	}
 }

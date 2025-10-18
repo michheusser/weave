@@ -12,7 +12,7 @@
 
 namespace test
 {
-	namespace module
+	namespace utilities
 	{
 		std::thread::id DisplayBridge::_mainThreadID;
 		std::condition_variable DisplayBridge::conditionVariable;

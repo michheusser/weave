@@ -26,6 +26,8 @@
 #include "buffer/Configuration.h"
 #include "buffer/Context.h"
 
+#include "utilities/DisplayBridge.h"
+
 
 
 using namespace test;
@@ -65,5 +67,7 @@ int main()
 	                .build();
 
 	pipeline.start();
+	utilities::DisplayBridge::flushFrames();
+
 	return 0;
 }
