@@ -16,7 +16,6 @@ message(STATUS "Logging Enabled: ${ENABLE_LOGGING}")
 message(STATUS "Monitoring Enabled: ${ENABLE_MONITORING}")
 
 
-find_package(OpenCV REQUIRED)
 if(ENABLE_LOGGING)
     find_package(spdlog REQUIRED)
 endif()

@@ -8,7 +8,6 @@
 #include <weave/graph/Node.h>
 #include <weave/graph/Edge.h>
 #include <weave/user/EdgeTraits.h>
-#include <weave/user/Module.h>
 
 namespace weave
 {

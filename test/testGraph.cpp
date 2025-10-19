@@ -2,15 +2,15 @@
 // All rights reserved
 // https://github.com/michheusser
 
-#include "Specializations/SlotSpecialization.h"
-#include "Specializations/RingBufferTraitsSpecialization.h"
-#include "Specializations/ChannelTraitsSpecialization.h"
-#include "Specializations/EdgeTraitsSpecialization.h"
+#include "specializations/SlotSpecialization.h"
+#include "specializations/RingBufferTraitsSpecialization.h"
+#include "specializations/ChannelTraitsSpecialization.h"
+#include "specializations/EdgeTraitsSpecialization.h"
 
-#include "Specializations/ProcessorTraitsSpecialization.h"
-#include "Specializations/SynchronizerTraitsSpecialization.h"
-#include "Specializations/WorkerTraitsSpecialization.h"
-#include "Specializations/NodeTraitsSpecialization.h"
+#include "specializations/ProcessorTraitsSpecialization.h"
+#include "specializations/SynchronizerTraitsSpecialization.h"
+#include "specializations/WorkerTraitsSpecialization.h"
+#include "specializations/NodeTraitsSpecialization.h"
 
 #include <weave/graph/Builder.h>
 

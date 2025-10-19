@@ -1,15 +1,33 @@
+# OpenCV
+find_package(OpenCV REQUIRED)
+
+# ONNX
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+set(ENV{ONNXRUNTIME_ROOT} "/Users/michelsmacbookpro/workspace/onnxruntime")
+find_package(ONNXRuntime REQUIRED)
+
 add_library(test STATIC
         modules/Capturer.cpp
         modules/Capturer.h
         modules/Configuration.h
         modules/Constants.h
         modules/Context.h
-        utilities/DisplayBridge.cpp
-        utilities/DisplayBridge.h
+        modules/Decoder.cpp
+        modules/Decoder.h
         modules/Displayer.cpp
         modules/Displayer.h
+        modules/Encoder.cpp
+        modules/Encoder.h
+        modules/InferenceInputProcessor.cpp
+        modules/InferenceInputProcessor.h
+        modules/InferenceModel.cpp
+        modules/InferenceModel.h
         modules/Preprocessor.cpp
         modules/Preprocessor.h
+        modules/MessageHeader.h
+
+        utilities/DisplayBridge.cpp
+        utilities/DisplayBridge.h
 
         buffer/Context.h
         buffer/Configuration.h
@@ -17,19 +35,28 @@ add_library(test STATIC
 
         worker/Context.h
 
-        Specializations/SlotSpecialization.h
-        Specializations/SlotSpecialization.cpp
-        Specializations/EdgeTraitsSpecialization.h
-        Specializations/ChannelTraitsSpecialization.h
-        Specializations/RingBufferTraitsSpecialization.h
-        Specializations/ProcessorTraitsSpecialization.h
-        Specializations/WorkerTraitsSpecialization.h
-        Specializations/NodeTraitsSpecialization.h
-        Specializations/SynchronizerTraitsSpecialization.h
+        streaming/Configuration.h
+        streaming/Constants.h
+        streaming/NetworkClient.cpp
+        streaming/NetworkClient.h
+        streaming/NetworkServer.cpp
+        streaming/NetworkServer.h
+        streaming/NetworkUtilities.cpp
+        streaming/NetworkUtilities.h
+
+        specializations/SlotSpecialization.h
+        specializations/SlotSpecialization.cpp
+        specializations/EdgeTraitsSpecialization.h
+        specializations/ChannelTraitsSpecialization.h
+        specializations/RingBufferTraitsSpecialization.h
+        specializations/ProcessorTraitsSpecialization.h
+        specializations/WorkerTraitsSpecialization.h
+        specializations/NodeTraitsSpecialization.h
+        specializations/SynchronizerTraitsSpecialization.h
 )
 
 target_include_directories(test PUBLIC ${OpenCV_INCLUDE_DIRS})
-target_link_libraries(test PUBLIC ${OpenCV_LIBS} graph error logging utilities user)
+target_link_libraries(test PUBLIC ${OpenCV_LIBS} ONNXRuntime::ONNXRuntime graph error logging utilities user)
 
 if (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     message(STATUS "Detected macOS")
