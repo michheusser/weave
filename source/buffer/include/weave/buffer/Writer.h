@@ -15,7 +15,7 @@ namespace weave
 	namespace buffer
 	{
 		// TODO Expand in case it's not a SCSP but MCMP for completeness sake! Acquirers also change!
-		template<typename ChannelTag, constants::PolicyType policy>
+		template<typename ChannelTag, constants::PolicyType policy, size_t numSlots>
 		class Writer
 		{
 		public:
@@ -24,10 +24,10 @@ namespace weave
 			using StorageType = typename user::Slot<SlotTag>::StorageType;
 
 			explicit Writer(std::shared_mutex& mutex, std::condition_variable_any& conditionVariableRead, std::condition_variable_any& conditionVariableWrite,
-			                RingBuffer<RingBufferTag>& queueBuffer) noexcept : _mutex(mutex), _conditionVariableRead(conditionVariableRead), _conditionVariableWrite(conditionVariableWrite),
+			                RingBuffer<RingBufferTag, numSlots>& queueBuffer) noexcept : _mutex(mutex), _conditionVariableRead(conditionVariableRead), _conditionVariableWrite(conditionVariableWrite),
 			                                                                   _queueBuffer(queueBuffer), _state(constants::WriterState::Discarded)
 			{
-				WriterAcquirer<ChannelTag, policy>::acquire(_mutex, _conditionVariableWrite, _queueBuffer, _state);
+				WriterAcquirer<ChannelTag, policy, numSlots>::acquire(_mutex, _conditionVariableWrite, _queueBuffer, _state);
 			}
 
 			// Copying is not allowed, because in a SCSP context, I cannot have two active readers or two active writers.
@@ -82,7 +82,7 @@ namespace weave
 			std::shared_mutex& _mutex;
 			std::condition_variable_any& _conditionVariableRead;
 			std::condition_variable_any& _conditionVariableWrite;
-			RingBuffer<RingBufferTag>& _queueBuffer;
+			RingBuffer<RingBufferTag, numSlots>& _queueBuffer;
 			// Writer's State
 			constants::WriterState _state;
 		};

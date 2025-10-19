@@ -9,13 +9,14 @@ namespace weave
 {
 	namespace graph
 	{
-		template<typename EdgeTag, typename FromNodeTag, typename ToNodeTag>
+		template<typename EdgeTag, typename FromNodeTag, typename ToNodeTag, size_t numSlots>
 		class EdgeDescriptor
 		{
 		public:
 			using Tag = EdgeTag;
 			using FromNode = FromNodeTag;
 			using ToNode = ToNodeTag;
+			static constexpr size_t slots = numSlots;
 		};
 	}
 }

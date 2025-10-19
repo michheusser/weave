@@ -15,12 +15,13 @@ namespace weave
 	{
 		template<typename EdgeDescriptorType>
 		struct ExtractEdgeDescriptorParams;
-		template<typename EdgeTag, typename FromNodeTag, typename ToNodeTag>
-		struct ExtractEdgeDescriptorParams<EdgeDescriptor<EdgeTag, FromNodeTag, ToNodeTag> >
+		template<typename EdgeTag, typename FromNodeTag, typename ToNodeTag, size_t numSlots>
+		struct ExtractEdgeDescriptorParams<EdgeDescriptor<EdgeTag, FromNodeTag, ToNodeTag, numSlots> >
 		{
 			using Tag = EdgeTag;
 			using FromNode = FromNodeTag;
 			using ToNode = ToNodeTag;
+			static constexpr size_t slots = numSlots;
 		};
 
 		template<typename T>
@@ -31,6 +32,7 @@ namespace weave
 		{
 		public:
 			using EdgeTag = typename ExtractEdgeDescriptorParams<EdgeDescriptorType>::Tag;
+			static constexpr size_t numSlots = ExtractEdgeDescriptorParams<EdgeDescriptorType>::slots;
 			using ChannelTag = typename user::EdgeTraits<EdgeTag>::ChannelTag;
 			static constexpr buffer::constants::PolicyType policy = buffer::constants::PolicyType::Lossless;
 			explicit Edge(typename user::EdgeTraits<typename ExtractEdgeDescriptorParams<EdgeDescriptorType>::Tag>::ContextType& context) : _channel(context)
@@ -42,7 +44,7 @@ namespace weave
 			Edge(Edge&&) = delete;
 			Edge& operator=(Edge&&) = delete;
 
-			buffer::Channel<ChannelTag, policy>& getChannel() // TODO Decide if this is the best solution
+			buffer::Channel<ChannelTag, policy, numSlots>& getChannel() // TODO Decide if this is the best solution
 			{
 				return _channel;
 			}
@@ -53,7 +55,7 @@ namespace weave
 			}
 
 			// TODO Later substitute by multiplexer with several buffers!
-			buffer::Channel<ChannelTag, policy> _channel;
+			buffer::Channel<ChannelTag, policy, numSlots> _channel;
 		};
 	}
 }

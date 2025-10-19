@@ -19,17 +19,16 @@ namespace weave
 		template<typename... Channels>
 		struct ChannelsTupleToDataAccessTuple<std::tuple<Channels&...> >
 		{
-			using ReaderTuple = std::tuple<buffer::Reader<typename Channels::Tag, Channels::policyType>...>;
-			using WriterTuple = std::tuple<buffer::Writer<typename Channels::Tag, Channels::policyType>...>;
-			using ReaderDataTuple = std::tuple<const typename buffer::Reader<typename Channels::Tag, Channels::policyType>::StorageType&...>;
-			using WriterDataTuple = std::tuple<typename buffer::Writer<typename Channels::Tag, Channels::policyType>::StorageType&...>;
+			using ReaderTuple = std::tuple<buffer::Reader<typename Channels::Tag, Channels::policyType, Channels::slots>...>;
+			using WriterTuple = std::tuple<buffer::Writer<typename Channels::Tag, Channels::policyType, Channels::slots>...>;
+			using ReaderDataTuple = std::tuple<const typename buffer::Reader<typename Channels::Tag, Channels::policyType, Channels::slots>::StorageType&...>;
+			using WriterDataTuple = std::tuple<typename buffer::Writer<typename Channels::Tag, Channels::policyType, Channels::slots>::StorageType&...>;
 		};
 
 		template<typename SynchronizerTag>
 		class Synchronizer
 		{
 		public:
-			// TODO Strategy: Make generic, list of inbuffers, list of outbuffers and then assert for maximum one of each and at least one of either (static_assert)
 			using ProcessorTag = typename user::SynchronizerTraits<SynchronizerTag>::ProcessorTag;
 			explicit Synchronizer(const typename user::SynchronizerTraits<SynchronizerTag>::ContextType& context) : _processor(context)
 			{}
@@ -47,7 +46,7 @@ namespace weave
 				}
 			}
 
-			template<typename InChannelTupleType, typename OutChannelTupleType> // TODO Make sure tuple contains references
+			template<typename InChannelTupleType, typename OutChannelTupleType>
 			error::Result cycle(InChannelTupleType& inChannelTuple, OutChannelTupleType& outChannelTuple) noexcept
 			{
 				// Readers / Writers don't need to be references (they contain references)
@@ -79,52 +78,45 @@ namespace weave
 			}
 
 		private:
-			// TODO Optimize and see if possible not to pass object, but just do with template
+			// Functions are inlined since we're on function definition. Also, by constructing in return statements we have copy-elision.
 			template<typename ReadersTupleType, typename ChannelTupleType, size_t... Indices>
-			ReadersTupleType _getChannelsTupleReaders(ChannelTupleType& channelTuple, std::index_sequence<Indices...> sequence)
+			ReadersTupleType _getChannelsTupleReaders(ChannelTupleType& channelTuple, std::index_sequence<Indices...> sequence) const noexcept
 			{
-				// return ReadersTupleType(std::get<Indices>(channelTuple).reader()...); // TODO Change to this to avoid copy
-				ReadersTupleType readersTuple = {std::get<Indices>(channelTuple).reader()...}; // Uses move semantics for correct RAII behavior.
-				return readersTuple;
+				return ReadersTupleType(std::get<Indices>(channelTuple).reader()...);
 			}
 
 			template<typename WritersTupleType, typename ChannelTupleType, size_t... Indices>
-			WritersTupleType _getChannelsTupleWriters(ChannelTupleType& channelTuple, std::index_sequence<Indices...> sequence)
+			WritersTupleType _getChannelsTupleWriters(ChannelTupleType& channelTuple, std::index_sequence<Indices...> sequence) const noexcept
 			{
-				// return WritersTupleType(std::get<Indices>(channelTuple).writer()...);  // TODO Change to this to avoid copy
-				WritersTupleType writersTuple = {std::get<Indices>(channelTuple).writer()...}; // Uses move semantics for correct RAII behavior.
-				return writersTuple;
+				return WritersTupleType(std::get<Indices>(channelTuple).writer()...);
 			}
 
 			template<typename ReadersDataTupleType, typename ReadersTupleType, size_t... Indices>
-			ReadersDataTupleType _getReadersTupleData(ReadersTupleType& readersTuple, std::index_sequence<Indices...> sequence)
+			ReadersDataTupleType _getReadersTupleData(ReadersTupleType& readersTuple, std::index_sequence<Indices...> sequence) const noexcept
 			{
-				ReadersDataTupleType dataTuple = {std::get<Indices>(readersTuple).data()...};
-				return dataTuple;
+				return ReadersDataTupleType(std::get<Indices>(readersTuple).data()...);
 			}
 
 			template<typename WritersDataTupleType, typename WritersTupleType, size_t... Indices>
-			WritersDataTupleType _getWritersTupleData(WritersTupleType& writersTuple, std::index_sequence<Indices...> sequence)
+			WritersDataTupleType _getWritersTupleData(WritersTupleType& writersTuple, std::index_sequence<Indices...> sequence) const noexcept
 			{
-				WritersDataTupleType dataTuple = {std::get<Indices>(writersTuple).data()...};
-				return dataTuple;
+				return WritersDataTupleType(std::get<Indices>(writersTuple).data()...);
 			}
 
 			template<typename TupleType, size_t... Indices>
-			bool _active(TupleType& tuple, std::index_sequence<Indices...> sequence)
+			bool _active(TupleType& tuple, std::index_sequence<Indices...> sequence) const noexcept
 			{
-				bool allActive = (std::get<Indices>(tuple).active() && ...);
-				return allActive;
+				return (std::get<Indices>(tuple).active() && ...);
 			}
 
 			template<typename TupleType, size_t... Indices>
-			void _release(TupleType& tuple, std::index_sequence<Indices...> sequence)
+			void _release(TupleType& tuple, std::index_sequence<Indices...> sequence) const noexcept
 			{
 				(std::get<Indices>(tuple).release(), ...);
 			}
 
 			template<typename TupleType, size_t... Indices>
-			void _publish(TupleType& tuple, std::index_sequence<Indices...> sequence)
+			void _publish(TupleType& tuple, std::index_sequence<Indices...> sequence) const noexcept
 			{
 				int frameID = 0; // TODO Deal with frame
 				(std::get<Indices>(tuple).publish(frameID), ...);

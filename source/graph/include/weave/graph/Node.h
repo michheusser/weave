@@ -16,12 +16,10 @@ namespace weave
 	{
 		template<typename NodeDescriptorType>
 		struct ExtractNodeDescriptorParams;
-		template<typename NodeTag, uint64_t NumInputs, uint64_t NumOutputs>
-		struct ExtractNodeDescriptorParams<NodeDescriptor<NodeTag, NumInputs, NumOutputs> >
+		template<typename NodeTag>
+		struct ExtractNodeDescriptorParams<NodeDescriptor<NodeTag>>
 		{
 			using Tag = NodeTag;
-			static constexpr uint64_t inputs = NumInputs;
-			static constexpr uint64_t outputs = NumOutputs;
 		};
 
 		template<typename Edge>
@@ -34,12 +32,13 @@ namespace weave
 
 		template<typename EdgeType>
 		struct ExtractEdgeParams;
-		template<typename EdgeTag, typename FromNodeTag, typename ToNodeTag>
-		struct ExtractEdgeParams<Edge<EdgeDescriptor<EdgeTag, FromNodeTag, ToNodeTag> >&>
+		template<typename EdgeTag, typename FromNodeTag, typename ToNodeTag, size_t numSlots>
+		struct ExtractEdgeParams<Edge<EdgeDescriptor<EdgeTag, FromNodeTag, ToNodeTag, numSlots> >&>
 		{
 			using Tag = EdgeTag;
 			using FromNode = FromNodeTag;
 			using ToNode = ToNodeTag;
+			static constexpr size_t slots = numSlots;
 		};
 
 		template<typename EdgeTupleType>
@@ -47,7 +46,7 @@ namespace weave
 		template<typename... Edges>
 		struct EdgeTupleToChannelTuple<std::tuple<Edges...> >
 		{
-			using ChannelTuple = std::tuple<buffer::Channel<typename user::EdgeTraits<typename ExtractEdgeParams<Edges>::Tag>::ChannelTag, Edge<typename ExtractEdgeDescriptor<Edges>::Descriptor>::policy>&...>;
+			using ChannelTuple = std::tuple<buffer::Channel<typename user::EdgeTraits<typename ExtractEdgeParams<Edges>::Tag>::ChannelTag, Edge<typename ExtractEdgeDescriptor<Edges>::Descriptor>::policy, ExtractEdgeParams<Edges>::slots>&...>;
 		};
 
 		template<typename T>
@@ -86,12 +85,10 @@ namespace weave
 			template<typename ChannelTupleType, typename EdgeTupleType, std::size_t... Indices>
 			ChannelTupleType _constructTuple(EdgeTupleType& edges, std::index_sequence<Indices...> sequence)
 			{
-
-				return ChannelTupleType{std::get<Indices>(edges).getChannel()...};
-
-				/*// We pass a dummy object to deduce the indices (not the nicest, but seems to be used a lot). Passing it as template parameter requires too many helper constructs.
-				ChannelTupleType tuple = {std::tuple_element_t<Indices, ChannelTupleType>(std::get<Indices>(edges).getChannel())...}; // TODO NEED to expose getChannel?
-				return tuple; // Move is not needed here, because we're passing tuple of references!*/
+				// We pass a dummy object to deduce the indices (not the nicest, but seems to be the standard C++ idiom).
+				// Passing it as template parameter requires too many unnecessary helper constructs.
+				ChannelTupleType tuple = {std::tuple_element_t<Indices, ChannelTupleType>(std::get<Indices>(edges).getChannel())...};
+				return tuple; // Move is not needed here, because we're passing tuple of references!
 			}
 			worker::Worker<WorkerTag> _worker;
 		};

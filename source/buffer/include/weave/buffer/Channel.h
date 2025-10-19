@@ -21,12 +21,13 @@ namespace weave
 {
 	namespace buffer
 	{
-		template<typename ChannelTag, constants::PolicyType policy>
+		template<typename ChannelTag, constants::PolicyType policy, size_t numSlots>
 		class Channel
 		{
 		public:
 			using Tag = ChannelTag;
 			static constexpr constants::PolicyType policyType = policy;
+			static constexpr size_t slots = numSlots;
 			using RingBufferTag = typename user::ChannelTraits<ChannelTag>::RingBufferTag;
 			explicit Channel(const typename user::ChannelTraits<ChannelTag>::ContextType& context)
 			{
@@ -42,14 +43,14 @@ namespace weave
 			Channel(Channel&&) = delete;
 			Channel& operator=(Channel&&) = delete;
 
-			Reader<ChannelTag, policy> reader() noexcept
+			Reader<ChannelTag, policy, numSlots> reader() noexcept
 			{
-				return Reader<ChannelTag, policy>(_mutex, _conditionVariableRead, _conditionVariableWrite, _ringBuffer);
+				return Reader<ChannelTag, policy, numSlots>(_mutex, _conditionVariableRead, _conditionVariableWrite, _ringBuffer);
 			}
 
-			Writer<ChannelTag, policy> writer() noexcept
+			Writer<ChannelTag, policy, numSlots> writer() noexcept
 			{
-				return Writer<ChannelTag, policy>(_mutex, _conditionVariableRead, _conditionVariableWrite, _ringBuffer);
+				return Writer<ChannelTag, policy, numSlots>(_mutex, _conditionVariableRead, _conditionVariableWrite, _ringBuffer);
 			}
 
 		private:
@@ -70,7 +71,7 @@ namespace weave
 			mutable std::shared_mutex _mutex;
 			mutable std::condition_variable_any _conditionVariableRead;
 			mutable std::condition_variable_any _conditionVariableWrite;
-			RingBuffer<RingBufferTag> _ringBuffer;
+			RingBuffer<RingBufferTag, numSlots> _ringBuffer;
 		};
 	}
 }

@@ -18,7 +18,7 @@ namespace weave
 {
 	namespace buffer
 	{
-		template <typename RingBufferTag>
+		template <typename RingBufferTag, size_t numSlots>
 		class RingBuffer
 		{
 		public:
@@ -107,7 +107,7 @@ namespace weave
 			//  is put together and not spread across the heap (e.g. if InternalData is a string or a vector)
 
 
-			static constexpr uint64_t NUM_SLOTS = 16; // TODO Needs to come from the traits.
+			static constexpr uint64_t NUM_SLOTS = numSlots;
 			std::array<user::Slot<SlotTag>, NUM_SLOTS> _slotArray;
 			std::array<uint32_t, NUM_SLOTS> _frameIDs;
 			uint64_t _usedCount;

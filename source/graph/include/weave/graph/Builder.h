@@ -64,17 +64,17 @@ namespace weave
 			{}
 
 			// TODO Optimize for moving contexts instead of copying it everytime.
-			template<typename NodeTag, uint64_t numInputs, uint64_t numOutputs>
-			Builder<typename AppendToList<NodeDescriptorListType, NodeDescriptor<NodeTag, numInputs, numOutputs> >::NewDescriptorListType, EdgeDescriptorListType> addNode(const typename user::NodeTraits<NodeTag>::ContextType& context)
+			template<typename NodeTag>
+			Builder<typename AppendToList<NodeDescriptorListType, NodeDescriptor<NodeTag> >::NewDescriptorListType, EdgeDescriptorListType> addNode(const typename user::NodeTraits<NodeTag>::ContextType& context)
 			{
-				Builder<typename AppendToList<NodeDescriptorListType, NodeDescriptor<NodeTag, numInputs, numOutputs> >::NewDescriptorListType, EdgeDescriptorListType> newBuilder(std::tuple_cat(_nodeContexts, std::make_tuple(context)), _edgeContexts);
+				Builder<typename AppendToList<NodeDescriptorListType, NodeDescriptor<NodeTag> >::NewDescriptorListType, EdgeDescriptorListType> newBuilder(std::tuple_cat(_nodeContexts, std::make_tuple(context)), _edgeContexts);
 				return newBuilder;
 			}
 
-			template<typename EdgeTag, typename FromNode, typename ToNode>
-			Builder<NodeDescriptorListType, typename AppendToList<EdgeDescriptorListType, EdgeDescriptor<EdgeTag, FromNode, ToNode> >::NewDescriptorListType> addEdge(const typename user::EdgeTraits<EdgeTag>::ContextType& context)
+			template<typename EdgeTag, typename FromNode, typename ToNode, size_t numSlots>
+			Builder<NodeDescriptorListType, typename AppendToList<EdgeDescriptorListType, EdgeDescriptor<EdgeTag, FromNode, ToNode, numSlots> >::NewDescriptorListType> addEdge(const typename user::EdgeTraits<EdgeTag>::ContextType& context)
 			{
-				Builder<NodeDescriptorListType, typename AppendToList<EdgeDescriptorListType, EdgeDescriptor<EdgeTag, FromNode, ToNode> >::NewDescriptorListType> newBuilder(_nodeContexts, std::tuple_cat(_edgeContexts, std::make_tuple(context)));
+				Builder<NodeDescriptorListType, typename AppendToList<EdgeDescriptorListType, EdgeDescriptor<EdgeTag, FromNode, ToNode, numSlots> >::NewDescriptorListType> newBuilder(_nodeContexts, std::tuple_cat(_edgeContexts, std::make_tuple(context)));
 				return newBuilder;
 			}
 

@@ -49,7 +49,7 @@ namespace weave
 
 		private:
 			template<typename InputDataTupleType, size_t... InputIndices, typename OutputDataTupleType, size_t... OutputIndices>
-			error::Result _process(InputDataTupleType& inputDataTuple, std::index_sequence<InputIndices...> inputSequence, OutputDataTupleType& outputDataTuple, std::index_sequence<OutputIndices...> outputSequence)
+			error::Result _process(InputDataTupleType& inputDataTuple, std::index_sequence<InputIndices...> inputSequence, OutputDataTupleType& outputDataTuple, std::index_sequence<OutputIndices...> outputSequence) noexcept
 			{
 				error::Result result = _module.process(std::get<InputIndices>(inputDataTuple)..., std::get<OutputIndices>(outputDataTuple)...);
 				return result;

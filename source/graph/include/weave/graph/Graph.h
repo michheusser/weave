@@ -28,22 +28,21 @@ namespace weave
 
 		template<typename NodeType>
 		struct ExtractDescriptorParamsFromNode;
-		template<typename NodeTag, uint64_t numInputs, uint64_t numOutputs>
-		struct ExtractDescriptorParamsFromNode<Node<NodeDescriptor<NodeTag, numInputs, numOutputs> > >
+		template<typename NodeTag>
+		struct ExtractDescriptorParamsFromNode<Node<NodeDescriptor<NodeTag>>>
 		{
 			using Tag = NodeTag;
-			static constexpr uint64_t inputs = numInputs;
-			static constexpr uint64_t outputs = numOutputs;
 		};
 
 		template<typename EdgeType>
 		struct ExtractDescriptorParamsFromEdge;
-		template<typename EdgeTag, typename FromNodeTag, typename ToNodeTag>
-		struct ExtractDescriptorParamsFromEdge<Edge<EdgeDescriptor<EdgeTag, FromNodeTag, ToNodeTag> > >
+		template<typename EdgeTag, typename FromNodeTag, typename ToNodeTag, size_t numSlots>
+		struct ExtractDescriptorParamsFromEdge<Edge<EdgeDescriptor<EdgeTag, FromNodeTag, ToNodeTag, numSlots> > >
 		{
 			using Tag = EdgeTag;
 			using FromNode = FromNodeTag;
 			using ToNode = ToNodeTag;
+			static constexpr size_t slots = numSlots;
 		};
 
 		template<typename T>

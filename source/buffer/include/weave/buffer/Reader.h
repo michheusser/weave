@@ -14,7 +14,7 @@ namespace weave
 {
 	namespace buffer
 	{
-		template <typename ChannelTag, constants::PolicyType policy>
+		template <typename ChannelTag, constants::PolicyType policy, size_t numSlots>
 		class Reader
 		{
 		public:
@@ -23,11 +23,11 @@ namespace weave
 			using StorageType = typename user::Slot<SlotTag>::StorageType;
 
 			explicit Reader(std::shared_mutex& mutex, std::condition_variable_any& conditionVariableRead, std::condition_variable_any& conditionVariableWrite,
-			                RingBuffer<RingBufferTag>& queueBuffer) noexcept : _mutex(mutex), _conditionVariableRead(conditionVariableRead), _conditionVariableWrite(conditionVariableWrite),
+			                RingBuffer<RingBufferTag, numSlots>& queueBuffer) noexcept : _mutex(mutex), _conditionVariableRead(conditionVariableRead), _conditionVariableWrite(conditionVariableWrite),
 			                                                           _queueBuffer(queueBuffer), _state(constants::ReaderState::Released)
 			{
 				// In the future, we might want more sophisticated reading (e.g. reading without marking as read, etc.) so here we might change to std::shared_lock/std::condition_variable_any::notify_all()
-				ReaderAcquirer<ChannelTag, policy>::acquire(_mutex, _conditionVariableRead, _queueBuffer, _state);
+				ReaderAcquirer<ChannelTag, policy, numSlots>::acquire(_mutex, _conditionVariableRead, _queueBuffer, _state);
 			}
 
 			// Copying is not allowed, because in a SCSP context, I cannot have two active readers or two active writers.
@@ -87,7 +87,7 @@ namespace weave
 			std::shared_mutex& _mutex;
 			std::condition_variable_any& _conditionVariableRead;
 			std::condition_variable_any& _conditionVariableWrite;
-			RingBuffer<RingBufferTag>& _queueBuffer;
+			RingBuffer<RingBufferTag, numSlots>& _queueBuffer;
 			// Reader's State
 			constants::ReaderState _state;
 		};

@@ -20,17 +20,17 @@ namespace weave
 	namespace buffer
 	{
 		// Policies for a reader are concerned with the question "What's the strategy if the buffer is empty?". In this case, we always wait so the implementation is the same for all policies.
-		template <typename ChannelTag, constants::PolicyType policy>
+		template <typename ChannelTag, constants::PolicyType policy, size_t numSlots>
 		class ReaderAcquirer; // Cannot be instantiated
 
-		template <typename ChannelTag>
-		class ReaderAcquirer<ChannelTag, constants::PolicyType::Lossless>
+		template <typename ChannelTag, size_t numSlots>
+		class ReaderAcquirer<ChannelTag, constants::PolicyType::Lossless, numSlots>
 		{
 		public:
 			using Policy = Policy<constants::PolicyType::Lossless>;
 			using RingBufferTag = user::ChannelTraits<ChannelTag>::RingBufferTag;
 
-			static void acquire(std::shared_mutex& mutex, std::condition_variable_any& conditionVariableReader, RingBuffer<RingBufferTag>& queueBuffer, constants::ReaderState& readerState) noexcept
+			static void acquire(std::shared_mutex& mutex, std::condition_variable_any& conditionVariableReader, RingBuffer<RingBufferTag, numSlots>& queueBuffer, constants::ReaderState& readerState) noexcept
 			{
 				std::shared_lock lock(mutex);
 				conditionVariableReader.wait(lock, [&queueBuffer]()
@@ -41,55 +41,55 @@ namespace weave
 			}
 		};
 
-		template <typename ChannelTag>
-		class ReaderAcquirer<ChannelTag, constants::PolicyType::Realtime>
+		template <typename ChannelTag, size_t numSlots>
+		class ReaderAcquirer<ChannelTag, constants::PolicyType::Realtime, numSlots>
 		{
 		public:
 			using Policy = Policy<constants::PolicyType::Realtime>;
 			using RingBufferTag = user::ChannelTraits<ChannelTag>::RingBufferTag;
 
-			static void acquire(std::shared_mutex& mutex, std::condition_variable_any& conditionVariableReader, RingBuffer<RingBufferTag>& queueBuffer, constants::ReaderState& readerState) noexcept
+			static void acquire(std::shared_mutex& mutex, std::condition_variable_any& conditionVariableReader, RingBuffer<RingBufferTag, numSlots>& queueBuffer, constants::ReaderState& readerState) noexcept
 			{
-				ReaderAcquirer<ChannelTag, constants::PolicyType::Lossless>::acquire();
+				ReaderAcquirer<ChannelTag, constants::PolicyType::Lossless, numSlots>::acquire();
 			}
 		};
 
-		template <typename ChannelTag>
-		class ReaderAcquirer<ChannelTag, constants::PolicyType::Attempts>
+		template <typename ChannelTag, size_t numSlots>
+		class ReaderAcquirer<ChannelTag, constants::PolicyType::Attempts, numSlots>
 		{
 		public:
 			using Policy = Policy<constants::PolicyType::Realtime>;
 			using RingBufferTag = user::ChannelTraits<ChannelTag>::RingBufferTag;
 
-			static void acquire(std::shared_mutex& mutex, std::condition_variable_any& conditionVariableReader, RingBuffer<RingBufferTag>& queueBuffer, constants::ReaderState& readerState) noexcept
+			static void acquire(std::shared_mutex& mutex, std::condition_variable_any& conditionVariableReader, RingBuffer<RingBufferTag, numSlots>& queueBuffer, constants::ReaderState& readerState) noexcept
 			{
-				ReaderAcquirer<ChannelTag, constants::PolicyType::Lossless>::acquire();
+				ReaderAcquirer<ChannelTag, constants::PolicyType::Lossless, numSlots>::acquire();
 			}
 		};
 
-		template <typename ChannelTag>
-		class ReaderAcquirer<ChannelTag, constants::PolicyType::LiveStream>
+		template <typename ChannelTag, size_t numSlots>
+		class ReaderAcquirer<ChannelTag, constants::PolicyType::LiveStream, numSlots>
 		{
 		public:
 			using Policy = Policy<constants::PolicyType::LiveStream>;
 			using RingBufferTag = user::ChannelTraits<ChannelTag>::RingBufferTag;
 
-			static void acquire(std::shared_mutex& mutex, std::condition_variable_any& conditionVariableReader, RingBuffer<RingBufferTag>& queueBuffer, constants::ReaderState& readerState) noexcept
+			static void acquire(std::shared_mutex& mutex, std::condition_variable_any& conditionVariableReader, RingBuffer<RingBufferTag, numSlots>& queueBuffer, constants::ReaderState& readerState) noexcept
 			{
-				ReaderAcquirer<ChannelTag, constants::PolicyType::Lossless>::acquire();
+				ReaderAcquirer<ChannelTag, constants::PolicyType::Lossless, numSlots>::acquire();
 			}
 		};
 
-		template <typename ChannelTag>
-		class ReaderAcquirer<ChannelTag, constants::PolicyType::Throttled>
+		template <typename ChannelTag, size_t numSlots>
+		class ReaderAcquirer<ChannelTag, constants::PolicyType::Throttled, numSlots>
 		{
 		public:
 			using Policy = Policy<constants::PolicyType::Throttled>;
 			using RingBufferTag = user::ChannelTraits<ChannelTag>::RingBufferTag;
 
-			static void acquire(std::shared_mutex& mutex, std::condition_variable_any& conditionVariableReader, RingBuffer<RingBufferTag>& queueBuffer, constants::ReaderState& readerState) noexcept
+			static void acquire(std::shared_mutex& mutex, std::condition_variable_any& conditionVariableReader, RingBuffer<RingBufferTag, numSlots>& queueBuffer, constants::ReaderState& readerState) noexcept
 			{
-				ReaderAcquirer<ChannelTag, constants::PolicyType::Lossless>::acquire();
+				ReaderAcquirer<ChannelTag, constants::PolicyType::Lossless, numSlots>::acquire();
 			}
 		};
 	}

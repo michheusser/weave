@@ -19,18 +19,18 @@ namespace weave
 	namespace buffer
 	{
 		// Policies for a writer are concerned with the question "What's the strategy if the buffer is full?"
-		template <typename ChannelTag, constants::PolicyType policy>
+		template <typename ChannelTag, constants::PolicyType policy, size_t numSlots>
 		class WriterAcquirer; // Cannot be instantiated
 
 		// TODO Approach: Implement single specialized policies, and then try to make generic using the parameters of the policy to avoid specialization (if possible)
-		template <typename ChannelTag>
-		class WriterAcquirer<ChannelTag, constants::PolicyType::Lossless>
+		template <typename ChannelTag, size_t numSlots>
+		class WriterAcquirer<ChannelTag, constants::PolicyType::Lossless, numSlots>
 		{
 			using Policy = Policy<constants::PolicyType::Lossless>;
 			using RingBufferTag = user::ChannelTraits<ChannelTag>::RingBufferTag;
 
 		public:
-			static void acquire(std::shared_mutex& mutex, std::condition_variable_any& conditionVariableWrite, RingBuffer<RingBufferTag>& ringBuffer, constants::WriterState& writerState) noexcept
+			static void acquire(std::shared_mutex& mutex, std::condition_variable_any& conditionVariableWrite, RingBuffer<RingBufferTag, numSlots>& ringBuffer, constants::WriterState& writerState) noexcept
 			{
 				std::unique_lock lock(mutex);
 				conditionVariableWrite.wait(lock, [&ringBuffer]()
@@ -42,14 +42,14 @@ namespace weave
 			}
 		};
 
-		template <typename ChannelTag>
-		class WriterAcquirer<ChannelTag, constants::PolicyType::Realtime>
+		template <typename ChannelTag, size_t numSlots>
+		class WriterAcquirer<ChannelTag, constants::PolicyType::Realtime, numSlots>
 		{
 		public:
 			using Policy = Policy<constants::PolicyType::Realtime>;
 			using RingBufferTag = user::ChannelTraits<ChannelTag>::RingBufferTag;
 
-			static void acquire(std::shared_mutex& mutex, std::condition_variable_any& conditionVariableWrite, RingBuffer<RingBufferTag>& ringBuffer, constants::WriterState& writerState) noexcept
+			static void acquire(std::shared_mutex& mutex, std::condition_variable_any& conditionVariableWrite, RingBuffer<RingBufferTag, numSlots>& ringBuffer, constants::WriterState& writerState) noexcept
 			{
 				std::unique_lock lock(mutex);
 				if (ringBuffer.full())
@@ -61,14 +61,14 @@ namespace weave
 			}
 		};
 
-		template <typename ChannelTag>
-		class WriterAcquirer<ChannelTag, constants::PolicyType::Attempts>
+		template <typename ChannelTag, size_t numSlots>
+		class WriterAcquirer<ChannelTag, constants::PolicyType::Attempts, numSlots>
 		{
 		public:
 			using Policy = Policy<constants::PolicyType::Attempts>;
 			using RingBufferTag = user::ChannelTraits<ChannelTag>::RingBufferTag;
 
-			static void acquire(std::shared_mutex& mutex, std::condition_variable_any& conditionVariableWrite, RingBuffer<RingBufferTag>& ringBuffer, constants::WriterState& writerState) noexcept
+			static void acquire(std::shared_mutex& mutex, std::condition_variable_any& conditionVariableWrite, RingBuffer<RingBufferTag, numSlots>& ringBuffer, constants::WriterState& writerState) noexcept
 			{
 				for (int i = 1; i <= Policy::numAttempts; ++i)
 				{
@@ -92,14 +92,14 @@ namespace weave
 		};
 
 
-		template <typename ChannelTag>
-		class WriterAcquirer<ChannelTag, constants::PolicyType::LiveStream>
+		template <typename ChannelTag, size_t numSlots>
+		class WriterAcquirer<ChannelTag, constants::PolicyType::LiveStream, numSlots>
 		{
 		public:
 			using Policy = Policy<constants::PolicyType::LiveStream>;
 			using RingBufferTag = user::ChannelTraits<ChannelTag>::RingBufferTag;
 
-			static void acquire(std::shared_mutex& mutex, std::condition_variable_any& conditionVariableWrite, RingBuffer<RingBufferTag>& ringBuffer, constants::WriterState& writerState) noexcept
+			static void acquire(std::shared_mutex& mutex, std::condition_variable_any& conditionVariableWrite, RingBuffer<RingBufferTag, numSlots>& ringBuffer, constants::WriterState& writerState) noexcept
 			{
 				std::unique_lock lock(mutex);
 				conditionVariableWrite.wait_for(std::chrono::milliseconds(Policy::timeoutMS),[](){return true;});
@@ -113,14 +113,14 @@ namespace weave
 		};
 
 
-		template <typename ChannelTag>
-		class WriterAcquirer<ChannelTag, constants::PolicyType::Throttled>
+		template <typename ChannelTag, size_t numSlots>
+		class WriterAcquirer<ChannelTag, constants::PolicyType::Throttled, numSlots>
 		{
 		public:
 			using Policy = Policy<constants::PolicyType::Throttled>;
 			using RingBufferTag = user::ChannelTraits<ChannelTag>::RingBufferTag;
 
-			static void acquire(std::shared_mutex& mutex, std::condition_variable_any& conditionVariableWrite, RingBuffer<RingBufferTag>& ringBuffer, constants::WriterState& writerState) noexcept
+			static void acquire(std::shared_mutex& mutex, std::condition_variable_any& conditionVariableWrite, RingBuffer<RingBufferTag, numSlots>& ringBuffer, constants::WriterState& writerState) noexcept
 			{
 				std::unique_lock lock(mutex);
 				if (!ringBuffer.full())

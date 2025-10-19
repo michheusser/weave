@@ -17,14 +17,11 @@ add_library(test STATIC
 
         worker/Context.h
 
-        Specializations/ModuleSpecialization.h
         Specializations/SlotSpecialization.h
         Specializations/SlotSpecialization.cpp
         Specializations/EdgeTraitsSpecialization.h
         Specializations/ChannelTraitsSpecialization.h
         Specializations/RingBufferTraitsSpecialization.h
-        #Specializations/ProcessorSpecialization.cpp # TODO Remove
-        #Specializations/ProcessorSpecialization.h # TODO Remove
         Specializations/ProcessorTraitsSpecialization.h
         Specializations/WorkerTraitsSpecialization.h
         Specializations/NodeTraitsSpecialization.h
