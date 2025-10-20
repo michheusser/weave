@@ -9,19 +9,25 @@
 #include "ChannelTraitsSpecialization.h"
 #include "../buffer/Context.h"
 
-struct FirstRawImageEdge
+struct ClientRawImageEdge
 {};
 
-struct FirstNormalizedImageEdge
+struct ClientImageSendEdge
 {};
 
-struct FirstInferenceInputTensorEdge
+struct ClientImageReceiveEdge
 {};
 
-struct FirstInferenceOutputImageEdge
+struct ClientDisplayImageEdge
 {};
 
-struct SecondNormalizedImageEdge
+struct ServerImageReceiveEdge
+{};
+
+struct ServerInferenceInputTensorEdge
+{};
+
+struct ServerImageSendEdge
 {};
 
 namespace weave
@@ -30,35 +36,49 @@ namespace weave
 	{
 		// TODO Consider making traits classes part of the actual class header (Channel.h)
 		template<>
-		struct EdgeTraits<FirstRawImageEdge>
+		struct EdgeTraits<ClientRawImageEdge>
 		{
 			using ChannelTag = DefaultImageChannel;
 			using ContextType = ChannelTraits<ChannelTag>::ContextType;
 		};
 
 		template<>
-		struct EdgeTraits<FirstNormalizedImageEdge>
+		struct EdgeTraits<ClientImageSendEdge>
 		{
 			using ChannelTag = DefaultImageChannel;
 			using ContextType = ChannelTraits<ChannelTag>::ContextType;
 		};
 
 		template<>
-		struct EdgeTraits<FirstInferenceInputTensorEdge>
+		struct EdgeTraits<ClientImageReceiveEdge>
+		{
+			using ChannelTag = DefaultImageChannel;
+			using ContextType = ChannelTraits<ChannelTag>::ContextType;
+		};
+
+		template<>
+		struct EdgeTraits<ClientDisplayImageEdge>
+		{
+			using ChannelTag = DefaultImageChannel;
+			using ContextType = ChannelTraits<ChannelTag>::ContextType;
+		};
+
+		template<>
+		struct EdgeTraits<ServerImageReceiveEdge>
+		{
+			using ChannelTag = DefaultImageChannel;
+			using ContextType = ChannelTraits<ChannelTag>::ContextType;
+		};
+
+		template<>
+		struct EdgeTraits<ServerInferenceInputTensorEdge>
 		{
 			using ChannelTag = DefaultInferenceInputTensorChannel;
 			using ContextType = ChannelTraits<ChannelTag>::ContextType;
 		};
 
 		template<>
-		struct EdgeTraits<FirstInferenceOutputImageEdge>
-		{
-			using ChannelTag = DefaultImageChannel;
-			using ContextType = ChannelTraits<ChannelTag>::ContextType;
-		};
-
-		template<>
-		struct EdgeTraits<SecondNormalizedImageEdge>
+		struct EdgeTraits<ServerImageSendEdge>
 		{
 			using ChannelTag = DefaultImageChannel;
 			using ContextType = ChannelTraits<ChannelTag>::ContextType;

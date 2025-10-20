@@ -7,6 +7,7 @@
 #include <opencv2/videoio.hpp>
 #include <weave/error/Result.h>
 #include "Configuration.h"
+#include "Context.h"
 
 namespace test
 {
@@ -15,7 +16,7 @@ namespace test
 		class Preprocessor
 		{
 		public:
-			explicit Preprocessor(const NormalizerConfiguration& configuration);
+			explicit Preprocessor(const Context<constants::ModuleType::ImageNormalizer>& context);
 			~Preprocessor();
 			void initialize();
 			weave::error::Result process(const cv::Mat& sourceFrame, cv::Mat& destinationFrame) const noexcept;

@@ -12,6 +12,9 @@
 #include <weave/error/Exception.h>
 #include <weave/error/Result.h>
 #include <weave/logging/Macros.h>
+
+#include "Context.h"
+
 namespace test
 {
 	namespace module
@@ -19,7 +22,7 @@ namespace test
 		class InferenceInputProcessor
 		{
 		public:
-			explicit InferenceInputProcessor(const InferenceInputProcessorConfiguration& configuration);
+			explicit InferenceInputProcessor(const Context<constants::ModuleType::InferenceInputProcessor>& context);
 			void initialize();
 			weave::error::Result process(const cv::Mat& convertedFrame, Ort::Value& inputTensor) const noexcept;
 		private:

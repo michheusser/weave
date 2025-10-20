@@ -15,7 +15,7 @@ namespace test
 {
 	namespace module
 	{
-		Displayer::Displayer(const DisplayerConfiguration& configuration) : _title(configuration.title)
+		Displayer::Displayer(const Context<constants::ModuleType::ImageDisplayer>& context) : _title(context.configuration.title)
 		{}
 
 		Displayer::~Displayer()

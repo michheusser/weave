@@ -7,7 +7,7 @@
 #include <array>
 #include <vector>
 
-#include "Constants.h"
+#include "constants.h"
 #include "Configuration.h"
 #include <weave/logging/Macros.h>
 #include <weave/error/Exception.h>

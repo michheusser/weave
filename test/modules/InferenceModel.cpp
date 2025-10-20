@@ -11,7 +11,7 @@ namespace test
 {
 	namespace module
 	{
-		InferenceModel::InferenceModel(const InferenceModelConfiguration& configuration) : _configuration(configuration), _env(nullptr), _session(nullptr)
+		InferenceModel::InferenceModel(const Context<constants::ModuleType::InferenceModel>& context) : _configuration(context.configuration), _env(nullptr), _session(nullptr)
 		{}
 
 		void InferenceModel::initialize()

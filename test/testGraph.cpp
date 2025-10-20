@@ -28,95 +28,155 @@ using namespace test;
 
 int main()
 {
-	// FirstCapturerNode
-	module::Context<module::constants::ModuleType::ImageCapturer> firtImageCapturerContext;
-	firtImageCapturerContext.configuration.cameraID = module::constants::CAMERA_ID;
-	firtImageCapturerContext.configuration.captureAPI = module::constants::OPENCV_VIDEO_CAPTURE_API;
+	/***** NETWORK *****/
+	streaming::NetworkClientConfiguration networkClientConfiguration;
+	networkClientConfiguration.localAddress = streaming::constants::CLIENT_LOCAL_ADDRESS;
+	networkClientConfiguration.localPort = streaming::constants::CLIENT_LOCAL_PORT;
+	networkClientConfiguration.remoteAddress = streaming::constants::CLIENT_REMOTE_ADDRESS;
+	networkClientConfiguration.remotePort = streaming::constants::CLIENT_REMOTE_PORT;
+	std::shared_ptr<streaming::NetworkClient> networkClient = std::make_shared<streaming::NetworkClient>(networkClientConfiguration);
 
-	// RawImageEdge
-	buffer::Context<buffer::constants::BufferType::Image> rawImageBufferContext;
-	rawImageBufferContext.configuration.frameHeight = module::constants::RAW_FRAME_HEIGHT;
-	rawImageBufferContext.configuration.frameWidth = module::constants::RAW_FRAME_WIDTH;
-	rawImageBufferContext.configuration.frameType = module::constants::RAW_FRAME_TYPE;
 
-	// FirstNormalizerNode
-	module::Context<module::constants::ModuleType::ImageNormalizer> firstImageNormalizerContext;
-	firstImageNormalizerContext.configuration.destinationWidth = module::constants::FRAME_WIDTH;
-	firstImageNormalizerContext.configuration.destinationHeight = module::constants::FRAME_HEIGHT;
+	streaming::NetworkServerConfiguration networkServerConfiguration;
+	networkServerConfiguration.localAddress = streaming::constants::SERVER_LOCAL_ADDRESS;
+	networkServerConfiguration.localPort = streaming::constants::SERVER_LOCAL_PORT;
+	std::shared_ptr<streaming::NetworkServer> networkServer = std::make_shared<streaming::NetworkServer>(networkServerConfiguration);
 
-	// NormalizedImageEdge
-	buffer::Context<buffer::constants::BufferType::Image> firstNormalizedImageContext;
-	firstNormalizedImageContext.configuration.frameHeight = module::constants::FRAME_HEIGHT;
-	firstNormalizedImageContext.configuration.frameWidth = module::constants::FRAME_WIDTH;
-	firstNormalizedImageContext.configuration.frameType = module::constants::FRAME_TYPE;
+	/******* CLIENT *****/
+	module::Context<module::constants::ModuleType::ImageCapturer> clientImageCapturerContext;
+	clientImageCapturerContext.configuration.cameraID = module::constants::CAMERA_ID;
+	clientImageCapturerContext.configuration.captureAPI = module::constants::OPENCV_VIDEO_CAPTURE_API;
+
+	buffer::Context<buffer::constants::BufferType::Image> clientRawImageBufferContext;
+	clientRawImageBufferContext.configuration.frameHeight = module::constants::RAW_FRAME_HEIGHT;
+	clientRawImageBufferContext.configuration.frameWidth = module::constants::RAW_FRAME_WIDTH;
+	clientRawImageBufferContext.configuration.frameType = module::constants::RAW_FRAME_TYPE;
+
+	module::Context<module::constants::ModuleType::ImageNormalizer> clientFirstImageNormalizerContext;
+	clientFirstImageNormalizerContext.configuration.destinationWidth = module::constants::FRAME_WIDTH;
+	clientFirstImageNormalizerContext.configuration.destinationHeight = module::constants::FRAME_HEIGHT;
+
+	buffer::Context<buffer::constants::BufferType::Image> clientImageSendBufferContext;
+	clientImageSendBufferContext.configuration.frameHeight = module::constants::FRAME_HEIGHT;
+	clientImageSendBufferContext.configuration.frameWidth = module::constants::FRAME_WIDTH;
+	clientImageSendBufferContext.configuration.frameType = module::constants::FRAME_TYPE;
+
+	module::Context<module::constants::ModuleType::ClientSender> clientImageSenderContext;
+	clientImageSenderContext.networkBufferConfiguration.bufferSize = module::constants::BUFFER_SIZE;
+	clientImageSenderContext.encoderConfiguration.encodingFormat = std::string(module::constants::ENCODING_FORMAT);
+	clientImageSenderContext.encoderConfiguration.encodingParameters = {module::constants::COMPRESSION_IMWRITE_PARAM, module::constants::COMPRESSION_LEVEL};
+	clientImageSenderContext.networkClient = networkClient;
+
+	module::Context<module::constants::ModuleType::ClientReceiver> clientImageReceiverContext;
+	clientImageReceiverContext.networkBufferConfiguration.bufferSize = module::constants::BUFFER_SIZE;
+	clientImageReceiverContext.decoderConfiguration.flags = module::constants::DECODER_FLAGS;
+	clientImageReceiverContext.networkClient = networkClient;
+
+	buffer::Context<buffer::constants::BufferType::Image> clientImageReceiveBufferContext;
+	clientImageReceiveBufferContext.configuration.frameHeight = module::constants::FRAME_HEIGHT;
+	clientImageReceiveBufferContext.configuration.frameWidth = module::constants::FRAME_WIDTH;
+	clientImageReceiveBufferContext.configuration.frameType = module::constants::FRAME_TYPE;
+
+	module::Context<module::constants::ModuleType::ImageNormalizer> clientSecondImageNormalizerContext;
+	clientSecondImageNormalizerContext.configuration.destinationWidth = module::constants::RAW_FRAME_WIDTH;
+	clientSecondImageNormalizerContext.configuration.destinationHeight = module::constants::RAW_FRAME_HEIGHT;
+
+	buffer::Context<buffer::constants::BufferType::Image> clientDisplayImageBufferContext;
+	clientDisplayImageBufferContext.configuration.frameHeight = module::constants::RAW_FRAME_HEIGHT;
+	clientDisplayImageBufferContext.configuration.frameWidth = module::constants::RAW_FRAME_WIDTH;
+	clientDisplayImageBufferContext.configuration.frameType = module::constants::RAW_FRAME_TYPE;
+
+	module::Context<module::constants::ModuleType::ImageDisplayer> clientImageDisplayerContext;
+	clientImageDisplayerContext.configuration.title = std::string(module::constants::DEFAULT_DISPLAY_TITLE);
+
+
+
+	/****** SERVER *******/
+
+	module::Context<module::constants::ModuleType::ServerReceiver> serverImageReceiverContext;
+	serverImageReceiverContext.networkBufferConfiguration.bufferSize = module::constants::BUFFER_SIZE;
+	serverImageReceiverContext.decoderConfiguration.flags = module::constants::DECODER_FLAGS;
+	serverImageReceiverContext.networkServer = networkServer;
+
+	buffer::Context<buffer::constants::BufferType::Image> serverImageReceiveBufferContext;
+	serverImageReceiveBufferContext.configuration.frameHeight = module::constants::FRAME_HEIGHT;
+	serverImageReceiveBufferContext.configuration.frameWidth = module::constants::FRAME_WIDTH;
+	serverImageReceiveBufferContext.configuration.frameType = module::constants::FRAME_TYPE;
 
 	// FirstInferenceInputProcessorNode
-	module::Context<module::constants::ModuleType::InferenceInputProcessor> firstInferenceInputProcessorContext;
-	firstInferenceInputProcessorContext.configuration.rtype = module::constants::INPUT_FRAME_RTYPE;
-	firstInferenceInputProcessorContext.configuration.alpha = module::constants::INPUT_FRAME_ALPHA;
-	firstInferenceInputProcessorContext.configuration.inputWidth = module::constants::INPUT_FRAME_WIDTH;
-	firstInferenceInputProcessorContext.configuration.inputHeight = module::constants::INPUT_FRAME_HEIGHT;
-	firstInferenceInputProcessorContext.configuration.mean = module::constants::INPUT_FRAME_MEAN;
-	firstInferenceInputProcessorContext.configuration.std = module::constants::INPUT_FRAME_STD;
+	module::Context<module::constants::ModuleType::InferenceInputProcessor> serverInferenceInputProcessorContext;
+	serverInferenceInputProcessorContext.configuration.rtype = module::constants::INPUT_FRAME_RTYPE;
+	serverInferenceInputProcessorContext.configuration.alpha = module::constants::INPUT_FRAME_ALPHA;
+	serverInferenceInputProcessorContext.configuration.inputWidth = module::constants::INPUT_FRAME_WIDTH;
+	serverInferenceInputProcessorContext.configuration.inputHeight = module::constants::INPUT_FRAME_HEIGHT;
+	serverInferenceInputProcessorContext.configuration.mean = module::constants::INPUT_FRAME_MEAN;
+	serverInferenceInputProcessorContext.configuration.std = module::constants::INPUT_FRAME_STD;
 
 	// InferenceInputTensorEdge
-	buffer::Context<buffer::constants::BufferType::InferenceInputTensor> inferenceInputTensorContext;
-	inferenceInputTensorContext.configuration.height = module::constants::TENSOR_HEIGHT;
-	inferenceInputTensorContext.configuration.width = module::constants::TENSOR_WIDTH;
-	inferenceInputTensorContext.configuration.tensorAllocatorType = module::constants::TENSOR_ALLOCATOR_TYPE;
-	inferenceInputTensorContext.configuration.tensorMemoryType = module::constants::TENSOR_MEMORY_TYPE;
+	buffer::Context<buffer::constants::BufferType::InferenceInputTensor> serverInferenceInputTensorContext;
+	serverInferenceInputTensorContext.configuration.height = module::constants::TENSOR_HEIGHT;
+	serverInferenceInputTensorContext.configuration.width = module::constants::TENSOR_WIDTH;
+	serverInferenceInputTensorContext.configuration.tensorAllocatorType = module::constants::TENSOR_ALLOCATOR_TYPE;
+	serverInferenceInputTensorContext.configuration.tensorMemoryType = module::constants::TENSOR_MEMORY_TYPE;
 
 	// FirstInferenceModelNode
-	module::Context<module::constants::ModuleType::InferenceModel> firstInferenceModelContext;
-	firstInferenceModelContext.configuration.loggingLevel = module::constants::ONNX_ENV_LOGGING_LEVEL;
-	firstInferenceModelContext.configuration.logid = module::constants::ONNX_ENV_LOGID;
-	firstInferenceModelContext.configuration.modelPath = module::constants::ONNX_MODEL_PATH;
-	firstInferenceModelContext.configuration.modelFile = module::constants::ONNX_MODEL_FILE;
-	firstInferenceModelContext.configuration.outputImageType = module::constants::OUTPUT_IMAGE_TYPE;
-	firstInferenceModelContext.configuration.width = module::constants::OUTPUT_IMAGE_WIDTH;
-	firstInferenceModelContext.configuration.height = module::constants::OUTPUT_IMAGE_HEIGHT;
-	firstInferenceModelContext.configuration.normalizedAlpha = module::constants::OUTPUT_NORM_ALPHA;
-	firstInferenceModelContext.configuration.normalizedBeta = module::constants::OUTPUT_NORM_BETA;
-	firstInferenceModelContext.configuration.normalizeType = module::constants::OUTPUT_NORM_TYPE;
-	firstInferenceModelContext.configuration.normalizeDType = module::constants::OUTPUT_NORM_DTYPE;
+	module::Context<module::constants::ModuleType::InferenceModel> serverInferenceModelContext;
+	serverInferenceModelContext.configuration.loggingLevel = module::constants::ONNX_ENV_LOGGING_LEVEL;
+	serverInferenceModelContext.configuration.logid = module::constants::ONNX_ENV_LOGID;
+	serverInferenceModelContext.configuration.modelPath = module::constants::ONNX_MODEL_PATH;
+	serverInferenceModelContext.configuration.modelFile = module::constants::ONNX_MODEL_FILE;
+	serverInferenceModelContext.configuration.outputImageType = module::constants::OUTPUT_IMAGE_TYPE;
+	serverInferenceModelContext.configuration.width = module::constants::OUTPUT_IMAGE_WIDTH;
+	serverInferenceModelContext.configuration.height = module::constants::OUTPUT_IMAGE_HEIGHT;
+	serverInferenceModelContext.configuration.normalizedAlpha = module::constants::OUTPUT_NORM_ALPHA;
+	serverInferenceModelContext.configuration.normalizedBeta = module::constants::OUTPUT_NORM_BETA;
+	serverInferenceModelContext.configuration.normalizeType = module::constants::OUTPUT_NORM_TYPE;
+	serverInferenceModelContext.configuration.normalizeDType = module::constants::OUTPUT_NORM_DTYPE;
 
 	// InferenceOutputImageEdge
-	buffer::Context<buffer::constants::BufferType::Image> inferenceOutputImageContext;
-	inferenceOutputImageContext.configuration.frameHeight = module::constants::FRAME_HEIGHT;
-	inferenceOutputImageContext.configuration.frameWidth = module::constants::FRAME_WIDTH;
-	inferenceOutputImageContext.configuration.frameType = module::constants::FRAME_TYPE;
+	buffer::Context<buffer::constants::BufferType::Image> serverImageSendBufferContext;
+	serverImageSendBufferContext.configuration.frameHeight = module::constants::FRAME_HEIGHT;
+	serverImageSendBufferContext.configuration.frameWidth = module::constants::FRAME_WIDTH;
+	serverImageSendBufferContext.configuration.frameType = module::constants::FRAME_TYPE;
 
-	// SecondNormalizerNode
-	module::Context<module::constants::ModuleType::ImageNormalizer> secondImageNormalizerContext;
-	secondImageNormalizerContext.configuration.destinationWidth = module::constants::RAW_FRAME_WIDTH;
-	secondImageNormalizerContext.configuration.destinationHeight = module::constants::RAW_FRAME_HEIGHT;
-
-	// SecondNormalizedImageEdge
-	buffer::Context<buffer::constants::BufferType::Image> secondNormalizedImageContext;
-	secondNormalizedImageContext.configuration.frameHeight = module::constants::RAW_FRAME_HEIGHT;
-	secondNormalizedImageContext.configuration.frameWidth = module::constants::RAW_FRAME_WIDTH;
-	secondNormalizedImageContext.configuration.frameType = module::constants::RAW_FRAME_TYPE;
-
-	// FirstDisplayerNode
-	module::Context<module::constants::ModuleType::ImageDisplayer> firstImageDisplayerContext;
-	firstImageDisplayerContext.configuration.title = std::string(module::constants::DEFAULT_DISPLAY_TITLE);
+	module::Context<module::constants::ModuleType::ServerSender> serverImageSenderContext;
+	serverImageSenderContext.networkBufferConfiguration.bufferSize = module::constants::BUFFER_SIZE;
+	serverImageSenderContext.encoderConfiguration.encodingFormat = std::string(module::constants::ENCODING_FORMAT);
+	serverImageSenderContext.encoderConfiguration.encodingParameters = {module::constants::COMPRESSION_IMWRITE_PARAM, module::constants::COMPRESSION_LEVEL};
+	serverImageSenderContext.networkServer = networkServer;
 
 	// Build
-	auto pipeline = weave::graph::Builder()
-		.addNode<FirstCapturerNode>(firtImageCapturerContext).addEdge<FirstRawImageEdge, FirstCapturerNode, FirstNormalizerNode, 16>(rawImageBufferContext)
-		.addNode<FirstNormalizerNode>(firstImageNormalizerContext)
-		.addEdge<FirstNormalizedImageEdge, FirstNormalizerNode, FirstInferenceInputProcessorNode, 16>(firstNormalizedImageContext)
-		.addNode<FirstInferenceInputProcessorNode>(firstInferenceInputProcessorContext)
-		.addEdge<FirstInferenceInputTensorEdge, FirstInferenceInputProcessorNode, FirstInferenceModelNode,16>(inferenceInputTensorContext)
-		.addNode<FirstInferenceModelNode>(firstInferenceModelContext)
-		.addEdge<FirstInferenceOutputImageEdge, FirstInferenceModelNode, SecondNormalizerNode,16>(inferenceOutputImageContext)
-		.addNode<SecondNormalizerNode>(secondImageNormalizerContext)
-		.addEdge<SecondNormalizedImageEdge, SecondNormalizerNode, FirstDisplayerNode,16>(secondNormalizedImageContext)
-		.addNode<FirstDisplayerNode>(firstImageDisplayerContext)
+	auto clientPipeline = weave::graph::Builder()
+		.addNode<ClientImageCapturerNode>(clientImageCapturerContext)
+		.addEdge<ClientRawImageEdge, ClientImageCapturerNode, ClientFirstImageNormalizerNode, 16>(clientRawImageBufferContext)
+		.addNode<ClientFirstImageNormalizerNode>(clientFirstImageNormalizerContext)
+		.addEdge<ClientImageSendEdge, ClientFirstImageNormalizerNode, ClientImageSenderNode, 16>(clientImageSendBufferContext)
+		.addNode<ClientImageSenderNode>(clientImageSenderContext)
+		.addNode<ClientImageReceiverNode>(clientImageReceiverContext)
+		.addEdge<ClientImageReceiveEdge, ClientImageReceiverNode, ClientSecondImageNormalizerNode, 16>(clientImageReceiveBufferContext)
+		.addNode<ClientSecondImageNormalizerNode>(clientSecondImageNormalizerContext)
+		.addEdge<ClientDisplayImageEdge, ClientSecondImageNormalizerNode, ClientImageDisplayerNode,16>(clientDisplayImageBufferContext)
+		.addNode<ClientImageDisplayerNode>(clientImageDisplayerContext)
 		.build();
 
-	pipeline.start();
-	utilities::DisplayBridge::flushFrames();
+	auto serverPipeline = weave::graph::Builder()
+		.addNode<ServerImageReceiverNode>(serverImageReceiverContext)
+		.addEdge<ServerImageReceiveEdge, ServerImageReceiverNode, ServerInferenceInputProcessorNode, 16>(serverImageReceiveBufferContext)
+		.addNode<ServerInferenceInputProcessorNode>(serverInferenceInputProcessorContext)
+		.addEdge<ServerInferenceInputTensorEdge, ServerInferenceInputProcessorNode, ServerInferenceModelNode,16>(serverInferenceInputTensorContext)
+		.addNode<ServerInferenceModelNode>(serverInferenceModelContext)
+		.addEdge<ServerImageSendEdge, ServerInferenceModelNode, ServerImageSenderNode,16>(serverImageSendBufferContext)
+		.addNode<ServerImageSenderNode>(serverImageSenderContext)
+		.build();
 
+	networkServer->initialize();
+	networkClient->initialize();
+
+	networkServer->listen();
+	networkClient->connect();
+	networkServer->accept();
+	serverPipeline.start();
+	clientPipeline.start();
+	utilities::DisplayBridge::flushFrames();
 	return 0;
 }

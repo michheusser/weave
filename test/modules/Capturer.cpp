@@ -18,7 +18,7 @@ namespace test
 	{
 		uint64_t Capturer::nextFrameID = 1;
 
-		Capturer::Capturer(const CapturerConfiguration& configuration) : _videoCapture(configuration.cameraID, configuration.captureAPI), _cameraID(configuration.cameraID)
+		Capturer::Capturer(const Context<constants::ModuleType::ImageCapturer>& context) : _videoCapture(context.configuration.cameraID, context.configuration.captureAPI), _cameraID(context.configuration.cameraID)
 		// Constructor doesn't throw per default
 		{}
 

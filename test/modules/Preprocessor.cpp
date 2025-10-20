@@ -10,8 +10,8 @@ namespace test
 {
 	namespace module
 	{
-		Preprocessor::Preprocessor(const NormalizerConfiguration& configuration) :
-			_destinationSize(configuration.destinationWidth, configuration.destinationHeight)
+		Preprocessor::Preprocessor(const Context<constants::ModuleType::ImageNormalizer>& context) :
+			_destinationSize(context.configuration.destinationWidth, context.configuration.destinationHeight)
 		{}
 
 		Preprocessor::~Preprocessor()

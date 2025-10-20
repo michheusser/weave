@@ -9,107 +9,109 @@
 #include "WorkerTraitsSpecialization.h"
 #include "../modules/Context.h"
 
-struct FirstCapturerNode
+struct ClientImageCapturerNode
 {};
 
-struct FirstNormalizerNode
+struct ClientFirstImageNormalizerNode
 {};
 
-struct FirstClientSenderNode
+struct ClientImageSenderNode
 {};
 
-struct FirstServerReceiverNode
+struct ClientImageReceiverNode
 {};
 
-struct FirstInferenceInputProcessorNode
+struct ClientSecondImageNormalizerNode
 {};
 
-struct FirstInferenceModelNode
+struct ClientImageDisplayerNode
 {};
 
-struct FirstServerSenderNode
+
+struct ServerImageReceiverNode
 {};
 
-struct FirstClientReceiverNode
+struct ServerInferenceInputProcessorNode
 {};
 
-struct SecondNormalizerNode
+struct ServerInferenceModelNode
 {};
 
-struct FirstDisplayerNode
+struct ServerImageSenderNode
 {};
+
 
 namespace weave
 {
 	namespace user
 	{
 		template<>
-		struct NodeTraits<FirstCapturerNode>
+		struct NodeTraits<ClientImageCapturerNode>
 		{
 			using WorkerTag = DefaultCapturerWorker;
 			using ContextType = WorkerTraits<WorkerTag>::ContextType;
 		};
 
 		template<>
-		struct NodeTraits<FirstNormalizerNode>
+		struct NodeTraits<ClientFirstImageNormalizerNode>
 		{
 			using WorkerTag = DefaultNormalizerWorker;
 			using ContextType = WorkerTraits<WorkerTag>::ContextType;
 		};
 
 		template<>
-		struct NodeTraits<FirstClientSenderNode>
+		struct NodeTraits<ClientImageSenderNode>
 		{
 			using WorkerTag = DefaultClientSenderWorker;
 			using ContextType = WorkerTraits<WorkerTag>::ContextType;
 		};
 
 		template<>
-		struct NodeTraits<FirstServerReceiverNode>
-		{
-			using WorkerTag = DefaultServerReceiverWorker;
-			using ContextType = WorkerTraits<WorkerTag>::ContextType;
-		};
-
-		template<>
-		struct NodeTraits<FirstInferenceInputProcessorNode>
-		{
-			using WorkerTag = DefaultInferenceInputProcessorWorker;
-			using ContextType = WorkerTraits<WorkerTag>::ContextType;
-		};
-
-		template<>
-		struct NodeTraits<FirstInferenceModelNode>
-		{
-			using WorkerTag = DefaultInferenceModelWorker;
-			using ContextType = WorkerTraits<WorkerTag>::ContextType;
-		};
-
-		template<>
-		struct NodeTraits<FirstServerSenderNode>
-		{
-			using WorkerTag = DefaultServerSenderWorker;
-			using ContextType = WorkerTraits<WorkerTag>::ContextType;
-		};
-
-		template<>
-		struct NodeTraits<FirstClientReceiverNode>
+		struct NodeTraits<ClientImageReceiverNode>
 		{
 			using WorkerTag = DefaultClientReceiverWorker;
 			using ContextType = WorkerTraits<WorkerTag>::ContextType;
 		};
 
 		template<>
-		struct NodeTraits<SecondNormalizerNode>
+		struct NodeTraits<ClientSecondImageNormalizerNode>
 		{
 			using WorkerTag = DefaultNormalizerWorker;
 			using ContextType = WorkerTraits<WorkerTag>::ContextType;
 		};
 
 		template<>
-		struct NodeTraits<FirstDisplayerNode>
+		struct NodeTraits<ClientImageDisplayerNode>
 		{
 			using WorkerTag = DefaultDisplayerWorker;
+			using ContextType = WorkerTraits<WorkerTag>::ContextType;
+		};
+
+		template<>
+		struct NodeTraits<ServerImageReceiverNode>
+		{
+			using WorkerTag = DefaultServerReceiverWorker;
+			using ContextType = WorkerTraits<WorkerTag>::ContextType;
+		};
+
+		template<>
+		struct NodeTraits<ServerInferenceInputProcessorNode>
+		{
+			using WorkerTag = DefaultInferenceInputProcessorWorker;
+			using ContextType = WorkerTraits<WorkerTag>::ContextType;
+		};
+
+		template<>
+		struct NodeTraits<ServerInferenceModelNode>
+		{
+			using WorkerTag = DefaultInferenceModelWorker;
+			using ContextType = WorkerTraits<WorkerTag>::ContextType;
+		};
+
+		template<>
+		struct NodeTraits<ServerImageSenderNode>
+		{
+			using WorkerTag = DefaultServerSenderWorker;
 			using ContextType = WorkerTraits<WorkerTag>::ContextType;
 		};
 	}

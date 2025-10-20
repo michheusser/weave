@@ -7,6 +7,9 @@
 #include <opencv2/videoio.hpp>
 #include "Configuration.h"
 #include <weave/error/Result.h>
+
+#include "Context.h"
+
 namespace test
 {
 	namespace module
@@ -14,7 +17,7 @@ namespace test
 		class Displayer
 		{
 		public:
-			explicit Displayer(const DisplayerConfiguration& configuration);
+			explicit Displayer(const Context<constants::ModuleType::ImageDisplayer>& context);
 			~Displayer();
 			void initialize();
 			weave::error::Result process(const cv::Mat& frameBuffer) noexcept;

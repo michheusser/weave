@@ -13,7 +13,7 @@ namespace test
 {
 	namespace module
 	{
-		InferenceInputProcessor::InferenceInputProcessor(const InferenceInputProcessorConfiguration& configuration) : _configuration(configuration)
+		InferenceInputProcessor::InferenceInputProcessor(const Context<constants::ModuleType::InferenceInputProcessor>& context) : _configuration(context.configuration)
 		{}
 
 		void InferenceInputProcessor::initialize()

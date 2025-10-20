@@ -11,7 +11,7 @@
 #include <vector>
 #include <algorithm>
 
-#include "Constants.h"
+#include "constants.h"
 #include <weave/error/Exception.h>
 #include <weave/error/Result.h>
 #include <weave/logging/Macros.h>
@@ -27,9 +27,9 @@ namespace test
 				try
 				{
 					sockaddr_in addressObject{};
-					addressObject.sin_family = Constants::IPv4_FAMILY;
+					addressObject.sin_family = constants::IPv4_FAMILY;
 					addressObject.sin_port = htons(port);
-					int clientAddressRval = ::inet_pton(Constants::IPv4_FAMILY, address.c_str(), &addressObject.sin_addr);
+					int clientAddressRval = ::inet_pton(constants::IPv4_FAMILY, address.c_str(), &addressObject.sin_addr);
 					if (clientAddressRval == 0)
 					{
 						throw weave::error::Exception("Invalid IP Address");
@@ -51,7 +51,7 @@ namespace test
 			{
 				try
 				{
-					int fileDescriptor = ::socket(Constants::IPv4_FAMILY, Constants::TCP_SOCKET_TYPE, 0);
+					int fileDescriptor = ::socket(constants::IPv4_FAMILY, constants::TCP_SOCKET_TYPE, 0);
 					if (fileDescriptor == -1)
 					{
 						throw weave::error::Exception("System Error" + errnoToString(errno));

@@ -11,7 +11,7 @@ namespace test
 {
 	namespace streaming
 	{
-		namespace Constants
+		namespace constants
 		{
 			constexpr int IPv4_FAMILY = AF_INET;
 			constexpr int TCP_SOCKET_TYPE = SOCK_STREAM;

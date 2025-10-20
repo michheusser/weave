@@ -8,10 +8,14 @@
 #include <weave/user/ProcessorTraits.h>
 #include "../modules/Context.h"
 #include "../modules/Capturer.h"
+#include "../modules/ClientReceiver.h"
+#include "../modules/ClientSender.h"
 #include "../modules/Preprocessor.h"
 #include "../modules/Displayer.h"
 #include "../modules/InferenceInputProcessor.h"
 #include "../modules/InferenceModel.h"
+#include "../modules/ServerReceiver.h"
+#include "../modules/ServerSender.h"
 
 struct DefaultCapturerProcessor
 {};
@@ -65,7 +69,7 @@ namespace weave
 		{
 			using ProcessorTag = DefaultClientSenderProcessor;
 			using ContextType = test::module::Context<test::module::constants::ModuleType::ClientSender>;
-			using ModuleType = void; // TODO
+			using ModuleType = test::module::ClientSender;
 		};
 
 		template<>
@@ -73,7 +77,7 @@ namespace weave
 		{
 			using ProcessorTag = DefaultServerReceiverProcessor;
 			using ContextType = test::module::Context<test::module::constants::ModuleType::ServerReceiver>;
-			using ModuleType = void; // TODO
+			using ModuleType = test::module::ServerReceiver;
 		};
 
 		template<>
@@ -97,7 +101,7 @@ namespace weave
 		{
 			using ProcessorTag = DefaultServerSenderProcessor;
 			using ContextType = test::module::Context<test::module::constants::ModuleType::ServerSender>;
-			using ModuleType = void; // TODO
+			using ModuleType = test::module::ServerSender;
 		};
 
 		template<>
@@ -105,7 +109,7 @@ namespace weave
 		{
 			using ProcessorTag = DefaultClientReceiverProcessor;
 			using ContextType = test::module::Context<test::module::constants::ModuleType::ClientReceiver>;
-			using ModuleType = void; // TODO
+			using ModuleType = test::module::ClientReceiver;
 		};
 
 		template<>

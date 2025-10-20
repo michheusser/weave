@@ -8,6 +8,8 @@
 #include <opencv2/videoio.hpp>
 #include <weave/error/Result.h>
 
+#include "Context.h"
+
 namespace test
 {
 	namespace module
@@ -15,7 +17,7 @@ namespace test
 		class Capturer
 		{
 		public:
-			explicit Capturer(const CapturerConfiguration& configuration);
+			explicit Capturer(const Context<constants::ModuleType::ImageCapturer>& context);
 			// TODO Further constructors missing
 			~Capturer();
 			void initialize();

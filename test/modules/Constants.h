@@ -8,6 +8,7 @@
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/videoio.hpp>
 #include <onnxruntime_c_api.h>
+#include <sys/socket.h>
 
 namespace test
 {
