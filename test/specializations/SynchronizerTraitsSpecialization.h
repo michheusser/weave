@@ -12,10 +12,28 @@
 struct DefaultCapturerSynchronizer
 {};
 
-struct DefaultDisplayerSynchronizer
+struct DefaultNormalizerSynchronizer
 {};
 
-struct DefaultNormalizerSynchronizer
+struct DefaultClientSenderSynchronizer
+{};
+
+struct DefaultServerReceiverSynchronizer
+{};
+
+struct DefaultInferenceInputProcessorSynchronizer
+{};
+
+struct DefaultInferenceModelSynchronizer
+{};
+
+struct DefaultServerSenderSynchronizer
+{};
+
+struct DefaultClientReceiverSynchronizer
+{};
+
+struct DefaultDisplayerSynchronizer
 {};
 
 namespace weave
@@ -30,16 +48,58 @@ namespace weave
 		};
 
 		template<>
-		struct SynchronizerTraits<DefaultDisplayerSynchronizer>
+		struct SynchronizerTraits<DefaultNormalizerSynchronizer>
 		{
-			using ProcessorTag = DefaultDisplayerProcessor;
+			using ProcessorTag = DefaultNormalizerProcessor;
 			using ContextType = ProcessorTraits<ProcessorTag>::ContextType;
 		};
 
 		template<>
-		struct SynchronizerTraits<DefaultNormalizerSynchronizer>
+		struct SynchronizerTraits<DefaultClientSenderSynchronizer>
 		{
-			using ProcessorTag = DefaultNormalizerProcessor;
+			using ProcessorTag = DefaultClientSenderProcessor;
+			using ContextType = ProcessorTraits<ProcessorTag>::ContextType;
+		};
+
+		template<>
+		struct SynchronizerTraits<DefaultServerReceiverSynchronizer>
+		{
+			using ProcessorTag = DefaultServerReceiverProcessor;
+			using ContextType = ProcessorTraits<ProcessorTag>::ContextType;
+		};
+
+		template<>
+		struct SynchronizerTraits<DefaultInferenceInputProcessorSynchronizer>
+		{
+			using ProcessorTag = DefaultInferenceInputProcessorProcessor;
+			using ContextType = ProcessorTraits<ProcessorTag>::ContextType;
+		};
+
+		template<>
+		struct SynchronizerTraits<DefaultInferenceModelSynchronizer>
+		{
+			using ProcessorTag = DefaultInferenceModelProcessor;
+			using ContextType = ProcessorTraits<ProcessorTag>::ContextType;
+		};
+
+		template<>
+		struct SynchronizerTraits<DefaultServerSenderSynchronizer>
+		{
+			using ProcessorTag = DefaultServerSenderProcessor;
+			using ContextType = ProcessorTraits<ProcessorTag>::ContextType;
+		};
+
+		template<>
+		struct SynchronizerTraits<DefaultClientReceiverSynchronizer>
+		{
+			using ProcessorTag = DefaultClientReceiverProcessor;
+			using ContextType = ProcessorTraits<ProcessorTag>::ContextType;
+		};
+
+		template<>
+		struct SynchronizerTraits<DefaultDisplayerSynchronizer>
+		{
+			using ProcessorTag = DefaultDisplayerProcessor;
 			using ContextType = ProcessorTraits<ProcessorTag>::ContextType;
 		};
 	}

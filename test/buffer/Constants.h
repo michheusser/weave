@@ -15,17 +15,9 @@ namespace test
 		{
 			enum class BufferType
 			{
-				Image
+				Image,
+				InferenceInputTensor
 			};
-
-			constexpr int RAW_FRAME_HEIGHT = 1080;
-			constexpr int RAW_FRAME_WIDTH = 1920;
-			constexpr int RAW_FRAME_TYPE = CV_8UC3; // RGB, 8-bit
-
-			constexpr int FRAME_HEIGHT = 256;
-			constexpr int FRAME_WIDTH = 256;
-			constexpr int FRAME_TYPE = CV_8UC3; // RGB, 8-bit
-
 		}
 	}
 }

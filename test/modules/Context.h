@@ -30,7 +30,19 @@ namespace test
 		template<>
 		struct Context<constants::ModuleType::ImageNormalizer>
 		{
-			PreprocessorConfiguration configuration;
+			NormalizerConfiguration configuration;
+		};
+
+		template<>
+		struct Context<constants::ModuleType::InferenceInputProcessor>
+		{
+			InferenceInputProcessorConfiguration configuration;
+		};
+
+		template<>
+		struct Context<constants::ModuleType::InferenceModel>
+		{
+			InferenceModelConfiguration configuration;
 		};
 	}
 }

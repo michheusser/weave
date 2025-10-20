@@ -13,6 +13,9 @@
 struct DefaultImageChannel
 {};
 
+struct DefaultInferenceInputTensorChannel
+{};
+
 namespace weave
 {
 	namespace user
@@ -22,6 +25,13 @@ namespace weave
 		struct ChannelTraits<DefaultImageChannel>
 		{
 			using RingBufferTag = DefaultImageRingBuffer;
+			using ContextType = RingBufferTraits<RingBufferTag>::ContextType;
+		};
+
+		template<>
+		struct ChannelTraits<DefaultInferenceInputTensorChannel>
+		{
+			using RingBufferTag = DefaultInferenceInputTensorRingBuffer;
 			using ContextType = RingBufferTraits<RingBufferTag>::ContextType;
 		};
 	}

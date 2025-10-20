@@ -13,6 +13,9 @@
 struct DefaultImageRingBuffer
 {};
 
+struct DefaultInferenceInputTensorRingBuffer
+{};
+
 namespace weave
 {
 	namespace user
@@ -20,10 +23,16 @@ namespace weave
 		template<>
 		struct RingBufferTraits<DefaultImageRingBuffer>
 		{
-			using SlotTag = ImageSlot;
-			using ContextType =  Slot<SlotTag>::ContextType;
+			using SlotTag = DefaultImageSlot;
+			using ContextType = Slot<SlotTag>::ContextType;
 		};
 
+		template<>
+		struct RingBufferTraits<DefaultInferenceInputTensorRingBuffer>
+		{
+			using SlotTag = DefaultInferenceInputTensorSlot;
+			using ContextType = Slot<SlotTag>::ContextType;
+		};
 	}
 }
 

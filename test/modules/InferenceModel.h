@@ -22,7 +22,7 @@ namespace test
 		public:
 			explicit InferenceModel(const InferenceModelConfiguration& configuration);
 			void initialize();
-			weave::error::Result executeInference(const Ort::Value& inputTensor, cv::Mat& outputFrame) const noexcept;
+			weave::error::Result process(const Ort::Value& inputTensor, cv::Mat& outputFrame) const noexcept;
 		private:
 			InferenceModelConfiguration _configuration;
 			std::unique_ptr<Ort::Env> _env;

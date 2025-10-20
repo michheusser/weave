@@ -12,10 +12,28 @@
 struct DefaultCapturerWorker
 {};
 
-struct DefaultDisplayerWorker
+struct DefaultNormalizerWorker
 {};
 
-struct DefaultNormalizerWorker
+struct DefaultClientSenderWorker
+{};
+
+struct DefaultServerReceiverWorker
+{};
+
+struct DefaultInferenceInputProcessorWorker
+{};
+
+struct DefaultInferenceModelWorker
+{};
+
+struct DefaultServerSenderWorker
+{};
+
+struct DefaultClientReceiverWorker
+{};
+
+struct DefaultDisplayerWorker
 {};
 
 namespace weave
@@ -30,16 +48,58 @@ namespace weave
 		};
 
 		template<>
-		struct WorkerTraits<DefaultDisplayerWorker>
+		struct WorkerTraits<DefaultNormalizerWorker>
 		{
-			using SynchronizerTag = DefaultDisplayerSynchronizer;
+			using SynchronizerTag = DefaultNormalizerSynchronizer;
 			using ContextType = SynchronizerTraits<SynchronizerTag>::ContextType;
 		};
 
 		template<>
-		struct WorkerTraits<DefaultNormalizerWorker>
+		struct WorkerTraits<DefaultClientSenderWorker>
 		{
-			using SynchronizerTag = DefaultNormalizerSynchronizer;
+			using SynchronizerTag = DefaultClientSenderSynchronizer;
+			using ContextType = SynchronizerTraits<SynchronizerTag>::ContextType;
+		};
+
+		template<>
+		struct WorkerTraits<DefaultServerReceiverWorker>
+		{
+			using SynchronizerTag = DefaultServerReceiverSynchronizer;
+			using ContextType = SynchronizerTraits<SynchronizerTag>::ContextType;
+		};
+
+		template<>
+		struct WorkerTraits<DefaultInferenceInputProcessorWorker>
+		{
+			using SynchronizerTag = DefaultInferenceInputProcessorSynchronizer;
+			using ContextType = SynchronizerTraits<SynchronizerTag>::ContextType;
+		};
+
+		template<>
+		struct WorkerTraits<DefaultInferenceModelWorker>
+		{
+			using SynchronizerTag = DefaultInferenceModelSynchronizer;
+			using ContextType = SynchronizerTraits<SynchronizerTag>::ContextType;
+		};
+
+		template<>
+		struct WorkerTraits<DefaultServerSenderWorker>
+		{
+			using SynchronizerTag = DefaultServerSenderSynchronizer;
+			using ContextType = SynchronizerTraits<SynchronizerTag>::ContextType;
+		};
+
+		template<>
+		struct WorkerTraits<DefaultClientReceiverWorker>
+		{
+			using SynchronizerTag = DefaultClientReceiverSynchronizer;
+			using ContextType = SynchronizerTraits<SynchronizerTag>::ContextType;
+		};
+
+		template<>
+		struct WorkerTraits<DefaultDisplayerWorker>
+		{
+			using SynchronizerTag = DefaultDisplayerSynchronizer;
 			using ContextType = SynchronizerTraits<SynchronizerTag>::ContextType;
 		};
 	}

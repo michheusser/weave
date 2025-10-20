@@ -20,7 +20,8 @@ namespace test
 		{
 		public:
 			explicit InferenceInputProcessor(const InferenceInputProcessorConfiguration& configuration);
-			weave::error::Result preprocessFrame(const cv::Mat& convertedFrame, Ort::Value& inputTensor) const noexcept;
+			void initialize();
+			weave::error::Result process(const cv::Mat& convertedFrame, Ort::Value& inputTensor) const noexcept;
 		private:
 			InferenceInputProcessorConfiguration _configuration;
 		};

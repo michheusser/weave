@@ -19,7 +19,7 @@ namespace test
 			uint32_t captureAPI;
 		};
 
-		struct PreprocessorConfiguration
+		struct NormalizerConfiguration
 		{
 			int destinationWidth;
 			int destinationHeight;

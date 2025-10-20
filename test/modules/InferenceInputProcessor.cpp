@@ -9,7 +9,6 @@
 #include "Constants.h"
 #include <opencv2/opencv.hpp>
 
-
 namespace test
 {
 	namespace module
@@ -17,7 +16,10 @@ namespace test
 		InferenceInputProcessor::InferenceInputProcessor(const InferenceInputProcessorConfiguration& configuration) : _configuration(configuration)
 		{}
 
-		weave::error::Result InferenceInputProcessor::preprocessFrame(const cv::Mat& sourceFrame, Ort::Value& inputTensor) const noexcept
+		void InferenceInputProcessor::initialize()
+		{}
+
+		weave::error::Result InferenceInputProcessor::process(const cv::Mat& sourceFrame, Ort::Value& inputTensor) const noexcept
 		{
 			cv::Mat convertedFrame;
 			sourceFrame.convertTo(convertedFrame, _configuration.rtype, _configuration.alpha); // TODO Big optimization potential. This is not zero-copy!

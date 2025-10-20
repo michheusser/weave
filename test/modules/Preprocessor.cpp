@@ -10,7 +10,7 @@ namespace test
 {
 	namespace module
 	{
-		Preprocessor::Preprocessor(const PreprocessorConfiguration& configuration) :
+		Preprocessor::Preprocessor(const NormalizerConfiguration& configuration) :
 			_destinationSize(configuration.destinationWidth, configuration.destinationHeight)
 		{}
 

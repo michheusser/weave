@@ -57,6 +57,8 @@ add_library(test STATIC
 
 target_include_directories(test PUBLIC ${OpenCV_INCLUDE_DIRS})
 target_link_libraries(test PUBLIC ${OpenCV_LIBS} ONNXRuntime::ONNXRuntime graph error logging utilities user)
+target_compile_definitions(test PUBLIC WEAVE_MODELS_LOCATION=\"${CMAKE_HOME_DIRECTORY}/test/models/fast-neural-stayle-transfer\")
+
 
 if (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     message(STATUS "Detected macOS")

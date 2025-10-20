@@ -12,10 +12,31 @@
 struct FirstCapturerNode
 {};
 
-struct FirstDisplayerNode
+struct FirstNormalizerNode
 {};
 
-struct FirstNormalizerNode
+struct FirstClientSenderNode
+{};
+
+struct FirstServerReceiverNode
+{};
+
+struct FirstInferenceInputProcessorNode
+{};
+
+struct FirstInferenceModelNode
+{};
+
+struct FirstServerSenderNode
+{};
+
+struct FirstClientReceiverNode
+{};
+
+struct SecondNormalizerNode
+{};
+
+struct FirstDisplayerNode
 {};
 
 namespace weave
@@ -30,16 +51,65 @@ namespace weave
 		};
 
 		template<>
-		struct NodeTraits<FirstDisplayerNode>
+		struct NodeTraits<FirstNormalizerNode>
 		{
-			using WorkerTag = DefaultDisplayerWorker;
+			using WorkerTag = DefaultNormalizerWorker;
 			using ContextType = WorkerTraits<WorkerTag>::ContextType;
 		};
 
 		template<>
-		struct NodeTraits<FirstNormalizerNode>
+		struct NodeTraits<FirstClientSenderNode>
+		{
+			using WorkerTag = DefaultClientSenderWorker;
+			using ContextType = WorkerTraits<WorkerTag>::ContextType;
+		};
+
+		template<>
+		struct NodeTraits<FirstServerReceiverNode>
+		{
+			using WorkerTag = DefaultServerReceiverWorker;
+			using ContextType = WorkerTraits<WorkerTag>::ContextType;
+		};
+
+		template<>
+		struct NodeTraits<FirstInferenceInputProcessorNode>
+		{
+			using WorkerTag = DefaultInferenceInputProcessorWorker;
+			using ContextType = WorkerTraits<WorkerTag>::ContextType;
+		};
+
+		template<>
+		struct NodeTraits<FirstInferenceModelNode>
+		{
+			using WorkerTag = DefaultInferenceModelWorker;
+			using ContextType = WorkerTraits<WorkerTag>::ContextType;
+		};
+
+		template<>
+		struct NodeTraits<FirstServerSenderNode>
+		{
+			using WorkerTag = DefaultServerSenderWorker;
+			using ContextType = WorkerTraits<WorkerTag>::ContextType;
+		};
+
+		template<>
+		struct NodeTraits<FirstClientReceiverNode>
+		{
+			using WorkerTag = DefaultClientReceiverWorker;
+			using ContextType = WorkerTraits<WorkerTag>::ContextType;
+		};
+
+		template<>
+		struct NodeTraits<SecondNormalizerNode>
 		{
 			using WorkerTag = DefaultNormalizerWorker;
+			using ContextType = WorkerTraits<WorkerTag>::ContextType;
+		};
+
+		template<>
+		struct NodeTraits<FirstDisplayerNode>
+		{
+			using WorkerTag = DefaultDisplayerWorker;
 			using ContextType = WorkerTraits<WorkerTag>::ContextType;
 		};
 	}

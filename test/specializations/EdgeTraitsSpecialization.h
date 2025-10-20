@@ -9,10 +9,19 @@
 #include "ChannelTraitsSpecialization.h"
 #include "../buffer/Context.h"
 
-struct FirstImageEdge
+struct FirstRawImageEdge
 {};
 
-struct SecondImageEdge
+struct FirstNormalizedImageEdge
+{};
+
+struct FirstInferenceInputTensorEdge
+{};
+
+struct FirstInferenceOutputImageEdge
+{};
+
+struct SecondNormalizedImageEdge
 {};
 
 namespace weave
@@ -21,19 +30,39 @@ namespace weave
 	{
 		// TODO Consider making traits classes part of the actual class header (Channel.h)
 		template<>
-		struct EdgeTraits<FirstImageEdge>
+		struct EdgeTraits<FirstRawImageEdge>
 		{
 			using ChannelTag = DefaultImageChannel;
 			using ContextType = ChannelTraits<ChannelTag>::ContextType;
 		};
 
 		template<>
-		struct EdgeTraits<SecondImageEdge>
+		struct EdgeTraits<FirstNormalizedImageEdge>
 		{
 			using ChannelTag = DefaultImageChannel;
 			using ContextType = ChannelTraits<ChannelTag>::ContextType;
 		};
 
+		template<>
+		struct EdgeTraits<FirstInferenceInputTensorEdge>
+		{
+			using ChannelTag = DefaultInferenceInputTensorChannel;
+			using ContextType = ChannelTraits<ChannelTag>::ContextType;
+		};
+
+		template<>
+		struct EdgeTraits<FirstInferenceOutputImageEdge>
+		{
+			using ChannelTag = DefaultImageChannel;
+			using ContextType = ChannelTraits<ChannelTag>::ContextType;
+		};
+
+		template<>
+		struct EdgeTraits<SecondNormalizedImageEdge>
+		{
+			using ChannelTag = DefaultImageChannel;
+			using ContextType = ChannelTraits<ChannelTag>::ContextType;
+		};
 	}
 }
 

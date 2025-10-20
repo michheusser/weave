@@ -20,6 +20,12 @@ namespace test
 		{
 			ImageBufferConfiguration configuration;
 		};
+
+		template<>
+		struct Context<constants::BufferType::InferenceInputTensor>
+		{
+			 TensorBufferConfiguration configuration;
+		};
 	}
 }
 

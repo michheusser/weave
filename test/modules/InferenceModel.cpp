@@ -32,7 +32,7 @@ namespace test
 			_outputName = _session->GetOutputNameAllocated(0, allocator);
 		}
 
-		weave::error::Result InferenceModel::executeInference(const Ort::Value& inputTensor, cv::Mat& outputFrame) const noexcept
+		weave::error::Result InferenceModel::process(const Ort::Value& inputTensor, cv::Mat& outputFrame) const noexcept
 		{
 			// Run inference
 			const char* inputNames[] = {_inputName->get()};
