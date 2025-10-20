@@ -22,7 +22,7 @@ namespace test
 		public:
 			explicit Encoder(const EncoderConfiguration& configuration);
 			// TODO Further constructors/Destructors
-			weave::error::Result encodeFrameIntoBuffer(const cv::Mat& sourceFrame, std::vector<uint8_t>& destinationBuffer, uint32_t frameID) const noexcept;
+			weave::error::Result encodeFrameIntoBuffer(const cv::Mat& sourceFrame, std::vector<uint8_t>& destinationBuffer) const noexcept;
 		private:
 			const std::string _encodingFormat;
 			const std::vector<int> _encodingParameters;

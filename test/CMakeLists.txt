@@ -25,6 +25,14 @@ add_library(test STATIC
         modules/Preprocessor.cpp
         modules/Preprocessor.h
         modules/MessageHeader.h
+        modules/ClientReceiver.cpp
+        modules/ClientReceiver.h
+        modules/ClientSender.cpp
+        modules/ClientSender.h
+        modules/ServerReceiver.cpp
+        modules/ServerReceiver.h
+        modules/ServerSender.cpp
+        modules/ServerSender.h
 
         utilities/DisplayBridge.cpp
         utilities/DisplayBridge.h

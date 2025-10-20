@@ -17,8 +17,9 @@ namespace test
 		Encoder::Encoder(const EncoderConfiguration& configuration) : _encodingFormat(configuration.encodingFormat), _encodingParameters(configuration.encodingParameters)
 		{}
 
-		weave::error::Result Encoder::encodeFrameIntoBuffer(const cv::Mat& sourceFrame, std::vector<uint8_t>& destinationBuffer, const uint32_t frameID) const noexcept
+		weave::error::Result Encoder::encodeFrameIntoBuffer(const cv::Mat& sourceFrame, std::vector<uint8_t>& destinationBuffer) const noexcept
 		{
+			const uint32_t frameID = 0; // TODO Deal with frames
 			if (sourceFrame.empty())
 			{
 				return {weave::error::Type::EmptyBuffer, frameID}; // Empty frame

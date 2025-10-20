@@ -41,6 +41,11 @@ namespace test
 			int flags;
 		};
 
+		struct NetworkBufferConfiguration
+		{
+			int bufferSize;
+		};
+
 		struct InferenceInputProcessorConfiguration
 		{
 			int rtype;

@@ -7,6 +7,8 @@
 
 #include "Constants.h"
 #include "Configuration.h"
+#include "../streaming/NetworkClient.h"
+#include "../streaming/NetworkServer.h"
 
 namespace test
 {
@@ -43,6 +45,38 @@ namespace test
 		struct Context<constants::ModuleType::InferenceModel>
 		{
 			InferenceModelConfiguration configuration;
+		};
+
+		template<>
+		struct Context<constants::ModuleType::ClientReceiver>
+		{
+			NetworkBufferConfiguration networkBufferConfiguration;
+			DecoderConfiguration decoderConfiguration;
+			std::shared_ptr<streaming::NetworkClient> networkClient;
+		};
+
+		template<>
+		struct Context<constants::ModuleType::ClientSender>
+		{
+			NetworkBufferConfiguration networkBufferConfiguration;
+			EncoderConfiguration encoderConfiguration;
+			std::shared_ptr<streaming::NetworkClient> networkClient;
+		};
+
+		template<>
+		struct Context<constants::ModuleType::ServerReceiver>
+		{
+			NetworkBufferConfiguration networkBufferConfiguration;
+			DecoderConfiguration decoderConfiguration;
+			std::shared_ptr<streaming::NetworkServer> networkServer;
+		};
+
+		template<>
+		struct Context<constants::ModuleType::ServerSender>
+		{
+			NetworkBufferConfiguration networkBufferConfiguration;
+			EncoderConfiguration encoderConfiguration;
+			std::shared_ptr<streaming::NetworkServer> networkServer;
 		};
 	}
 }

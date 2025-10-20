@@ -41,7 +41,6 @@ namespace weave
 		class Slot<DefaultInferenceInputTensorSlot>
 		{
 		public:
-			// TODO This has to be made generic so it can be implemented by user. This contains already the Traits, so functional parts could be made generic and the user part a traits (TODO LATER)
 			using Type = DefaultInferenceInputTensorSlot;
 			using StorageType = Ort::Value;
 			using ContextType = test::buffer::Context<test::buffer::constants::BufferType::InferenceInputTensor>;
