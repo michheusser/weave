@@ -8,8 +8,8 @@
 #include <cstdint>
 #include <cassert>
 #include <array>
-#include <weave/user/Slot.h>
 
+#include <weave/buffer/Slot.h>
 #include <weave/error/Exception.h>
 #include <weave/logging/Macros.h>
 
@@ -17,23 +17,23 @@ namespace weave
 {
 	namespace buffer
 	{
-		template <typename RingBufferTag, size_t numSlots>
+		template<typename RingBufferTag, size_t numSlots>
 		class RingBuffer
 		{
 		public:
 			using SlotTag = RingBufferTag;
-			using ContextType = typename user::Slot<SlotTag>::ContextType;
+			using ContextType = typename Slot<SlotTag>::ContextType;
 
 			// We do not throw errors, but rather have contracts (assert), since we have the invariant that reader and writer will
 			// only exist when the RingBuffer is not empty and not full respectively. Thus, we do not return error codes.
-			RingBuffer() :  _usedCount(0), _head(0), _tail(0)
+			RingBuffer() : _usedCount(0), _head(0), _tail(0)
 			{}
 
 			void initialize(const ContextType& context)
 			{
 				try
 				{
-					for (user::Slot<SlotTag>& curSlot : _slotArray)
+					for (Slot<SlotTag>& curSlot: _slotArray)
 					{
 						curSlot.initialize(context); // TODO Still pending
 					}
@@ -65,7 +65,7 @@ namespace weave
 				return used() == NUM_SLOTS;
 			}
 
-			typename user::Slot<SlotTag>::StorageType& newSlot() noexcept
+			typename Slot<SlotTag>::StorageType& newSlot() noexcept
 			{
 				assert(!full());
 				return _slotArray[_head].data();
@@ -86,13 +86,13 @@ namespace weave
 				++_usedCount;
 			}
 
-			typename user::Slot<SlotTag>::StorageType& front() noexcept
+			typename Slot<SlotTag>::StorageType& front() noexcept
 			{
 				assert(!empty());
 				return _slotArray[_tail].data();
 			}
 
-			const typename user::Slot<SlotTag>::StorageType& front() const noexcept
+			const typename Slot<SlotTag>::StorageType& front() const noexcept
 			{
 				assert(!empty());
 				return _slotArray[_tail].data();
@@ -103,13 +103,13 @@ namespace weave
 				assert(!empty());
 				return _frameIDs[_tail];
 			}
+
 		private:
 			// TODO In general a lot of improvement potential here by using a custom allocator or to make sure that all the underlying data
 			//  is put together and not spread across the heap (e.g. if InternalData is a string or a vector)
 
-
 			static constexpr uint64_t NUM_SLOTS = numSlots;
-			std::array<user::Slot<SlotTag>, NUM_SLOTS> _slotArray;
+			std::array<Slot<SlotTag>, NUM_SLOTS> _slotArray;
 			std::array<uint32_t, NUM_SLOTS> _frameIDs;
 			uint64_t _usedCount;
 			uint64_t _head; // Writes/pushes happen here

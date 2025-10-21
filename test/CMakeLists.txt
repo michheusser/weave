@@ -34,6 +34,11 @@ add_library(test STATIC
         modules/ServerSender.cpp
         modules/ServerSender.h
 
+        slots/Image.cpp
+        slots/Image.h
+        slots/InferenceTensor.cpp
+        slots/InferenceTensor.h
+
         utilities/DisplayBridge.cpp
         utilities/DisplayBridge.h
 
@@ -52,9 +57,8 @@ add_library(test STATIC
         streaming/NetworkUtilities.cpp
         streaming/NetworkUtilities.h
 
-        specializations/SlotSpecialization.h
-        specializations/SlotSpecialization.cpp
         specializations/ProcessorTraitsSpecialization.h
+        specializations/SlotTraitsSpecialization.h
 )
 
 target_include_directories(test PUBLIC ${OpenCV_INCLUDE_DIRS})

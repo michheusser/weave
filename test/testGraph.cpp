@@ -3,7 +3,7 @@
 // https://github.com/michheusser
 
 #include "specializations/ProcessorTraitsSpecialization.h"
-#include "specializations/SlotSpecialization.h"
+#include "specializations/SlotTraitsSpecialization.h"
 #include <weave/graph/Builder.h>
 
 #include "modules/Constants.h"

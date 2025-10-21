@@ -7,6 +7,7 @@ add_library(buffer STATIC
         include/weave/buffer/ReaderAcquirer.h
         include/weave/buffer/Writer.h
         include/weave/buffer/WriterAcquirer.h
+        include/weave/buffer/Slot.h
         source/Dummy.cpp
         source/Dummy.h
 )

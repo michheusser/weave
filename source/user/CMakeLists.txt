@@ -1,5 +1,5 @@
 add_library(user STATIC
-        include/weave/user/Slot.h
+        include/weave/user/SlotTraits.h
         include/weave/user/ProcessorTraits.h
         source/Dummy.cpp
 )

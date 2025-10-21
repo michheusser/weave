@@ -6,7 +6,7 @@
 #include <weave/error/Result.h>
 #include <weave/buffer/Constants.h>
 #include <weave/buffer/ReaderAcquirer.h>
-#include <weave/user/Slot.h>
+#include <weave/buffer/Slot.h>
 
 namespace weave
 {
@@ -18,7 +18,7 @@ namespace weave
 		public:
 			using RingBufferTag = ChannelTag;
 			using SlotTag = ChannelTag;
-			using StorageType = typename user::Slot<SlotTag>::StorageType;
+			using StorageType = typename Slot<SlotTag>::StorageType;
 
 			explicit Reader(std::shared_mutex& mutex, std::condition_variable_any& conditionVariableRead, std::condition_variable_any& conditionVariableWrite,
 			                RingBuffer<RingBufferTag, numSlots>& queueBuffer) noexcept : _mutex(mutex), _conditionVariableRead(conditionVariableRead), _conditionVariableWrite(conditionVariableWrite),
