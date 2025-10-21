@@ -9,7 +9,6 @@
 #include <cassert>
 #include <array>
 #include <weave/user/Slot.h>
-#include <weave/user/RingBufferTraits.h>
 
 #include <weave/error/Exception.h>
 #include <weave/logging/Macros.h>
@@ -22,13 +21,15 @@ namespace weave
 		class RingBuffer
 		{
 		public:
-			using SlotTag = typename user::RingBufferTraits<RingBufferTag>::SlotTag;
+			using SlotTag = RingBufferTag;
+			using ContextType = typename user::Slot<SlotTag>::ContextType;
+
 			// We do not throw errors, but rather have contracts (assert), since we have the invariant that reader and writer will
 			// only exist when the RingBuffer is not empty and not full respectively. Thus, we do not return error codes.
 			RingBuffer() :  _usedCount(0), _head(0), _tail(0)
 			{}
 
-			void initialize(const typename user::RingBufferTraits<RingBufferTag>::ContextType& context)
+			void initialize(const ContextType& context)
 			{
 				try
 				{

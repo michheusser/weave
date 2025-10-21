@@ -7,8 +7,6 @@
 #include <weave/buffer/Constants.h>
 #include <weave/buffer/WriterAcquirer.h>
 #include <weave/user/Slot.h>
-#include <weave/user/RingBufferTraits.h>
-#include <weave/user/ChannelTraits.h>
 
 namespace weave
 {
@@ -19,8 +17,8 @@ namespace weave
 		class Writer
 		{
 		public:
-			using RingBufferTag = typename user::ChannelTraits<ChannelTag>::RingBufferTag;
-			using SlotTag = typename user::RingBufferTraits<RingBufferTag>::SlotTag;
+			using RingBufferTag = ChannelTag;
+			using SlotTag = ChannelTag;
 			using StorageType = typename user::Slot<SlotTag>::StorageType;
 
 			explicit Writer(std::shared_mutex& mutex, std::condition_variable_any& conditionVariableRead, std::condition_variable_any& conditionVariableWrite,

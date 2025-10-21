@@ -7,22 +7,20 @@
 
 #include <weave/graph/Node.h>
 #include <weave/graph/Edge.h>
-#include <weave/user/EdgeTraits.h>
 
 namespace weave
 {
 	namespace graph
 	{
-		// TODO MAKE SURE THAT ALL BUFFERS ARE REALLY PASSED BY REFERENCE! (It will be anyways clear if the pipeline is broke)
 		template<typename GraphDescriptorType>
 		struct GraphDescriptionToTuples;
 		template<typename... NodeDescriptorTypes, typename... EdgeDescriptorTypes>
 		struct GraphDescriptionToTuples<GraphDescriptor<NodeDescriptorList<NodeDescriptorTypes...>, EdgeDescriptorList<EdgeDescriptorTypes...> > >
 		{
 			using NodeTuple = std::tuple<Node<NodeDescriptorTypes>...>;
-			using NodeContextTuple = std::tuple<typename user::NodeTraits<typename NodeDescriptorTypes::Tag>::ContextType...>;
+			using NodeContextTuple = std::tuple<typename Node<NodeDescriptorTypes>::ContextType...>;
 			using EdgeTuple = std::tuple<Edge<EdgeDescriptorTypes>...>;
-			using EdgeContextTuple = std::tuple<typename user::EdgeTraits<typename EdgeDescriptorTypes::Tag>::ContextType...>;
+			using EdgeContextTuple = std::tuple<typename Edge<EdgeDescriptorTypes>::ContextType...>;
 		};
 
 		template<typename NodeType>

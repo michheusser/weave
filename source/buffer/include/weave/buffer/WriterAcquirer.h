@@ -12,7 +12,6 @@
 #include <weave/buffer/Policy.h>
 #include <weave/buffer/Constants.h>
 #include <weave/buffer/RingBuffer.h>
-#include <weave/user/ChannelTraits.h>
 
 namespace weave
 {
@@ -27,7 +26,7 @@ namespace weave
 		class WriterAcquirer<ChannelTag, constants::PolicyType::Lossless, numSlots>
 		{
 			using Policy = Policy<constants::PolicyType::Lossless>;
-			using RingBufferTag = user::ChannelTraits<ChannelTag>::RingBufferTag;
+			using RingBufferTag = ChannelTag;
 
 		public:
 			static void acquire(std::shared_mutex& mutex, std::condition_variable_any& conditionVariableWrite, RingBuffer<RingBufferTag, numSlots>& ringBuffer, constants::WriterState& writerState) noexcept
@@ -47,7 +46,7 @@ namespace weave
 		{
 		public:
 			using Policy = Policy<constants::PolicyType::Realtime>;
-			using RingBufferTag = user::ChannelTraits<ChannelTag>::RingBufferTag;
+			using RingBufferTag = ChannelTag;
 
 			static void acquire(std::shared_mutex& mutex, std::condition_variable_any& conditionVariableWrite, RingBuffer<RingBufferTag, numSlots>& ringBuffer, constants::WriterState& writerState) noexcept
 			{
@@ -66,7 +65,7 @@ namespace weave
 		{
 		public:
 			using Policy = Policy<constants::PolicyType::Attempts>;
-			using RingBufferTag = user::ChannelTraits<ChannelTag>::RingBufferTag;
+			using RingBufferTag = ChannelTag;
 
 			static void acquire(std::shared_mutex& mutex, std::condition_variable_any& conditionVariableWrite, RingBuffer<RingBufferTag, numSlots>& ringBuffer, constants::WriterState& writerState) noexcept
 			{
@@ -97,7 +96,7 @@ namespace weave
 		{
 		public:
 			using Policy = Policy<constants::PolicyType::LiveStream>;
-			using RingBufferTag = user::ChannelTraits<ChannelTag>::RingBufferTag;
+			using RingBufferTag = ChannelTag;
 
 			static void acquire(std::shared_mutex& mutex, std::condition_variable_any& conditionVariableWrite, RingBuffer<RingBufferTag, numSlots>& ringBuffer, constants::WriterState& writerState) noexcept
 			{
@@ -118,7 +117,7 @@ namespace weave
 		{
 		public:
 			using Policy = Policy<constants::PolicyType::Throttled>;
-			using RingBufferTag = user::ChannelTraits<ChannelTag>::RingBufferTag;
+			using RingBufferTag = ChannelTag;
 
 			static void acquire(std::shared_mutex& mutex, std::condition_variable_any& conditionVariableWrite, RingBuffer<RingBufferTag, numSlots>& ringBuffer, constants::WriterState& writerState) noexcept
 			{

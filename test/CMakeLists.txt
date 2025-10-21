@@ -54,13 +54,7 @@ add_library(test STATIC
 
         specializations/SlotSpecialization.h
         specializations/SlotSpecialization.cpp
-        specializations/EdgeTraitsSpecialization.h
-        specializations/ChannelTraitsSpecialization.h
-        specializations/RingBufferTraitsSpecialization.h
         specializations/ProcessorTraitsSpecialization.h
-        specializations/WorkerTraitsSpecialization.h
-        specializations/NodeTraitsSpecialization.h
-        specializations/SynchronizerTraitsSpecialization.h
 )
 
 target_include_directories(test PUBLIC ${OpenCV_INCLUDE_DIRS})

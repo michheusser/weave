@@ -10,7 +10,6 @@
 #include <weave/error/Result.h>
 #include <weave/error/Exception.h>
 #include <weave/logging/Macros.h>
-#include <weave/user/WorkerTraits.h>
 #include <weave/utilities/SignalManager.h>
 
 namespace weave
@@ -21,8 +20,9 @@ namespace weave
 		class Worker
 		{
 		public:
-			using SynchronizerTag = typename user::WorkerTraits<WorkerTag>::SynchronizerTag;
-			explicit Worker(const typename user::WorkerTraits<WorkerTag>::ContextType& context) : _synchronizer(context)
+			using SynchronizerTag = WorkerTag;
+			using ContextType = typename Synchronizer<SynchronizerTag>::ContextType;
+			explicit Worker(const ContextType& context) : _synchronizer(context)
 			{}
 
 			// Custom move, only copies synchronizer, otherwise no default move constructor! (threads can't be moved)

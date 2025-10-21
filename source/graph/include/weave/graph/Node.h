@@ -8,7 +8,6 @@
 #include <weave/buffer/Channel.h>
 #include <weave/graph/Edge.h>
 #include <weave/worker/Worker.h>
-#include <weave/user/NodeTraits.h>
 
 namespace weave
 {
@@ -39,6 +38,7 @@ namespace weave
 			using FromNode = FromNodeTag;
 			using ToNode = ToNodeTag;
 			static constexpr size_t slots = numSlots;
+			using ChannelTag = Edge<EdgeDescriptor<Tag, FromNode, ToNode, slots>>::ChannelTag;
 		};
 
 		template<typename EdgeTupleType>
@@ -46,7 +46,7 @@ namespace weave
 		template<typename... Edges>
 		struct EdgeTupleToChannelTuple<std::tuple<Edges...> >
 		{
-			using ChannelTuple = std::tuple<buffer::Channel<typename user::EdgeTraits<typename ExtractEdgeParams<Edges>::Tag>::ChannelTag, Edge<typename ExtractEdgeDescriptor<Edges>::Descriptor>::policy, ExtractEdgeParams<Edges>::slots>&...>;
+			using ChannelTuple = std::tuple<buffer::Channel<typename ExtractEdgeParams<Edges>::ChannelTag, Edge<typename ExtractEdgeDescriptor<Edges>::Descriptor>::policy, ExtractEdgeParams<Edges>::slots>&...>;
 		};
 
 		template<typename T>
@@ -56,10 +56,10 @@ namespace weave
 		class Node
 		{
 		public:
-			// TODO Move worker class with generic tags to Graph
 			using NodeTag = typename ExtractNodeDescriptorParams<NodeDescriptorType>::Tag;
-			using WorkerTag = typename user::NodeTraits<NodeTag>::WorkerTag;
-			explicit Node(typename user::NodeTraits<NodeTag>::ContextType& context) : _worker(context)
+			using WorkerTag = NodeTag;
+			using ContextType = typename worker::Worker<WorkerTag>::ContextType;
+			explicit Node(ContextType& context) : _worker(context)
 			{}
 
 			template<typename InEdgesTupleType, typename OutEdgesTupleType>
@@ -89,6 +89,7 @@ namespace weave
 				// Passing it as template parameter requires too many unnecessary helper constructs.
 				ChannelTupleType tuple = {std::tuple_element_t<Indices, ChannelTupleType>(std::get<Indices>(edges).getChannel())...};
 				return tuple; // Move is not needed here, because we're passing tuple of references!
+				// TODO Construct in place!
 			}
 			worker::Worker<WorkerTag> _worker;
 		};

@@ -13,8 +13,6 @@
 #include <weave/buffer/Constants.h>
 #include <weave/buffer/RingBuffer.h>
 
-#include <weave/user/ChannelTraits.h>
-
 namespace weave
 {
 	namespace buffer
@@ -28,7 +26,7 @@ namespace weave
 		{
 		public:
 			using Policy = Policy<constants::PolicyType::Lossless>;
-			using RingBufferTag = user::ChannelTraits<ChannelTag>::RingBufferTag;
+			using RingBufferTag = ChannelTag;
 
 			static void acquire(std::shared_mutex& mutex, std::condition_variable_any& conditionVariableReader, RingBuffer<RingBufferTag, numSlots>& queueBuffer, constants::ReaderState& readerState) noexcept
 			{
@@ -46,7 +44,7 @@ namespace weave
 		{
 		public:
 			using Policy = Policy<constants::PolicyType::Realtime>;
-			using RingBufferTag = user::ChannelTraits<ChannelTag>::RingBufferTag;
+			using RingBufferTag = ChannelTag;
 
 			static void acquire(std::shared_mutex& mutex, std::condition_variable_any& conditionVariableReader, RingBuffer<RingBufferTag, numSlots>& queueBuffer, constants::ReaderState& readerState) noexcept
 			{
@@ -59,7 +57,7 @@ namespace weave
 		{
 		public:
 			using Policy = Policy<constants::PolicyType::Realtime>;
-			using RingBufferTag = user::ChannelTraits<ChannelTag>::RingBufferTag;
+			using RingBufferTag = ChannelTag;
 
 			static void acquire(std::shared_mutex& mutex, std::condition_variable_any& conditionVariableReader, RingBuffer<RingBufferTag, numSlots>& queueBuffer, constants::ReaderState& readerState) noexcept
 			{
@@ -72,7 +70,7 @@ namespace weave
 		{
 		public:
 			using Policy = Policy<constants::PolicyType::LiveStream>;
-			using RingBufferTag = user::ChannelTraits<ChannelTag>::RingBufferTag;
+			using RingBufferTag = ChannelTag;
 
 			static void acquire(std::shared_mutex& mutex, std::condition_variable_any& conditionVariableReader, RingBuffer<RingBufferTag, numSlots>& queueBuffer, constants::ReaderState& readerState) noexcept
 			{
@@ -85,7 +83,7 @@ namespace weave
 		{
 		public:
 			using Policy = Policy<constants::PolicyType::Throttled>;
-			using RingBufferTag = user::ChannelTraits<ChannelTag>::RingBufferTag;
+			using RingBufferTag = ChannelTag;
 
 			static void acquire(std::shared_mutex& mutex, std::condition_variable_any& conditionVariableReader, RingBuffer<RingBufferTag, numSlots>& queueBuffer, constants::ReaderState& readerState) noexcept
 			{

@@ -17,107 +17,113 @@
 #include "../modules/ServerReceiver.h"
 #include "../modules/ServerSender.h"
 
-struct DefaultCapturerProcessor
+struct ClientImageCapturer
 {};
 
-struct DefaultNormalizerProcessor
+struct ClientFirstImageNormalizer
 {};
 
-struct DefaultClientSenderProcessor
+struct ClientImageSender
 {};
 
-struct DefaultServerReceiverProcessor
+struct ClientImageReceiver
 {};
 
-struct DefaultInferenceInputProcessorProcessor
+struct ClientSecondImageNormalizer
 {};
 
-struct DefaultInferenceModelProcessor
+struct ClientImageDisplayer
 {};
 
-struct DefaultServerSenderProcessor
+
+struct ServerImageReceiver
 {};
 
-struct DefaultClientReceiverProcessor
+struct ServerInferenceInputProcessor
 {};
 
-struct DefaultDisplayerProcessor
+struct ServerInferenceModel
 {};
+
+struct ServerImageSender
+{};
+
 
 namespace weave
 {
 	namespace user
 	{
+		// CLIENT
+
 		template<>
-		struct ProcessorTraits<DefaultCapturerProcessor>
+		struct ProcessorTraits<ClientImageCapturer>
 		{
-			using ProcessorTag = DefaultCapturerProcessor;
 			using ContextType = test::module::Context<test::module::constants::ModuleType::ImageCapturer>;
 			using ModuleType = test::module::Capturer;
 		};
 
 		template<>
-		struct ProcessorTraits<DefaultNormalizerProcessor>
+		struct ProcessorTraits<ClientFirstImageNormalizer>
 		{
-			using ProcessorTag = DefaultNormalizerProcessor;
 			using ContextType = test::module::Context<test::module::constants::ModuleType::ImageNormalizer>;
 			using ModuleType = test::module::Preprocessor;
 		};
 
 		template<>
-		struct ProcessorTraits<DefaultClientSenderProcessor>
+		struct ProcessorTraits<ClientImageSender>
 		{
-			using ProcessorTag = DefaultClientSenderProcessor;
 			using ContextType = test::module::Context<test::module::constants::ModuleType::ClientSender>;
 			using ModuleType = test::module::ClientSender;
 		};
 
 		template<>
-		struct ProcessorTraits<DefaultServerReceiverProcessor>
+		struct ProcessorTraits<ClientImageReceiver>
 		{
-			using ProcessorTag = DefaultServerReceiverProcessor;
-			using ContextType = test::module::Context<test::module::constants::ModuleType::ServerReceiver>;
-			using ModuleType = test::module::ServerReceiver;
-		};
-
-		template<>
-		struct ProcessorTraits<DefaultInferenceInputProcessorProcessor>
-		{
-			using ProcessorTag = DefaultInferenceInputProcessorProcessor;
-			using ContextType = test::module::Context<test::module::constants::ModuleType::InferenceInputProcessor>;
-			using ModuleType = test::module::InferenceInputProcessor;
-		};
-
-		template<>
-		struct ProcessorTraits<DefaultInferenceModelProcessor>
-		{
-			using ProcessorTag = DefaultInferenceModelProcessor;
-			using ContextType = test::module::Context<test::module::constants::ModuleType::InferenceModel>;
-			using ModuleType = test::module::InferenceModel;
-		};
-
-		template<>
-		struct ProcessorTraits<DefaultServerSenderProcessor>
-		{
-			using ProcessorTag = DefaultServerSenderProcessor;
-			using ContextType = test::module::Context<test::module::constants::ModuleType::ServerSender>;
-			using ModuleType = test::module::ServerSender;
-		};
-
-		template<>
-		struct ProcessorTraits<DefaultClientReceiverProcessor>
-		{
-			using ProcessorTag = DefaultClientReceiverProcessor;
 			using ContextType = test::module::Context<test::module::constants::ModuleType::ClientReceiver>;
 			using ModuleType = test::module::ClientReceiver;
 		};
 
 		template<>
-		struct ProcessorTraits<DefaultDisplayerProcessor>
+		struct ProcessorTraits<ClientSecondImageNormalizer>
 		{
-			using ProcessorTag = DefaultDisplayerProcessor;
+			using ContextType = test::module::Context<test::module::constants::ModuleType::ImageNormalizer>;
+			using ModuleType = test::module::Preprocessor;
+		};
+
+		template<>
+		struct ProcessorTraits<ClientImageDisplayer>
+		{
 			using ContextType = test::module::Context<test::module::constants::ModuleType::ImageDisplayer>;
 			using ModuleType = test::module::Displayer;
+		};
+
+		// SERVER
+		template<>
+		struct ProcessorTraits<ServerImageReceiver>
+		{
+			using ContextType = test::module::Context<test::module::constants::ModuleType::ServerReceiver>;
+			using ModuleType = test::module::ServerReceiver;
+		};
+
+		template<>
+		struct ProcessorTraits<ServerInferenceInputProcessor>
+		{
+			using ContextType = test::module::Context<test::module::constants::ModuleType::InferenceInputProcessor>;
+			using ModuleType = test::module::InferenceInputProcessor;
+		};
+
+		template<>
+		struct ProcessorTraits<ServerInferenceModel>
+		{
+			using ContextType = test::module::Context<test::module::constants::ModuleType::InferenceModel>;
+			using ModuleType = test::module::InferenceModel;
+		};
+
+		template<>
+		struct ProcessorTraits<ServerImageSender>
+		{
+			using ContextType = test::module::Context<test::module::constants::ModuleType::ServerSender>;
+			using ModuleType = test::module::ServerSender;
 		};
 	}
 }

@@ -10,7 +10,6 @@
 #include <weave/graph/NodeDescriptor.h>
 #include <weave/graph/EdgeDescriptor.h>
 #include <weave/graph/Graph.h>
-#include <weave/user/EdgeTraits.h>
 
 namespace weave
 {
@@ -39,13 +38,13 @@ namespace weave
 		template<typename... NodeDescriptors>
 		struct DescriptorListToContextTuple<NodeDescriptorList<NodeDescriptors...> >
 		{
-			using ContextTuple = std::tuple<typename user::NodeTraits<typename NodeDescriptors::Tag>::ContextType...>;
+			using ContextTuple = std::tuple<typename Node<NodeDescriptors>::ContextType...>;
 		};
 
 		template<typename... EdgeDescriptors>
 		struct DescriptorListToContextTuple<EdgeDescriptorList<EdgeDescriptors...> >
 		{
-			using ContextTuple = std::tuple<typename user::EdgeTraits<typename EdgeDescriptors::Tag>::ContextType...>;
+			using ContextTuple = std::tuple<typename Edge<EdgeDescriptors>::ContextType...>;
 		};
 
 		// Builder
@@ -62,14 +61,14 @@ namespace weave
 
 			// TODO Optimize for moving contexts instead of copying it everytime.
 			template<typename NodeTag>
-			Builder<typename AppendToList<NodeDescriptorListType, NodeDescriptor<NodeTag> >::NewDescriptorListType, EdgeDescriptorListType> addNode(const typename user::NodeTraits<NodeTag>::ContextType& context)
+			Builder<typename AppendToList<NodeDescriptorListType, NodeDescriptor<NodeTag> >::NewDescriptorListType, EdgeDescriptorListType> addNode(const typename Node<NodeDescriptor<NodeTag>>::ContextType& context)
 			{
 				Builder<typename AppendToList<NodeDescriptorListType, NodeDescriptor<NodeTag> >::NewDescriptorListType, EdgeDescriptorListType> newBuilder(std::tuple_cat(_nodeContexts, std::make_tuple(context)), _edgeContexts);
 				return newBuilder;
 			}
 
 			template<typename EdgeTag, typename FromNode, typename ToNode, size_t numSlots>
-			Builder<NodeDescriptorListType, typename AppendToList<EdgeDescriptorListType, EdgeDescriptor<EdgeTag, FromNode, ToNode, numSlots> >::NewDescriptorListType> addEdge(const typename user::EdgeTraits<EdgeTag>::ContextType& context)
+			Builder<NodeDescriptorListType, typename AppendToList<EdgeDescriptorListType, EdgeDescriptor<EdgeTag, FromNode, ToNode, numSlots> >::NewDescriptorListType> addEdge(const typename Edge<EdgeDescriptor<EdgeTag, FromNode, ToNode, numSlots>>::ContextType& context)
 			{
 				Builder<NodeDescriptorListType, typename AppendToList<EdgeDescriptorListType, EdgeDescriptor<EdgeTag, FromNode, ToNode, numSlots> >::NewDescriptorListType> newBuilder(_nodeContexts, std::tuple_cat(_edgeContexts, std::make_tuple(context)));
 				return newBuilder;

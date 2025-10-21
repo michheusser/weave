@@ -7,7 +7,6 @@
 
 #include <iostream>
 #include <weave/worker/Processor.h>
-#include <weave/user/SynchronizerTraits.h>
 #include <weave/error/Result.h>
 
 namespace weave
@@ -29,8 +28,9 @@ namespace weave
 		class Synchronizer
 		{
 		public:
-			using ProcessorTag = typename user::SynchronizerTraits<SynchronizerTag>::ProcessorTag;
-			explicit Synchronizer(const typename user::SynchronizerTraits<SynchronizerTag>::ContextType& context) : _processor(context)
+			using ProcessorTag = SynchronizerTag;
+			using ContextType = typename Processor<ProcessorTag>::ContextType;
+			explicit Synchronizer(const ContextType& context) : _processor(context)
 			{}
 
 			void initialize()

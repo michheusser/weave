@@ -7,7 +7,6 @@
 
 #include <weave/buffer/Channel.h>
 #include <weave/buffer/Constants.h>
-#include <weave/user/EdgeTraits.h>
 
 namespace weave
 {
@@ -31,11 +30,13 @@ namespace weave
 		class Edge
 		{
 		public:
-			using EdgeTag = typename ExtractEdgeDescriptorParams<EdgeDescriptorType>::Tag;
 			static constexpr size_t numSlots = ExtractEdgeDescriptorParams<EdgeDescriptorType>::slots;
-			using ChannelTag = typename user::EdgeTraits<EdgeTag>::ChannelTag;
 			static constexpr buffer::constants::PolicyType policy = buffer::constants::PolicyType::Lossless;
-			explicit Edge(typename user::EdgeTraits<typename ExtractEdgeDescriptorParams<EdgeDescriptorType>::Tag>::ContextType& context) : _channel(context)
+
+			using EdgeTag = typename ExtractEdgeDescriptorParams<EdgeDescriptorType>::Tag;
+			using ChannelTag = EdgeTag;
+			using ContextType = typename buffer::Channel<ChannelTag, policy, numSlots>::ContextType;
+			explicit Edge(ContextType& context) : _channel(context)
 			{}
 
 			// Edges contain channels, which contain synchronization artifacts and thus not copyable/movable. Even though the compiler deletes per default, we delete here explicitly to be more expressive and clear.

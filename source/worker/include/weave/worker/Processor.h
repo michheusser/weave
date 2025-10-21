@@ -21,7 +21,8 @@ namespace weave
 		{
 		public:
 			using ModuleType = typename user::ProcessorTraits<ProcessorTag>::ModuleType;
-			explicit Processor(const typename user::ProcessorTraits<ProcessorTag>::ContextType& context) : _module(context)
+			using ContextType = typename user::ProcessorTraits<ProcessorTag>::ContextType;
+			explicit Processor(const ContextType& context) : _module(context)
 			{}
 			void initialize()
 			{
