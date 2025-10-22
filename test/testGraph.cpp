@@ -4,8 +4,8 @@
 
 #include "specializations/ProcessorTraitsSpecialization.h"
 #include "specializations/SlotTraitsSpecialization.h"
-#include <weave/graph/Builder.h>
 
+#include <weave/graph/Builder.h>
 #include "modules/Constants.h"
 #include "modules/Configuration.h"
 #include "modules/Context.h"

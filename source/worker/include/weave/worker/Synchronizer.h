@@ -51,15 +51,15 @@ namespace weave
 			{
 				// Readers / Writers don't need to be references (they contain references)
 				using ReadersTupleType = typename ChannelsTupleToDataAccessTuple<InChannelTupleType>::ReaderTuple;
-				using WritersTupleType = typename ChannelsTupleToDataAccessTuple<OutChannelTupleType>::WriterTuple;
-
-				using ReadersDataTupleType = typename ChannelsTupleToDataAccessTuple<InChannelTupleType>::ReaderDataTuple;
-				using WritersDataTupleType = typename ChannelsTupleToDataAccessTuple<OutChannelTupleType>::WriterDataTuple;
-
 				ReadersTupleType inputReaders = _getChannelsTupleReaders<ReadersTupleType>(inChannelTuple, std::make_index_sequence<std::tuple_size_v<InChannelTupleType> >());
+
+				using WritersTupleType = typename ChannelsTupleToDataAccessTuple<OutChannelTupleType>::WriterTuple;
 				WritersTupleType outputWriters = _getChannelsTupleWriters<WritersTupleType>(outChannelTuple, std::make_index_sequence<std::tuple_size_v<OutChannelTupleType> >());
 
+				using ReadersDataTupleType = typename ChannelsTupleToDataAccessTuple<InChannelTupleType>::ReaderDataTuple;
 				ReadersDataTupleType inputReadersDataTuple = _getReadersTupleData<ReadersDataTupleType>(inputReaders, std::make_index_sequence<std::tuple_size_v<ReadersTupleType> >());
+
+				using WritersDataTupleType = typename ChannelsTupleToDataAccessTuple<OutChannelTupleType>::WriterDataTuple;
 				WritersDataTupleType outputWritersDataTuple = _getWritersTupleData<WritersDataTupleType>(outputWriters, std::make_index_sequence<std::tuple_size_v<WritersTupleType> >());
 
 				bool inputReadersActive = _active(inputReaders, std::make_index_sequence<std::tuple_size_v<ReadersTupleType> >());

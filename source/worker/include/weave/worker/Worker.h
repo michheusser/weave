@@ -41,26 +41,33 @@ namespace weave
 			template<typename InChannelTupleType, typename OutChannelTupleType>
 			void start(InChannelTupleType& inChannelTuple, OutChannelTupleType& outChannelTuple)
 			{
-				LOG_INFO("Starting worker...");
-				_thread = std::thread(&Worker::_run<InChannelTupleType, OutChannelTupleType>, this, inChannelTuple, outChannelTuple);
+				try
+				{
+					LOG_INFO("Starting worker...");
+					// We don't pass by reference to avoid lifetime issues with the tuples (even though they contain references!)
+					_thread = std::thread(&Worker::_run<InChannelTupleType, OutChannelTupleType>, this, inChannelTuple, outChannelTuple);
+				}
+				catch (std::system_error& exception)
+				{
+					throw error::Exception("Failed");
+					LOG_ERROR(exception.what());
+				}
 			}
 
 		private:
 			template<typename InChannelTupleType, typename OutChannelTupleType>
 			void _run(InChannelTupleType inChannelTuple, OutChannelTupleType outChannelTuple)
 			{
-				try
+				_synchronizer.initialize();
+				error::Result result = _cycle(inChannelTuple, outChannelTuple);
+				if (!result.ok())
 				{
-					_synchronizer.initialize();
-					error::Result result = _cycle(inChannelTuple, outChannelTuple);
-					if (!result.ok())
-					{
-						throw error::Exception("Error in cycle");
-					}
+					// No throwing since it's thread's entry point (would call std::terminate)
+					LOG_ERROR("Error in cycle. Terminating thread.");
 				}
-				catch (error::Exception& exception)
+				else
 				{
-					LOG_ERROR(exception.what());
+					LOG_DEBUG("Thread correctly terminated.");
 				}
 			}
 

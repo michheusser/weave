@@ -35,7 +35,7 @@ namespace weave
 				{
 					for (Slot<SlotTag>& curSlot: _slotArray)
 					{
-						curSlot.initialize(context); // TODO Still pending
+						curSlot.initialize(context);
 					}
 				}
 				catch (error::Exception& exception)

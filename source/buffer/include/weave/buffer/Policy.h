@@ -13,7 +13,7 @@ namespace weave
 	namespace buffer
 	{
 		// TODO Deal with the following dilemma: Is policy only concerning either reader/writer? There seems to be a coupling by making the policy part of the buffer, but
-		// reader/writer policy might mean different things?
+		//		reader/writer policy might mean different things?
 		template <constants::PolicyType type>
 		struct Policy; // Never instantiated as generic
 

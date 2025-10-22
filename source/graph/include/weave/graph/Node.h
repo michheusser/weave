@@ -16,7 +16,7 @@ namespace weave
 		template<typename NodeDescriptorType>
 		struct ExtractNodeDescriptorParams;
 		template<typename NodeTag>
-		struct ExtractNodeDescriptorParams<NodeDescriptor<NodeTag>>
+		struct ExtractNodeDescriptorParams<NodeDescriptor<NodeTag> >
 		{
 			using Tag = NodeTag;
 		};
@@ -38,7 +38,7 @@ namespace weave
 			using FromNode = FromNodeTag;
 			using ToNode = ToNodeTag;
 			static constexpr size_t slots = numSlots;
-			using ChannelTag = Edge<EdgeDescriptor<Tag, FromNode, ToNode, slots>>::ChannelTag;
+			using ChannelTag = Edge<EdgeDescriptor<Tag, FromNode, ToNode, slots> >::ChannelTag;
 		};
 
 		template<typename EdgeTupleType>
@@ -46,7 +46,8 @@ namespace weave
 		template<typename... Edges>
 		struct EdgeTupleToChannelTuple<std::tuple<Edges...> >
 		{
-			using ChannelTuple = std::tuple<buffer::Channel<typename ExtractEdgeParams<Edges>::ChannelTag, Edge<typename ExtractEdgeDescriptor<Edges>::Descriptor>::policy, ExtractEdgeParams<Edges>::slots>&...>;
+			using ChannelTuple = std::tuple<buffer::Channel<typename ExtractEdgeParams<Edges>::ChannelTag, Edge<typename ExtractEdgeDescriptor<Edges>::Descriptor>::policy, ExtractEdgeParams<
+				Edges>::slots>&...>;
 		};
 
 		template<typename T>
@@ -65,12 +66,12 @@ namespace weave
 			template<typename InEdgesTupleType, typename OutEdgesTupleType>
 			void start(InEdgesTupleType& inEdges, OutEdgesTupleType& outEdges)
 			{
-				using InChannelTupleType = typename EdgeTupleToChannelTuple<InEdgesTupleType>::ChannelTuple;
-				using OutChannelTupleType = typename EdgeTupleToChannelTuple<OutEdgesTupleType>::ChannelTuple;
-
 				try
 				{
+					using InChannelTupleType = typename EdgeTupleToChannelTuple<InEdgesTupleType>::ChannelTuple;
 					InChannelTupleType inChannels = _constructTuple<InChannelTupleType>(inEdges, std::make_index_sequence<std::tuple_size_v<InEdgesTupleType> >());
+
+					using OutChannelTupleType = typename EdgeTupleToChannelTuple<OutEdgesTupleType>::ChannelTuple;
 					OutChannelTupleType outChannels = _constructTuple<OutChannelTupleType>(outEdges, std::make_index_sequence<std::tuple_size_v<OutEdgesTupleType> >());
 					_worker.start(inChannels, outChannels);
 				}
@@ -83,13 +84,11 @@ namespace weave
 
 		private:
 			template<typename ChannelTupleType, typename EdgeTupleType, std::size_t... Indices>
-			ChannelTupleType _constructTuple(EdgeTupleType& edges, std::index_sequence<Indices...> sequence)
+			ChannelTupleType _constructTuple(EdgeTupleType& edges, std::index_sequence<Indices...> sequence) noexcept
 			{
 				// We pass a dummy object to deduce the indices (not the nicest, but seems to be the standard C++ idiom).
 				// Passing it as template parameter requires too many unnecessary helper constructs.
-				ChannelTupleType tuple = {std::tuple_element_t<Indices, ChannelTupleType>(std::get<Indices>(edges).getChannel())...};
-				return tuple; // Move is not needed here, because we're passing tuple of references!
-				// TODO Construct in place!
+				return ChannelTupleType(std::get<Indices>(edges).getChannel()...);
 			}
 			worker::Worker<WorkerTag> _worker;
 		};

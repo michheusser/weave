@@ -45,7 +45,7 @@ namespace weave
 			Edge(Edge&&) = delete;
 			Edge& operator=(Edge&&) = delete;
 
-			buffer::Channel<ChannelTag, policy, numSlots>& getChannel() // TODO Decide if this is the best solution
+			buffer::Channel<ChannelTag, policy, numSlots>& getChannel() noexcept // TODO Decide if this is the best solution
 			{
 				return _channel;
 			}

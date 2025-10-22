@@ -61,22 +61,49 @@ namespace weave
 
 			// TODO Optimize for moving contexts instead of copying it everytime.
 			template<typename NodeTag>
-			Builder<typename AppendToList<NodeDescriptorListType, NodeDescriptor<NodeTag> >::NewDescriptorListType, EdgeDescriptorListType> addNode(const typename Node<NodeDescriptor<NodeTag>>::ContextType& context)
+			Builder<typename AppendToList<NodeDescriptorListType, NodeDescriptor<NodeTag> >::NewDescriptorListType, EdgeDescriptorListType> addNode(const typename Node<NodeDescriptor<NodeTag> >::ContextType& context)
 			{
-				Builder<typename AppendToList<NodeDescriptorListType, NodeDescriptor<NodeTag> >::NewDescriptorListType, EdgeDescriptorListType> newBuilder(std::tuple_cat(_nodeContexts, std::make_tuple(context)), _edgeContexts);
-				return newBuilder;
+				try
+				{
+					LOG_DEBUG("Adding Node.");
+					Builder<typename AppendToList<NodeDescriptorListType, NodeDescriptor<NodeTag> >::NewDescriptorListType, EdgeDescriptorListType> newBuilder(std::tuple_cat(_nodeContexts, std::make_tuple(context)), _edgeContexts);
+					return newBuilder;
+				}
+				catch (error::Exception& exception)
+				{
+					LOG_ERROR(exception.what());
+					throw error::Exception("Failed");
+				}
 			}
 
 			template<typename EdgeTag, typename FromNode, typename ToNode, size_t numSlots>
-			Builder<NodeDescriptorListType, typename AppendToList<EdgeDescriptorListType, EdgeDescriptor<EdgeTag, FromNode, ToNode, numSlots> >::NewDescriptorListType> addEdge(const typename Edge<EdgeDescriptor<EdgeTag, FromNode, ToNode, numSlots>>::ContextType& context)
+			Builder<NodeDescriptorListType, typename AppendToList<EdgeDescriptorListType, EdgeDescriptor<EdgeTag, FromNode, ToNode, numSlots> >::NewDescriptorListType> addEdge(const typename Edge<EdgeDescriptor<EdgeTag, FromNode, ToNode, numSlots> >::ContextType& context)
 			{
-				Builder<NodeDescriptorListType, typename AppendToList<EdgeDescriptorListType, EdgeDescriptor<EdgeTag, FromNode, ToNode, numSlots> >::NewDescriptorListType> newBuilder(_nodeContexts, std::tuple_cat(_edgeContexts, std::make_tuple(context)));
-				return newBuilder;
+				try
+				{
+					LOG_DEBUG("Adding Edge.");
+					Builder<NodeDescriptorListType, typename AppendToList<EdgeDescriptorListType, EdgeDescriptor<EdgeTag, FromNode, ToNode, numSlots> >::NewDescriptorListType> newBuilder(_nodeContexts, std::tuple_cat(_edgeContexts, std::make_tuple(context)));
+					return newBuilder;
+				}
+				catch (error::Exception& exception)
+				{
+					LOG_ERROR(exception.what());
+					throw error::Exception("Failed");
+				}
 			}
 
 			Graph<GraphDescriptor<NodeDescriptorListType, EdgeDescriptorListType> > build()
 			{
-				return Graph<GraphDescriptor<NodeDescriptorListType, EdgeDescriptorListType> >(_nodeContexts, _edgeContexts);
+				try
+				{
+					LOG_DEBUG("Building Graph.");
+					return Graph<GraphDescriptor<NodeDescriptorListType, EdgeDescriptorListType> >(_nodeContexts, _edgeContexts);
+				}
+				catch (error::Exception& exception)
+				{
+					LOG_ERROR(exception.what());
+					throw error::Exception("Failed");
+				}
 			}
 
 		private:

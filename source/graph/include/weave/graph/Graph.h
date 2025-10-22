@@ -26,7 +26,7 @@ namespace weave
 		template<typename NodeType>
 		struct ExtractDescriptorParamsFromNode;
 		template<typename NodeTag>
-		struct ExtractDescriptorParamsFromNode<Node<NodeDescriptor<NodeTag>>>
+		struct ExtractDescriptorParamsFromNode<Node<NodeDescriptor<NodeTag> > >
 		{
 			using Tag = NodeTag;
 		};
@@ -41,9 +41,6 @@ namespace weave
 			using ToNode = ToNodeTag;
 			static constexpr size_t slots = numSlots;
 		};
-
-		template<typename T>
-		struct ShowType;
 
 		template<typename GraphDescriptorType>
 		class Graph
@@ -77,12 +74,20 @@ namespace weave
 			template<typename TupleType, typename ContextTupleType, std::size_t... Indices>
 			TupleType _constructTuple(ContextTupleType& contexts, std::index_sequence<Indices...> sequence)
 			{
-				// We pass a dummy object to deduce the indices (not the nicest, but seems to be used a lot). Passing it as template parameter requires too many helper constructs.
-				/**
-				 * The Edges being created are not copyable/not moveable, so we cannot use a syntax that creates temporaries like this one:
-				 * TupleType tuple = {std::tuple_element_t<Indices, TupleType>(std::get<Indices>(contexts))...};
-				 */
-				return TupleType{std::get<Indices>(contexts)...}; // Copy-elision (C++17) allows us to by-pass the deleted copy/move contructors.
+				try
+				{
+					// We pass a dummy object to deduce the indices (not the nicest, but seems to be used a lot). Passing it as template parameter requires too many helper constructs.
+					/**
+					 * The Edges being created are not copyable/not moveable, so we cannot use a syntax that creates temporaries like this one:
+					 * TupleType tuple = {std::tuple_element_t<Indices, TupleType>(std::get<Indices>(contexts))...};
+					 */
+					return TupleType{std::get<Indices>(contexts)...}; // Copy-elision (C++17) allows us to by-pass the deleted copy/move contructors.
+				}
+				catch (error::Exception& exception)
+				{
+					LOG_ERROR(exception.what());
+					throw error::Exception("Failed");
+				}
 			}
 
 			template<std::size_t... EdgeIndices>

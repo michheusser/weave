@@ -7,13 +7,6 @@ namespace weave
 	{
 		namespace constants
 		{
-			/*enum class BufferType // TODO Remove
-			{
-				Image,
-				Network,
-				Inference
-			};*/
-
 			enum class BufferState
 			{
 				Empty,

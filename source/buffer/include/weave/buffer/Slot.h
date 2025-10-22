@@ -26,7 +26,7 @@ namespace weave
 			{
 				_slot.initialize(context);
 			}
-			StorageType& data()
+			StorageType& data() noexcept
 			{
 				return _slot.data();
 			}

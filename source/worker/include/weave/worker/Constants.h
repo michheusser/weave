@@ -10,27 +10,7 @@ namespace weave
 	namespace worker
 	{
 		namespace Constants
-		{
-			/*enum class Type
-			{
-				Source,
-				Process,
-				Sink
-			};*/
-
-			/*enum class Module // TODO Remove
-			{
-				Capturer,
-				Displayer,
-				ImageProcessor,
-				ImageToTensor,
-				Inference,
-				ClientSender,
-				ClientReceiver,
-				ServerSender,
-				ServerReceiver
-			};*/
-		}
+		{}
 	}
 }
 
