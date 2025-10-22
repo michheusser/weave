@@ -7,6 +7,9 @@
 
 #include <weave/graph/Node.h>
 #include <weave/graph/Edge.h>
+#include <weave/utilities/Reflection.h>
+
+#include "Constants.h"
 
 namespace weave
 {
@@ -50,10 +53,19 @@ namespace weave
 			using NodeContextTuple = typename GraphDescriptionToTuples<GraphDescriptorType>::NodeContextTuple;
 			using EdgeTuple = typename GraphDescriptionToTuples<GraphDescriptorType>::EdgeTuple;
 			using EdgeContextTuple = typename GraphDescriptionToTuples<GraphDescriptorType>::EdgeContextTuple;
+			static constexpr std::string_view name = utilities::typeName<GraphDescriptorType>();
 			explicit Graph(NodeContextTuple nodeContexts, EdgeContextTuple edgeContexts) :
 				_edges(_constructTuple<EdgeTuple>(edgeContexts, std::make_index_sequence<std::tuple_size_v<EdgeContextTuple> >())),
 				_nodes(_constructTuple<NodeTuple>(nodeContexts, std::make_index_sequence<std::tuple_size_v<NodeContextTuple> >()))
-			{}
+			{
+				_initializeMetrics();
+			}
+
+			~Graph()
+			{
+				LOG_INFO("Graph shutdown complete.");
+				_dumpMetrics(); // TODO Arguably not the best place.
+			}
 
 			void start()
 			{
@@ -69,14 +81,48 @@ namespace weave
 				}
 			}
 
+			void waitForShutdown(std::chrono::milliseconds waitCycleTimeout = std::chrono::seconds(constants::DEFAULT_SHUTDOWN_WAIT_CYCLE_TIMEOUT_MILLISECONDS))
+			{
+				waitForShutdown([]()
+				                {}, waitCycleTimeout);
+			}
+
+			template<typename Callback>
+			void waitForShutdown(Callback&& callback, std::chrono::milliseconds waitCycleTimeout = std::chrono::seconds(constants::DEFAULT_SHUTDOWN_WAIT_CYCLE_TIMEOUT_MILLISECONDS))
+			{
+				LOG_INFO("Waiting for shutdown signal...");
+				while (!utilities::SignalManager::shutdownRequested())
+				{
+					callback();
+					std::this_thread::sleep_for(waitCycleTimeout);
+				}
+				LOG_INFO("Shutdown signal received. Waiting for workers to complete...");
+			}
+
 		private:
+			void _initializeMetrics()
+			{
+				TRACE_INIT("Graph", std::string(name));
+				METRICS_INIT("Graph", std::string(name));
+			}
+
+			void _dumpMetrics()
+			{
+				LOG_INFO("Dumping metrics...");
+				TRACE_DISPLAY();
+				METRICS_DISPLAY();
+				TRACE_DUMP();
+				METRICS_DUMP();
+				LOG_INFO("Metrics dumped.");
+			}
+
 			// Deduction can only happen from function arguments (end of the list), the previous template arguments have to be explicit (TupleType)
+			// We pass a dummy object to deduce the indices (not the nicest, but seems to be used a lot). Passing it as template parameter requires too many helper constructs.
 			template<typename TupleType, typename ContextTupleType, std::size_t... Indices>
 			TupleType _constructTuple(ContextTupleType& contexts, std::index_sequence<Indices...> sequence)
 			{
 				try
 				{
-					// We pass a dummy object to deduce the indices (not the nicest, but seems to be used a lot). Passing it as template parameter requires too many helper constructs.
 					/**
 					 * The Edges being created are not copyable/not moveable, so we cannot use a syntax that creates temporaries like this one:
 					 * TupleType tuple = {std::tuple_element_t<Indices, TupleType>(std::get<Indices>(contexts))...};

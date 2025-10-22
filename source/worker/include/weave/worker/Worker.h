@@ -11,6 +11,7 @@
 #include <weave/error/Exception.h>
 #include <weave/logging/Macros.h>
 #include <weave/utilities/SignalManager.h>
+#include <weave/utilities/Reflection.h>
 
 namespace weave
 {
@@ -22,6 +23,7 @@ namespace weave
 		public:
 			using SynchronizerTag = WorkerTag;
 			using ContextType = typename Synchronizer<SynchronizerTag>::ContextType;
+			static constexpr std::string_view name = utilities::typeName<WorkerTag>();
 			explicit Worker(const ContextType& context) : _synchronizer(context)
 			{}
 
@@ -35,15 +37,15 @@ namespace weave
 				{
 					_thread.join();
 				}
-				LOG_INFO("Worker shutdown.");
-			}
+				LOG_INFO(std::string(name) + ": worker shutdown.");
+}
 
 			template<typename InChannelTupleType, typename OutChannelTupleType>
 			void start(InChannelTupleType& inChannelTuple, OutChannelTupleType& outChannelTuple)
 			{
 				try
 				{
-					LOG_INFO("Starting worker...");
+				LOG_INFO(std::string(name) + ": starting worker...");
 					// We don't pass by reference to avoid lifetime issues with the tuples (even though they contain references!)
 					_thread = std::thread(&Worker::_run<InChannelTupleType, OutChannelTupleType>, this, inChannelTuple, outChannelTuple);
 				}

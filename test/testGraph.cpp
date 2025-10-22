@@ -161,14 +161,17 @@ int main()
 		.addNode<ServerImageSender>(serverImageSenderContext)
 		.build();
 
+	weave::utilities::SignalManager::installHandlers();
 	networkServer->initialize();
 	networkClient->initialize();
-
 	networkServer->listen();
 	networkClient->connect();
 	networkServer->accept();
 	serverPipeline.start();
 	clientPipeline.start();
-	utilities::DisplayBridge::flushFrames();
+	serverPipeline.waitForShutdown([]
+	{
+		utilities::DisplayBridge::flushFrame();
+	});
 	return 0;
 }

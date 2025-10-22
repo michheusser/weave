@@ -11,24 +11,24 @@ namespace weave
 {
 	namespace Configuration
 	{
-		Profiling::ClientSessionConfiguration ConfigurationGenerator::generateDefaultClientSessionConfiguration()
+		profiling::ClientSessionConfiguration ConfigurationGenerator::generateDefaultClientSessionConfiguration()
 		{
-			Profiling::ClientSessionConfiguration clientSessionConfiguration;
-			clientSessionConfiguration.sessionName = Profiling::Constants::DEFAULT_CLIENT_SESSION_NAME;
-			clientSessionConfiguration.sessionDescription = Profiling::Constants::DEFAULT_CLIENT_SESSION_DESCRIPTION;
-			clientSessionConfiguration.numCycles = Profiling::Constants::DEFAULT_NUM_CYCLES;
-			clientSessionConfiguration.loggingDirectory = std::string(Profiling::Constants::MONITORING_REPORTS_LOCATION) + "/" + _getDateString();
+			profiling::ClientSessionConfiguration clientSessionConfiguration;
+			clientSessionConfiguration.sessionName = profiling::Constants::DEFAULT_CLIENT_SESSION_NAME;
+			clientSessionConfiguration.sessionDescription = profiling::Constants::DEFAULT_CLIENT_SESSION_DESCRIPTION;
+			clientSessionConfiguration.numCycles = profiling::Constants::DEFAULT_NUM_CYCLES;
+			clientSessionConfiguration.loggingDirectory = std::string(profiling::Constants::MONITORING_REPORTS_LOCATION) + "/" + _getDateString();
 			clientSessionConfiguration.clientConfiguration = generateDefaultClientConfiguration();
 			return clientSessionConfiguration;
 		}
 
-		Profiling::ServerSessionConfiguration ConfigurationGenerator::generateDefaultServerSessionConfiguration()
+		profiling::ServerSessionConfiguration ConfigurationGenerator::generateDefaultServerSessionConfiguration()
 		{
-			Profiling::ServerSessionConfiguration serverSessionConfiguration;
-			serverSessionConfiguration.sessionName = Profiling::Constants::DEFAULT_SERVER_SESSION_NAME;
-			serverSessionConfiguration.sessionDescription = Profiling::Constants::DEFAULT_SERVER_SESSION_DESCRIPTION;
-			serverSessionConfiguration.numCycles = Profiling::Constants::DEFAULT_NUM_CYCLES;
-			serverSessionConfiguration.loggingDirectory = std::string(Profiling::Constants::MONITORING_REPORTS_LOCATION) + "/" + _getDateString();
+			profiling::ServerSessionConfiguration serverSessionConfiguration;
+			serverSessionConfiguration.sessionName = profiling::Constants::DEFAULT_SERVER_SESSION_NAME;
+			serverSessionConfiguration.sessionDescription = profiling::Constants::DEFAULT_SERVER_SESSION_DESCRIPTION;
+			serverSessionConfiguration.numCycles = profiling::Constants::DEFAULT_NUM_CYCLES;
+			serverSessionConfiguration.loggingDirectory = std::string(profiling::Constants::MONITORING_REPORTS_LOCATION) + "/" + _getDateString();
 			serverSessionConfiguration.serverConfiguration = generateDefaultServerConfiguration();
 			return serverSessionConfiguration;
 		}

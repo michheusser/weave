@@ -9,7 +9,7 @@ namespace weave
 {
 		namespace constants
 		{
-
+			constexpr long long DEFAULT_SHUTDOWN_WAIT_CYCLE_TIMEOUT_MILLISECONDS = 0;
 		}
 }
 

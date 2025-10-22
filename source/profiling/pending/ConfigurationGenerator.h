@@ -6,7 +6,7 @@
 #define CONFIGURATIONGENERATOR_H_2025_09_14_16_01_49
 
 #include "../Application/Configuration.h"
-#include "../Profiling/Configuration.h"
+#include "../profiling/Configuration.h"
 
 namespace weave
 {
@@ -15,8 +15,8 @@ namespace weave
 		class ConfigurationGenerator
 		{
 		public:
-			static Profiling::ClientSessionConfiguration generateDefaultClientSessionConfiguration();
-			static Profiling::ServerSessionConfiguration generateDefaultServerSessionConfiguration();
+			static profiling::ClientSessionConfiguration generateDefaultClientSessionConfiguration();
+			static profiling::ServerSessionConfiguration generateDefaultServerSessionConfiguration();
 			static Application::ClientConfiguration generateDefaultClientConfiguration();
 			static Application::ServerConfiguration generateDefaultServerConfiguration();
 		private:

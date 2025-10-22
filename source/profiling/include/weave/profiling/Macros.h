@@ -44,9 +44,11 @@
 		#define TRACE_DISPLAY() ((void)0)
 
 		#define METRICS_INIT(sessionName, sessionDescription) ((void)0)
+		#define METRICS_SET_NAME(sectionName) ((void)0)
 		#define METRICS_FRAME(worker) ((void)0)
 		#define METRICS_BYTES(worker, data) ((void)0)
 		#define METRICS_DUMP() ((void)0)
+		#define METRICS_DISPLAY() ((void)0)
 
 		#define CONFIG_INIT(sessionName, sessionDescription) ((void)0)
 		#define CONFIG_ADD(config) ((void)0)

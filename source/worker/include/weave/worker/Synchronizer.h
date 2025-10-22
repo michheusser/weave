@@ -8,6 +8,8 @@
 #include <iostream>
 #include <weave/worker/Processor.h>
 #include <weave/error/Result.h>
+#include <weave/profiling/Macros.h>
+#include <weave/utilities/Reflection.h>
 
 namespace weave
 {
@@ -30,6 +32,7 @@ namespace weave
 		public:
 			using ProcessorTag = SynchronizerTag;
 			using ContextType = typename Processor<ProcessorTag>::ContextType;
+			static constexpr std::string_view name = utilities::typeName<SynchronizerTag>();
 			explicit Synchronizer(const ContextType& context) : _processor(context)
 			{}
 
@@ -49,6 +52,10 @@ namespace weave
 			template<typename InChannelTupleType, typename OutChannelTupleType>
 			error::Result cycle(InChannelTupleType& inChannelTuple, OutChannelTupleType& outChannelTuple) noexcept
 			{
+				TRACE_FUNCTION(std::string(name));
+				METRICS_FRAME(std::string(name));
+				LOG_TRACE(std::string(name) +  ": starting cycle...");
+
 				// Readers / Writers don't need to be references (they contain references)
 				using ReadersTupleType = typename ChannelsTupleToDataAccessTuple<InChannelTupleType>::ReaderTuple;
 				ReadersTupleType inputReaders = _getChannelsTupleReaders<ReadersTupleType>(inChannelTuple, std::make_index_sequence<std::tuple_size_v<InChannelTupleType> >());
@@ -71,6 +78,7 @@ namespace weave
 					{
 						return {error::Type::Processing, 0};
 					}
+
 					_release(inputReaders, std::make_index_sequence<std::tuple_size_v<ReadersTupleType> >());
 					_publish(outputWriters, std::make_index_sequence<std::tuple_size_v<WritersTupleType> >());
 				}

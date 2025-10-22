@@ -6,8 +6,8 @@
 #include "../Application/Client.h"
 #include "../Application/Server.h"
 #include "../Configuration/ConfigurationGenerator.h"
-#include "../Error/Exception.h"
-#include "../Logging/Macros.h"
+#include "../error/Exception.h"
+#include "../logging/Macros.h"
 #include "../include/weave/profiling/Macros.h"
 
 namespace weave

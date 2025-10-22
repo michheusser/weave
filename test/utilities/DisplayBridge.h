@@ -26,7 +26,7 @@ namespace test
 
 			static weave::error::Result showFrame(const cv::Mat& frameBuffer, const std::string& title, const uint32_t frameID, const bool wait = false) noexcept;
 			static void flushFrames();
-
+			static weave::error::Result flushFrame();
 		private:
 			static weave::error::Result _showFrame(const cv::Mat& frameBuffer, const std::string& title, const uint32_t frameID, const bool wait = false) noexcept;
 			static std::thread::id _mainThreadID;

@@ -2,15 +2,15 @@
 // All rights reserved
 // https://github.com/michheusser
 
-#include "../Logging/Macros.h"
-#include "../Error/Exception.h"
+#include "../logging/Macros.h"
+#include "../error/Exception.h"
 #include "../Profiling/SessionExecutor.h"
 
 int main()
 {
 	try
 	{
-		weave::Profiling::SessionExecutor::executeDefaultClientSession();
+		weave::profiling::SessionExecutor::executeDefaultClientSession();
 		return 0;
 	}
 	catch (weave::error::Exception& exception)

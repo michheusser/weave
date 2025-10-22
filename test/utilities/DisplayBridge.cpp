@@ -16,7 +16,7 @@ namespace test
 	{
 		std::thread::id DisplayBridge::_mainThreadID;
 		std::condition_variable DisplayBridge::conditionVariable;
-		std::queue<std::tuple<const cv::Mat&, const std::string, const uint32_t, const bool>> DisplayBridge::_frameQueue;
+		std::queue<std::tuple<const cv::Mat&, const std::string, const uint32_t, const bool> > DisplayBridge::_frameQueue;
 		std::mutex DisplayBridge::_mutex;
 
 		weave::error::Result DisplayBridge::showFrame(const cv::Mat& frameBuffer, const std::string& title, const uint32_t frameID, const bool wait) noexcept
@@ -43,23 +43,32 @@ namespace test
 
 		void DisplayBridge::flushFrames()
 		{
-			std::unique_lock<std::mutex> lock(_mutex);
 			while (!weave::utilities::SignalManager::shutdownRequested())
 			{
-				conditionVariable.wait(lock, []()
-				{
-					return !_frameQueue.empty();
-				});
-				auto& [frame, title, frameID, wait] = _frameQueue.front();
-				_frameQueue.pop();
-				lock.unlock();
-				weave::error::Result result = _showFrame(frame, title, wait);
+				weave::error::Result result = flushFrame();
 				if (!result.ok())
 				{
-					LOG_ERROR("Failed to flush frames.");
+					LOG_ERROR("Failed to show frame.");
 					return;
 				}
-				lock.lock();
+			}
+		}
+
+		weave::error::Result DisplayBridge::flushFrame()
+		{
+			std::unique_lock<std::mutex> lock(_mutex);
+			conditionVariable.wait(lock, []()
+			{
+				return !_frameQueue.empty();
+			});
+			auto& [frame, title, frameID, wait] = _frameQueue.front();
+			_frameQueue.pop();
+			lock.unlock();
+			weave::error::Result result = _showFrame(frame, title, wait);
+			if (!result.ok())
+			{
+				LOG_ERROR("Failed to show frame.");
+				return {weave::error::Type::Display, 0};
 			}
 		}
 
