@@ -15,6 +15,8 @@ add_library(profiling STATIC
         include/weave/profiling/ConfigurationContext.h
         include/weave/profiling/TraceContext.h
         include/weave/profiling/ConfigurationDataNode.h
+        include/weave/profiling/FunctionStatistics.h
+        include/weave/profiling/Hash.h
         source/MetricsSpan.cpp
         source/ConfigurationContext.cpp
         source/ConfigurationCollector.cpp

@@ -16,7 +16,14 @@ namespace weave
 
 		void MetricsContext::init(const std::string& sessionName, const std::string& sessionDescription)
 		{
-			_metricsCollector = std::make_shared<MetricsCollector>(sessionName, sessionDescription);
+			if (initialized())
+			{
+				LOG_WARN("Metrics context already initialized.");
+			}
+			else
+			{
+				_metricsCollector = std::make_shared<MetricsCollector>(sessionName, sessionDescription);
+			}
 		}
 
 		bool MetricsContext::initialized()
@@ -78,9 +85,9 @@ namespace weave
 			}
 		}
 
-		MetricsSpan metric(const std::string name, const std::string& type, const int count)
+		MetricsSpan metric(uint64_t hash, const std::string_view& name, const std::string_view& type, const int count)
 		{
-			return MetricsSpan(name, type, count);
+			return MetricsSpan(hash, name, type, count);
 		}
 	}
 }

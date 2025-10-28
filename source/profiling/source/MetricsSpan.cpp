@@ -14,18 +14,19 @@ namespace weave
 {
 	namespace profiling
 	{
-		MetricsSpan::MetricsSpan(const std::string& name, const std::string& type, const int count) : _data(std::make_shared<MetricsSpanData>())
+		MetricsSpan::MetricsSpan(uint64_t hash, const std::string_view& name, const std::string_view& type, const int count) : _data(std::make_shared<MetricsSpanData>())
 		{
 			try
 			{
 				const std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
 
+				_data->hash = hash;
 				_data->name = name;
 				_data->threadID = std::this_thread::get_id();
 				_data->processID = getpid();
 				_data->type = type;
 				_data->count = count;
-				_data->startInNanoseconds = std::chrono::duration_cast<std::chrono::nanoseconds>(start.time_since_epoch()).count();
+				_data->startNs = std::chrono::duration_cast<std::chrono::nanoseconds>(start.time_since_epoch()).count();
 			}
 			catch (error::Exception& exception)
 			{
@@ -39,7 +40,7 @@ namespace weave
 			try
 			{
 				const std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
-				_data->endInNanoseconds = std::chrono::duration_cast<std::chrono::nanoseconds>(end.time_since_epoch()).count();
+				_data->endNs = std::chrono::duration_cast<std::chrono::nanoseconds>(end.time_since_epoch()).count();
 				MetricsContext::addMetricsSpan(_data);
 			}
 			catch (error::Exception& exception)

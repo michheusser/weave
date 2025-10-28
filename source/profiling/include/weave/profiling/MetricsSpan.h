@@ -13,7 +13,7 @@ namespace weave
 		class MetricsSpan
 		{
 		public:
-			explicit MetricsSpan(const std::string& name, const std::string& type, const int count);
+			explicit MetricsSpan(uint64_t hash, const std::string_view& name, const std::string_view& type, const int count);
 			~MetricsSpan();
 		private:
 			std::shared_ptr<MetricsSpanData> _data;

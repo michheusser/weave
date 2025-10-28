@@ -52,8 +52,8 @@ namespace weave
 			template<typename InChannelTupleType, typename OutChannelTupleType>
 			error::Result cycle(InChannelTupleType& inChannelTuple, OutChannelTupleType& outChannelTuple) noexcept
 			{
-				TRACE_FUNCTION(std::string(name));
-				METRICS_FRAME(std::string(name));
+				TRACE_FUNCTION(name);
+				METRICS_COUNT(name);
 				LOG_TRACE(std::string(name) +  ": starting cycle...");
 
 				// Readers / Writers don't need to be references (they contain references)

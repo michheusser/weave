@@ -8,20 +8,26 @@
 #include <weave/profiling/TraceContext.h>
 #include <weave/profiling/MetricsContext.h>
 #include <weave/profiling/ConfigurationContext.h>
-#include <weave/profiling/Constants.h>
+#include <weave/profiling/constants.h>
 #include <weave/profiling/ConfigurationDataBuilder.h>
 #include <weave/profiling/ConfigurationDataNode.h>
+#include <weave/profiling/Hash.h>
+
 
 #ifdef WEAVE_ENABLE_MONITORING
 		#define TRACE_INIT(sessionName, sessionDescription) weave::profiling::TraceContext::init(sessionName, sessionDescription)
-		#define TRACE_SET_FRAME(frameID) weave::profiling::TraceContext::setCurrentFrame(frameID)
+		#define TRACE_SET_FRAME(frameID) weave::profiling::TraceContext::setCurrentFrame(frameID) // TODO Remove?
 		#define TRACE_FUNCTION(className) weave::profiling::TraceSpan traceSpanFrame##__LINE__ = weave::profiling::trace(std::string(className) + "::" + __FUNCTION__)
 		#define TRACE_DUMP(directory) weave::profiling::TraceContext::dump(directory)
 		#define TRACE_DISPLAY() weave::profiling::TraceContext::display()
 
 		#define METRICS_INIT(sessionName, sessionDescription) weave::profiling::MetricsContext::init(sessionName, sessionDescription)
-		#define METRICS_FRAME(className) weave::profiling::MetricsSpan metricsSpanFrame##__LINE__ = weave::profiling::metric(std::string(className) + "::" + __FUNCTION__, std::string(weave::profiling::Constants::METRIC_FRAME_TYPE_STRING), 1)
-		#define METRICS_BYTES(className, data) weave::profiling::MetricsSpan metricsSpanData##__LINE__ = weave::profiling::metric(std::string(className) + "::" + __FUNCTION__,std::string(weave::profiling::Constants::METRIC_BYTE_TYPE_STRING), data)
+		#define METRICS_COUNT(metricsName) \
+			constexpr uint64_t metricsHash##__LINE__ = weave::profiling::Hash::hashString(metricsName);\
+			weave::profiling::MetricsSpan metricsSpanFrame##__LINE__ = weave::profiling::metric(metricsHash##__LINE__, metricsName, weave::profiling::constants::METRIC_FRAME_TYPE_STRING, 1)
+		#define METRICS_BYTES(metricsName, data) \
+			constexpr uint64_t metricsHash##__LINE__ = weave::profiling::Hash::hashString(metricsName);\
+			weave::profiling::MetricsSpan metricsSpanFrame##__LINE__ = weave::profiling::metric(metricsHash##__LINE__, metricsName, weave::profiling::constants::METRIC_BYTE_TYPE_STRING, data)
 		#define METRICS_DUMP(directory) weave::profiling::MetricsContext::dump(directory)
 		#define METRICS_DISPLAY() weave::profiling::MetricsContext::display()
 
@@ -44,10 +50,9 @@
 		#define TRACE_DISPLAY() ((void)0)
 
 		#define METRICS_INIT(sessionName, sessionDescription) ((void)0)
-		#define METRICS_SET_NAME(sectionName) ((void)0)
-		#define METRICS_FRAME(worker) ((void)0)
+		#define METRICS_COUNT(worker) ((void)0)
 		#define METRICS_BYTES(worker, data) ((void)0)
-		#define METRICS_DUMP() ((void)0)
+		#define METRICS_DUMP(directory) ((void)0)
 		#define METRICS_DISPLAY() ((void)0)
 
 		#define CONFIG_INIT(sessionName, sessionDescription) ((void)0)

@@ -8,6 +8,7 @@
 #include <string>
 
 #include <weave/profiling/MetricsSpanData.h>
+#include "FunctionStatistics.h"
 
 namespace weave
 {
@@ -16,6 +17,8 @@ namespace weave
 		class MetricsCollector
 		{
 		public:
+			// TODO Everything should be done compile time
+			// TODO Creation of the metrics map, if possible at init.
 			explicit MetricsCollector(const std::string& sessionName, const std::string& sessionDescription);
 			void addMetricsSpan(const std::shared_ptr<MetricsSpanData>& metricsSpanData);
 			void display();
@@ -25,7 +28,7 @@ namespace weave
 			mutable std::shared_mutex _mutex;
 			std::string _sessionName;
 			std::string _sessionDescription;
-			std::vector<std::shared_ptr<MetricsSpanData>> _metricsSpans;
+			std::unordered_map<uint64_t, FunctionStatistics> _statistics;
 		};
 	}
 }

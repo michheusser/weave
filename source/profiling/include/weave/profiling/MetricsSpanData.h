@@ -13,13 +13,14 @@ namespace weave
 	{
 		struct MetricsSpanData
 		{
-			std::string name;
-			std::thread::id threadID; // Obfuscated type since it differs depending on OS (has overloaded ostream operator)
+			uint64_t hash; // TODO To be done from name and type? What's the unique-key?
+			std::string_view name;
+			std::string_view type;
 			pid_t processID;
-			uint64_t startInNanoseconds;
-			uint64_t endInNanoseconds;
-			std::string type;
-			uint64_t count;
+			std::thread::id threadID; // Obfuscated type since it differs depending on OS (has overloaded ostream operator)
+			uint64_t startNs;
+			uint64_t endNs;
+			uint64_t count; // e.g. frames in a span (typically 1), bytes in a span, ...
 		};
 	}
 }

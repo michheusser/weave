@@ -28,7 +28,7 @@ namespace weave
 			static std::shared_ptr<MetricsCollector> _metricsCollector;
 		};
 
-		MetricsSpan metric(const std::string name, const std::string& type, const int count);
+		MetricsSpan metric(uint64_t hash, const std::string_view& name, const std::string_view& type, const int count);
 	}
 }
 

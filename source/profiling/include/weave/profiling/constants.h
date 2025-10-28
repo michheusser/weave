@@ -10,8 +10,10 @@ namespace weave
 {
 	namespace profiling
 	{
-		namespace Constants
+		namespace constants
 		{
+			constexpr size_t MAX_RESERVOIR_SIZE = 1000;
+
 			constexpr std::string_view METRIC_FRAME_TYPE_STRING = "frame";
 			constexpr std::string_view METRIC_BYTE_TYPE_STRING = "byte";
 
