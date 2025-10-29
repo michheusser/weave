@@ -54,7 +54,7 @@ namespace weave
 			{
 				TRACE_FUNCTION(name);
 				METRICS_COUNT(name);
-				LOG_TRACE(std::string(name) +  ": starting cycle...");
+				LOG_TRACE("{}: starting cycle...", std::string(name));
 
 				// Readers / Writers don't need to be references (they contain references)
 				using ReadersTupleType = typename ChannelsTupleToDataAccessTuple<InChannelTupleType>::ReaderTuple;

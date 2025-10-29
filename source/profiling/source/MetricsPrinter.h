@@ -19,13 +19,14 @@ namespace weave
 		public:
 			static std::string print(const std::string& sessionName, const std::string& sessionDescription, std::unordered_map<uint64_t, FunctionStatistics>& statistics);
 			static void dumpToCsv(const std::string& filename, std::unordered_map<uint64_t, FunctionStatistics>& statistics);
+
 		private:
 			static uint64_t _computePercentile(std::vector<uint64_t> samples, double percentile);
 			static double _nsToMs(uint64_t ns);
 			static double _nsToS(uint64_t ns);
 			static double _computeThroughput(uint64_t count, uint64_t durationNs);
 		};
-	}
-}
+	} // namespace profiling
+} // namespace weave
 
 #endif

@@ -148,6 +148,7 @@ namespace weave
 				}
 
 				csvFile.close();
+				LOG_INFO("Metrics dumped to: {}", filename);
 			}
 			catch (error::Exception& exception)
 			{
