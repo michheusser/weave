@@ -1,9 +1,9 @@
-# Weave
-Weave is a generic, graph-based data-processing framework meant for low-latency, high-throughput pipelines in the areas 
+# Weave ![License](https://img.shields.io/badge/license-MIT-blue) ![C++20](https://img.shields.io/badge/C%2B%2B-20-blue) ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen) 
+Weave is a generic, graph-based data-processing framework meant for low-latency, high-throughput pipelines in the domains of
 real-time video, audio, inference, and high-volume observability. It delivers compile-time graph construction with arbitrary topology with 
 heavy use of C++20 Template Metaprogramming capabilities, lock-free synchronization primitives for critical paths, 
 policy-based buffer management (selecting between backpressure and dropping strategies), and integrated distributed logging, tracing, and metrics
-across each pipeline stages. This is all while maintaining the flexibility to inject and profile custom data slots and processing modules
+across each pipeline stage. This is all while maintaining the flexibility to inject and profile custom data slots and processing modules
 without modifying core infrastructure.
 
 ## Why Weave Exists
@@ -27,6 +27,8 @@ highest-level of performance when low-latency and high-throughput are a priority
 
 ## Quick Example
 ...
+
+TODO PUT ARCHITECTURE IN OWN FILE
 
 ## Architecture
 ...
@@ -52,5 +54,5 @@ highest-level of performance when low-latency and high-throughput are a priority
 - Lock-free MPMC ring-buffer queues
 - Adaptive buffer policies using buffer multiplexing 
 
-## Building
+## Building and Installing
 ...
