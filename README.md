@@ -29,7 +29,7 @@ highest-level of performance when low-latency and high-throughput are a priority
 ### Example 1: Capture, Resize, Display
 
 A simple example using OpenCV to capturer, resize and display frames. The complete example is found [here](docs/examples/DISPLAY.md):
-```
+```cpp
 // Configuration / Context
 CapturerConfig capturerConfig = {1920, 1080}; // User defined type
 ResizerConfig resizerConfig = {640, 480};
