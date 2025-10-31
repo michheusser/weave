@@ -24,11 +24,11 @@ auto builder = weave::graph::Builder();
 
 To add edges and nodes we use:
 ```cpp
-weave::graph::Builder::addNode<...>(...);
+weave::graph::Builder::addNode<NodeTag, ...>(...);
 ```
 and 
 ```cpp
-weave::graph::Builder::addEdge<>(...);
+weave::graph::Builder::addEdge<FromNodeTag, ToNodeTag, ...>(...);
 ```
 Leaving the node and edge options and focusing only on the graph topology by defining the nodes each edge connects to,
 we define our whole graph in one call like so:

@@ -25,8 +25,85 @@ highest-level of performance when low-latency and high-throughput are a priority
 - Built-in distributed logging, tracing, and metrics and integration in custom modules
 - Lock-free synchronization
 
-## Quick Example
-...
+## Examples
+### Example 1: Capture, Resize, Display
+
+A simple example using OpenCV to capturer, resize and display frames. The complete example is found [here](docs/examples/DISPLAY.md):
+```
+// Configuration / Context
+CapturerConfig capturerConfig = {1920, 1080}; // User defined type
+ResizerConfig resizerConfig = {640, 480};
+DisplayerConfig displayerConfig = {DEFAULT_DISPLAYER_MODE};
+
+CapturerConfig capturerConfig = {1920, 1080}; // User defined type
+ImageSlotContext rawImageBufferContext{1920, 1080};
+ResizerConfig resizerConfig = {640, 480};
+ImageSlotContext resizedImageBufferContext = {640, 480};
+DisplayerConfig displayerConfig = {DEFAULT_DISPLAYER_MODE};
+
+auto pipeline = weave::graph::Builder()
+    .addNode<MyCapturerNode>(capturerConfig)
+    .addEdge<MyRawImageEdge, MyCapturerNode, MyResizerNode, 16, PolicyType::Lossless>(rawImageBufferContext)
+    .addNode<MyResizerNode>(resizerConfig)
+    .addEdge<MyResizedImageEdge, MyResizerNode, MyDisplayerNode, 16, PolicyType::LossLess>(resizedImageBufferContext)
+    .addNode<MyDisplayerNode>(displayerConfig)
+    .build();
+    
+pipeline.start();
+pipeline.waitForShutdown();
+```
+
+
+
+### Example 2: GPU Edge Inference Network Server
+This example sets up a server for GPU-based inference on an edge device (e.g. NVIDIA Jetson). It first defines the configuration objects (contexts), 
+which contain the (runtime) initialization constructs for the user-defined processing units and buffer-slots. It then defines
+and builds the pipeline, starts the network modules (which are passed in the corresponding context), and finally runs the pipeline.
+
+For the complete implementation on this inference example refer to [testGraph.cpp](test/testGraph.cpp).
+
+```cpp
+/**** CONFIGURATION ****/
+
+ImageReceiverContext imageReceiverContext;
+// ... configuration and pointer to network module
+ReceiverBufferContext imageReceiveBufferContext;
+// ...
+InferencePreprocessorContext inferenceInputProcessorContext;
+// ...
+InferenceInputBufferContext inferenceInputTensorContext;
+// ...
+InferenceModelContext inferenceModelContext;
+// ...
+ImageSenderContext imageSendBufferContext;
+// ...
+SenderBufferContext imageSenderContext;
+// ...configuration and pointer to network module
+
+
+/**** PIPELINE BUILD ****/
+
+auto serverPipeline = weave::graph::Builder()
+    .addNode<ServerImageReceiver>(imageReceiverContext)
+    .addEdge<ServerImageReceiveEdge, ServerImageReceiver, ServerInferenceInputProcessor, 32, PolicyType::Lossless>(imageReceiveBufferContext)
+    .addNode<ServerInferenceInputProcessor>(inferenceInputProcessorContext)
+    .addEdge<ServerInferenceInputTensorEdge, ServerInferenceInputProcessor, ServerInferenceModel, 8, PolicyType::Realtime>(inferenceInputTensorContext)
+    .addNode<ServerInferenceModel>(inferenceModelContext)
+    .addEdge<ServerImageSendEdge, ServerInferenceModel, ServerImageSender, 16, PolicyType::Throttled>(imageSendBufferContext)
+    .addNode<ServerImageSender>(imageSenderContext)
+    .build();
+
+weave::utilities::SignalManager::installHandlers();
+
+
+/**** RUNNING ****/
+
+networkServer->initialize();
+networkServer->listen();
+networkServer->accept();
+serverPipeline.start();
+serverPipeline.waitForShutdown();
+```
 
 ## Architecture
 The technical details of the architecture and the individual module of the library can be found in the [Architecture Document](docs/architecture/ARCHITECTURE.md)
