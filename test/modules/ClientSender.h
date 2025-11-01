@@ -18,7 +18,8 @@ namespace test
 		class ClientSender
 		{
 		public:
-			explicit ClientSender(const Context<constants::ModuleType::ClientSender>& context);
+			using ContextType = Context<constants::ModuleType::ClientSender>;
+			explicit ClientSender(const ContextType& context);
 			void initialize();
 			weave::error::Result process(const cv::Mat& inputBuffer) noexcept;
 

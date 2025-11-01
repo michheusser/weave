@@ -22,7 +22,8 @@ namespace test
 		class InferenceModel
 		{
 		public:
-			explicit InferenceModel(const Context<constants::ModuleType::InferenceModel>& context);
+			using ContextType = Context<constants::ModuleType::InferenceModel>;
+			explicit InferenceModel(const ContextType& context);
 			void initialize();
 			weave::error::Result process(const Ort::Value& inputTensor, cv::Mat& outputFrame) const noexcept;
 		private:

@@ -17,12 +17,12 @@ namespace weave
 {
 	namespace worker
 	{
-		template<typename WorkerTag>
+		template<typename WorkerTag, typename ModuleType>
 		class Worker
 		{
 		public:
 			using SynchronizerTag = WorkerTag;
-			using ContextType = typename Synchronizer<SynchronizerTag>::ContextType;
+			using ContextType = typename Synchronizer<SynchronizerTag, ModuleType>::ContextType;
 			static constexpr std::string_view name = utilities::typeName<WorkerTag>();
 			explicit Worker(const ContextType& context) : _synchronizer(context)
 			{}
@@ -90,7 +90,7 @@ namespace weave
 
 		private:
 			std::thread _thread;
-			Synchronizer<SynchronizerTag> _synchronizer;
+			Synchronizer<SynchronizerTag, ModuleType> _synchronizer;
 		};
 	}
 }

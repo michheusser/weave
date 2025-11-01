@@ -19,7 +19,8 @@ namespace test
 		class ServerSender
 		{
 		public:
-			explicit ServerSender(const Context<constants::ModuleType::ServerSender>& context);
+			using ContextType = Context<constants::ModuleType::ServerSender>;
+			explicit ServerSender(const ContextType& context);
 			void initialize();
 			weave::error::Result process(const cv::Mat& inputBuffer) noexcept;
 

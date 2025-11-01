@@ -17,7 +17,8 @@ namespace test
 		class Capturer
 		{
 		public:
-			explicit Capturer(const Context<constants::ModuleType::ImageCapturer>& context);
+			using ContextType = Context<constants::ModuleType::ImageCapturer>;
+			explicit Capturer(const ContextType& context);
 			// TODO Further constructors missing
 			~Capturer();
 			void initialize();

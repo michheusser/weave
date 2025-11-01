@@ -60,13 +60,13 @@ namespace weave
 			{}
 
 			// TODO Optimize for moving contexts instead of copying it everytime.
-			template<typename NodeTag>
-			Builder<typename AppendToList<NodeDescriptorListType, NodeDescriptor<NodeTag> >::NewDescriptorListType, EdgeDescriptorListType> addNode(const typename Node<NodeDescriptor<NodeTag> >::ContextType& context)
+			template<typename NodeTag, typename ModuleType>
+			Builder<typename AppendToList<NodeDescriptorListType, NodeDescriptor<NodeTag, ModuleType> >::NewDescriptorListType, EdgeDescriptorListType> addNode(const typename Node<NodeDescriptor<NodeTag, ModuleType> >::ContextType& context)
 			{
 				try
 				{
 					LOG_DEBUG("Adding Node.");
-					Builder<typename AppendToList<NodeDescriptorListType, NodeDescriptor<NodeTag> >::NewDescriptorListType, EdgeDescriptorListType> newBuilder(std::tuple_cat(_nodeContexts, std::make_tuple(context)), _edgeContexts);
+					Builder<typename AppendToList<NodeDescriptorListType, NodeDescriptor<NodeTag, ModuleType> >::NewDescriptorListType, EdgeDescriptorListType> newBuilder(std::tuple_cat(_nodeContexts, std::make_tuple(context)), _edgeContexts);
 					return newBuilder;
 				}
 				catch (error::Exception& exception)

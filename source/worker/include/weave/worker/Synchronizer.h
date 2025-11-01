@@ -26,12 +26,12 @@ namespace weave
 			using WriterDataTuple = std::tuple<typename buffer::Writer<typename Channels::Tag, Channels::policyType, Channels::slots>::StorageType&...>;
 		};
 
-		template<typename SynchronizerTag>
+		template<typename SynchronizerTag, typename ModuleType>
 		class Synchronizer
 		{
 		public:
 			using ProcessorTag = SynchronizerTag;
-			using ContextType = typename Processor<ProcessorTag>::ContextType;
+			using ContextType = typename Processor<ProcessorTag, ModuleType>::ContextType;
 			static constexpr std::string_view name = utilities::typeName<SynchronizerTag>();
 			explicit Synchronizer(const ContextType& context) : _processor(context)
 			{}
@@ -130,7 +130,7 @@ namespace weave
 				(std::get<Indices>(tuple).publish(frameID), ...);
 			}
 
-			Processor<ProcessorTag> _processor;
+			Processor<ProcessorTag, ModuleType> _processor;
 		};
 	}
 }

@@ -11,7 +11,7 @@ namespace weave
 {
 	namespace graph
 	{
-		template<typename NodeTag>
+		template<typename NodeTag, typename ModuleType>
 		class NodeDescriptor
 		{
 		public:

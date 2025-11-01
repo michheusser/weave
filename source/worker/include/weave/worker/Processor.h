@@ -16,12 +16,11 @@ namespace weave
 		template<typename T>
 		struct ShowType;
 
-		template<typename ProcessorTag>
+		template<typename ProcessorTag, typename ModuleType> // TODO Probably only needs moduletype and not processortag
 		class Processor
 		{
 		public:
-			using ModuleType = typename user::ProcessorTraits<ProcessorTag>::ModuleType;
-			using ContextType = typename user::ProcessorTraits<ProcessorTag>::ContextType;
+			using ContextType = typename ModuleType::ContextType;
 			explicit Processor(const ContextType& context) : _module(context)
 			{}
 			void initialize()

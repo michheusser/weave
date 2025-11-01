@@ -17,7 +17,8 @@ namespace test
 		class Displayer
 		{
 		public:
-			explicit Displayer(const Context<constants::ModuleType::ImageDisplayer>& context);
+			using ContextType = Context<constants::ModuleType::ImageDisplayer>;
+			explicit Displayer(const ContextType& context);
 			~Displayer();
 			void initialize();
 			weave::error::Result process(const cv::Mat& frameBuffer) noexcept;

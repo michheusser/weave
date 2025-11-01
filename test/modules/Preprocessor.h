@@ -16,7 +16,8 @@ namespace test
 		class Preprocessor
 		{
 		public:
-			explicit Preprocessor(const Context<constants::ModuleType::ImageNormalizer>& context);
+			using ContextType = Context<constants::ModuleType::ImageNormalizer>;
+			explicit Preprocessor(const ContextType& context);
 			~Preprocessor();
 			void initialize();
 			weave::error::Result process(const cv::Mat& sourceFrame, cv::Mat& destinationFrame) const noexcept;

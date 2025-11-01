@@ -20,7 +20,8 @@ namespace test
 		class ServerReceiver
 		{
 		public:
-			explicit ServerReceiver(const Context<constants::ModuleType::ServerReceiver>& context);
+			using ContextType = Context<constants::ModuleType::ServerReceiver>;
+			explicit ServerReceiver(const ContextType& context);
 			void initialize();
 			weave::error::Result process(cv::Mat& outputBuffer) noexcept;
 

@@ -22,7 +22,8 @@ namespace test
 		class InferenceInputProcessor
 		{
 		public:
-			explicit InferenceInputProcessor(const Context<constants::ModuleType::InferenceInputProcessor>& context);
+			using ContextType = Context<constants::ModuleType::InferenceInputProcessor>;
+			explicit InferenceInputProcessor(const ContextType& context);
 			void initialize();
 			weave::error::Result process(const cv::Mat& convertedFrame, Ort::Value& inputTensor) const noexcept;
 		private:

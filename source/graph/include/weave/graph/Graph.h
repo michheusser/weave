@@ -28,10 +28,11 @@ namespace weave
 
 		template<typename NodeType>
 		struct ExtractDescriptorParamsFromNode;
-		template<typename NodeTag>
-		struct ExtractDescriptorParamsFromNode<Node<NodeDescriptor<NodeTag> > >
+		template<typename NodeTag, typename ModuleType>
+		struct ExtractDescriptorParamsFromNode<Node<NodeDescriptor<NodeTag, ModuleType> > >
 		{
 			using Tag = NodeTag;
+			using Module = ModuleType;
 		};
 
 		template<typename EdgeType>

@@ -2,13 +2,21 @@
 // All rights reserved
 // https://github.com/michheusser
 
-#include "specializations/ProcessorTraitsSpecialization.h"
 #include "specializations/SlotTraitsSpecialization.h"
 
 #include <weave/graph/Builder.h>
 #include "modules/Constants.h"
 #include "modules/Configuration.h"
 #include "modules/Context.h"
+#include "modules/Capturer.h"
+#include "modules/ClientReceiver.h"
+#include "modules/ClientSender.h"
+#include "modules/Preprocessor.h"
+#include "modules/Displayer.h"
+#include "modules/InferenceInputProcessor.h"
+#include "modules/InferenceModel.h"
+#include "modules/ServerReceiver.h"
+#include "modules/ServerSender.h"
 
 #include "buffer//Constants.h"
 #include "buffer/Configuration.h"
@@ -17,6 +25,40 @@
 #include "utilities/DisplayBridge.h"
 
 using namespace test;
+
+// Module Tags
+struct ClientImageCapturer
+{};
+
+struct ClientFirstImageNormalizer
+{};
+
+struct ClientImageSender
+{};
+
+struct ClientImageReceiver
+{};
+
+struct ClientSecondImageNormalizer
+{};
+
+struct ClientImageDisplayer
+{};
+
+
+struct ServerImageReceiver
+{};
+
+struct ServerInferenceInputProcessor
+{};
+
+struct ServerInferenceModel
+{};
+
+struct ServerImageSender
+{};
+
+
 
 int main()
 {
@@ -139,26 +181,26 @@ int main()
 
 	// Build
 	auto clientPipeline = weave::graph::Builder()
-		.addNode<ClientImageCapturer>(clientImageCapturerContext)
+		.addNode<ClientImageCapturer, module::Capturer>(clientImageCapturerContext)
 		.addEdge<ClientRawImageEdge, ClientImageCapturer, ClientFirstImageNormalizer, 16>(clientRawImageBufferContext)
-		.addNode<ClientFirstImageNormalizer>(clientFirstImageNormalizerContext)
+		.addNode<ClientFirstImageNormalizer, module::Preprocessor>(clientFirstImageNormalizerContext)
 		.addEdge<ClientImageSendEdge, ClientFirstImageNormalizer, ClientImageSender, 16>(clientImageSendBufferContext)
-		.addNode<ClientImageSender>(clientImageSenderContext)
-		.addNode<ClientImageReceiver>(clientImageReceiverContext)
+		.addNode<ClientImageSender, module::ClientSender>(clientImageSenderContext)
+		.addNode<ClientImageReceiver, module::ClientReceiver>(clientImageReceiverContext)
 		.addEdge<ClientImageReceiveEdge, ClientImageReceiver, ClientSecondImageNormalizer, 16>(clientImageReceiveBufferContext)
-		.addNode<ClientSecondImageNormalizer>(clientSecondImageNormalizerContext)
+		.addNode<ClientSecondImageNormalizer, module::Preprocessor>(clientSecondImageNormalizerContext)
 		.addEdge<ClientDisplayImageEdge, ClientSecondImageNormalizer, ClientImageDisplayer,16>(clientDisplayImageBufferContext)
-		.addNode<ClientImageDisplayer>(clientImageDisplayerContext)
+		.addNode<ClientImageDisplayer, module::Displayer>(clientImageDisplayerContext)
 		.build();
 
 	auto serverPipeline = weave::graph::Builder()
-		.addNode<ServerImageReceiver>(serverImageReceiverContext)
+		.addNode<ServerImageReceiver, module::ServerReceiver>(serverImageReceiverContext)
 		.addEdge<ServerImageReceiveEdge, ServerImageReceiver, ServerInferenceInputProcessor, 16>(serverImageReceiveBufferContext)
-		.addNode<ServerInferenceInputProcessor>(serverInferenceInputProcessorContext)
+		.addNode<ServerInferenceInputProcessor, module::InferenceInputProcessor>(serverInferenceInputProcessorContext)
 		.addEdge<ServerInferenceInputTensorEdge, ServerInferenceInputProcessor, ServerInferenceModel,16>(serverInferenceInputTensorContext)
-		.addNode<ServerInferenceModel>(serverInferenceModelContext)
+		.addNode<ServerInferenceModel, module::InferenceModel>(serverInferenceModelContext)
 		.addEdge<ServerImageSendEdge, ServerInferenceModel, ServerImageSender,16>(serverImageSendBufferContext)
-		.addNode<ServerImageSender>(serverImageSenderContext)
+		.addNode<ServerImageSender, module::ServerSender>(serverImageSenderContext)
 		.build();
 
 	weave::utilities::SignalManager::installHandlers();

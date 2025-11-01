@@ -57,7 +57,6 @@ add_library(test STATIC
         streaming/NetworkUtilities.cpp
         streaming/NetworkUtilities.h
 
-        specializations/ProcessorTraitsSpecialization.h
         specializations/SlotTraitsSpecialization.h
 )
 

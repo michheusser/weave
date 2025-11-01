@@ -15,10 +15,11 @@ namespace weave
 	{
 		template<typename NodeDescriptorType>
 		struct ExtractNodeDescriptorParams;
-		template<typename NodeTag>
-		struct ExtractNodeDescriptorParams<NodeDescriptor<NodeTag> >
+		template<typename NodeTag, typename ModuleType>
+		struct ExtractNodeDescriptorParams<NodeDescriptor<NodeTag, ModuleType> >
 		{
 			using Tag = NodeTag;
+			using Module = ModuleType;
 		};
 
 		template<typename Edge>
@@ -58,8 +59,9 @@ namespace weave
 		{
 		public:
 			using NodeTag = typename ExtractNodeDescriptorParams<NodeDescriptorType>::Tag;
+			using ModuleType = typename ExtractNodeDescriptorParams<NodeDescriptorType>::Module;
 			using WorkerTag = NodeTag;
-			using ContextType = typename worker::Worker<WorkerTag>::ContextType;
+			using ContextType = typename worker::Worker<WorkerTag, ModuleType>::ContextType;
 			explicit Node(ContextType& context) : _worker(context)
 			{}
 
@@ -90,7 +92,7 @@ namespace weave
 				// Passing it as template parameter requires too many unnecessary helper constructs.
 				return ChannelTupleType(std::get<Indices>(edges).getChannel()...);
 			}
-			worker::Worker<WorkerTag> _worker;
+			worker::Worker<WorkerTag, ModuleType> _worker;
 		};
 	}
 }
