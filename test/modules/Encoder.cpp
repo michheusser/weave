@@ -27,7 +27,7 @@ namespace test
 			std::vector<uint8_t> encodedImageBuffer; // TODO Performance improvement potential (maybe making it static)
 			// No compression (e.g. with .png) should output a constant encoded frame size. If the input buffer
 			// does not use shrink_to_fit at any point in its lifetime, no reallocations will happen when encoding into the buffer.
-			const_cast<cv::Mat&>(sourceFrame);
+			// const_cast<cv::Mat&>(sourceFrame);
 			cv::imencode(_encodingFormat, sourceFrame, encodedImageBuffer, _encodingParameters);
 			MessageHeader messageHeader;
 			messageHeader.frameID = frameID;

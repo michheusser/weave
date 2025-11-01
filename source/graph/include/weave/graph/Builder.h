@@ -76,13 +76,13 @@ namespace weave
 				}
 			}
 
-			template<typename EdgeTag, typename FromNode, typename ToNode, size_t numSlots>
-			Builder<NodeDescriptorListType, typename AppendToList<EdgeDescriptorListType, EdgeDescriptor<EdgeTag, FromNode, ToNode, numSlots> >::NewDescriptorListType> addEdge(const typename Edge<EdgeDescriptor<EdgeTag, FromNode, ToNode, numSlots> >::ContextType& context)
+			template<typename EdgeTag, typename FromNode, typename ToNode, typename SlotDataType, size_t numSlots, buffer::constants::PolicyType policyType>
+			Builder<NodeDescriptorListType, typename AppendToList<EdgeDescriptorListType, EdgeDescriptor<EdgeTag, FromNode, ToNode, SlotDataType, numSlots, policyType> >::NewDescriptorListType> addEdge(const typename Edge<EdgeDescriptor<EdgeTag, FromNode, ToNode, SlotDataType, numSlots, policyType> >::ContextType& context)
 			{
 				try
 				{
 					LOG_DEBUG("Adding Edge.");
-					Builder<NodeDescriptorListType, typename AppendToList<EdgeDescriptorListType, EdgeDescriptor<EdgeTag, FromNode, ToNode, numSlots> >::NewDescriptorListType> newBuilder(_nodeContexts, std::tuple_cat(_edgeContexts, std::make_tuple(context)));
+					Builder<NodeDescriptorListType, typename AppendToList<EdgeDescriptorListType, EdgeDescriptor<EdgeTag, FromNode, ToNode, SlotDataType, numSlots, policyType> >::NewDescriptorListType> newBuilder(_nodeContexts, std::tuple_cat(_edgeContexts, std::make_tuple(context)));
 					return newBuilder;
 				}
 				catch (error::Exception& exception)

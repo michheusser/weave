@@ -5,19 +5,15 @@
 #ifndef SLOT_H_2025_09_30_16_59_17
 #define SLOT_H_2025_09_30_16_59_17
 
-#include <weave/user/SlotTraits.h>
-#include <weave/error/Result.h>
-#include <weave/logging/Macros.h>
 
 namespace weave
 {
 	namespace buffer
 	{
-		template<typename SlotTag>
+		template<typename SlotTag, typename SlotDataType> // TODO Probably don't need a SlotTag anymore here
 		class Slot
 		{
 		public:
-			using SlotDataType = typename user::SlotTraits<SlotTag>::SlotDataType;
 			using ContextType = typename SlotDataType::ContextType;
 			using StorageType = typename SlotDataType::StorageType;
 			explicit Slot()

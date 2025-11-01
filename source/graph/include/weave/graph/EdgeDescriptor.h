@@ -4,12 +4,13 @@
 
 #ifndef EDGEDESCRIPTOR_H_2025_10_06_15_53_24
 #define EDGEDESCRIPTOR_H_2025_10_06_15_53_24
+#include "weave/buffer/Constants.h"
 
 namespace weave
 {
 	namespace graph
 	{
-		template<typename EdgeTag, typename FromNodeTag, typename ToNodeTag, size_t numSlots>
+		template<typename EdgeTag, typename FromNodeTag, typename ToNodeTag, typename SlotDataType, size_t numSlots, buffer::constants::PolicyType policyType>
 		class EdgeDescriptor
 		{
 		public:

@@ -56,12 +56,10 @@ add_library(test STATIC
         streaming/NetworkServer.h
         streaming/NetworkUtilities.cpp
         streaming/NetworkUtilities.h
-
-        specializations/SlotTraitsSpecialization.h
 )
 
 target_include_directories(test PUBLIC ${OpenCV_INCLUDE_DIRS})
-target_link_libraries(test PUBLIC ${OpenCV_LIBS} ONNXRuntime::ONNXRuntime graph error logging utilities user)
+target_link_libraries(test PUBLIC ${OpenCV_LIBS} ONNXRuntime::ONNXRuntime graph error logging utilities)
 target_compile_definitions(test PUBLIC WEAVE_MODELS_LOCATION=\"${CMAKE_HOME_DIRECTORY}/test/models/fast-neural-stayle-transfer\")
 
 

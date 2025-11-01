@@ -32,14 +32,16 @@ namespace weave
 
 		template<typename EdgeType>
 		struct ExtractEdgeParams;
-		template<typename EdgeTag, typename FromNodeTag, typename ToNodeTag, size_t numSlots>
-		struct ExtractEdgeParams<Edge<EdgeDescriptor<EdgeTag, FromNodeTag, ToNodeTag, numSlots> >&>
+		template<typename EdgeTag, typename FromNodeTag, typename ToNodeTag, typename SlotDataType, size_t numSlots, buffer::constants::PolicyType policyType>
+		struct ExtractEdgeParams<Edge<EdgeDescriptor<EdgeTag, FromNodeTag, ToNodeTag, SlotDataType, numSlots, policyType> >&>
 		{
 			using Tag = EdgeTag;
 			using FromNode = FromNodeTag;
 			using ToNode = ToNodeTag;
+			using SlotData = SlotDataType;
 			static constexpr size_t slots = numSlots;
-			using ChannelTag = Edge<EdgeDescriptor<Tag, FromNode, ToNode, slots> >::ChannelTag;
+			static constexpr buffer::constants::PolicyType policy = policyType;
+			using ChannelTag = Edge<EdgeDescriptor<Tag, FromNode, ToNode, SlotData, slots, policy> >::ChannelTag;
 		};
 
 		template<typename EdgeTupleType>
@@ -47,8 +49,7 @@ namespace weave
 		template<typename... Edges>
 		struct EdgeTupleToChannelTuple<std::tuple<Edges...> >
 		{
-			using ChannelTuple = std::tuple<buffer::Channel<typename ExtractEdgeParams<Edges>::ChannelTag, Edge<typename ExtractEdgeDescriptor<Edges>::Descriptor>::policy, ExtractEdgeParams<
-				Edges>::slots>&...>;
+			using ChannelTuple = std::tuple<buffer::Channel<typename ExtractEdgeParams<Edges>::Tag, typename ExtractEdgeParams<Edges>::SlotData, ExtractEdgeParams<Edges>::slots, ExtractEdgeParams<Edges>::policy>&...>;
 		};
 
 		template<typename T>

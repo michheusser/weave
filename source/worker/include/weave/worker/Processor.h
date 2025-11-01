@@ -5,7 +5,6 @@
 #ifndef PROCESSOR_H_2025_09_20_15_34_46
 #define PROCESSOR_H_2025_09_20_15_34_46
 
-#include <weave/user/ProcessorTraits.h>
 #include <weave/error/Result.h>
 #include <weave/logging/Macros.h>
 

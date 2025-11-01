@@ -20,10 +20,10 @@ namespace weave
 		template<typename... Channels>
 		struct ChannelsTupleToDataAccessTuple<std::tuple<Channels&...> >
 		{
-			using ReaderTuple = std::tuple<buffer::Reader<typename Channels::Tag, Channels::policyType, Channels::slots>...>;
-			using WriterTuple = std::tuple<buffer::Writer<typename Channels::Tag, Channels::policyType, Channels::slots>...>;
-			using ReaderDataTuple = std::tuple<const typename buffer::Reader<typename Channels::Tag, Channels::policyType, Channels::slots>::StorageType&...>;
-			using WriterDataTuple = std::tuple<typename buffer::Writer<typename Channels::Tag, Channels::policyType, Channels::slots>::StorageType&...>;
+			using ReaderTuple = std::tuple<buffer::Reader<typename Channels::Tag, typename Channels::SlotData, Channels::slots, Channels::policy>...>;
+			using WriterTuple = std::tuple<buffer::Writer<typename Channels::Tag, typename Channels::SlotData, Channels::slots, Channels::policy>...>;
+			using ReaderDataTuple = std::tuple<const typename buffer::Reader<typename Channels::Tag, typename Channels::SlotData, Channels::slots, Channels::policy>::StorageType&...>;
+			using WriterDataTuple = std::tuple<typename buffer::Writer<typename Channels::Tag, typename Channels::SlotData, Channels::slots, Channels::policy>::StorageType&...>;
 		};
 
 		template<typename SynchronizerTag, typename ModuleType>

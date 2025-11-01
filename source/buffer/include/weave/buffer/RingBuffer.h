@@ -17,12 +17,12 @@ namespace weave
 {
 	namespace buffer
 	{
-		template<typename RingBufferTag, size_t numSlots>
+		template<typename RingBufferTag, typename SlotDataType, size_t numSlots>
 		class RingBuffer
 		{
 		public:
 			using SlotTag = RingBufferTag;
-			using ContextType = typename Slot<SlotTag>::ContextType;
+			using ContextType = typename Slot<SlotTag, SlotDataType>::ContextType;
 
 			// We do not throw errors, but rather have contracts (assert), since we have the invariant that reader and writer will
 			// only exist when the RingBuffer is not empty and not full respectively. Thus, we do not return error codes.
@@ -33,7 +33,7 @@ namespace weave
 			{
 				try
 				{
-					for (Slot<SlotTag>& curSlot: _slotArray)
+					for (Slot<SlotTag,SlotDataType>& curSlot: _slotArray)
 					{
 						curSlot.initialize(context);
 					}
@@ -52,7 +52,7 @@ namespace weave
 
 			uint64_t remaining() const noexcept
 			{
-				return NUM_SLOTS - used();
+				return _NUM_SLOTS - used();
 			}
 
 			bool empty() const noexcept
@@ -62,10 +62,10 @@ namespace weave
 
 			bool full() const noexcept
 			{
-				return used() == NUM_SLOTS;
+				return used() == _NUM_SLOTS;
 			}
 
-			typename Slot<SlotTag>::StorageType& newSlot() noexcept
+			typename Slot<SlotTag, SlotDataType>::StorageType& newSlot() noexcept
 			{
 				assert(!full());
 				return _slotArray[_head].data();
@@ -74,7 +74,7 @@ namespace weave
 			void pop() noexcept
 			{
 				assert(!empty());
-				_tail = (_tail + 1) % NUM_SLOTS;
+				_tail = (_tail + 1) % _NUM_SLOTS;
 				--_usedCount;
 			}
 
@@ -82,17 +82,17 @@ namespace weave
 			{
 				assert(!full());
 				_frameIDs[_head] = frameID;
-				_head = (_head + 1) % NUM_SLOTS;
+				_head = (_head + 1) % _NUM_SLOTS;
 				++_usedCount;
 			}
 
-			typename Slot<SlotTag>::StorageType& front() noexcept
+			typename Slot<SlotTag, SlotDataType>::StorageType& front() noexcept
 			{
 				assert(!empty());
 				return _slotArray[_tail].data();
 			}
 
-			const typename Slot<SlotTag>::StorageType& front() const noexcept
+			const typename Slot<SlotTag, SlotDataType>::StorageType& front() const noexcept
 			{
 				assert(!empty());
 				return _slotArray[_tail].data();
@@ -108,9 +108,9 @@ namespace weave
 			// TODO In general a lot of improvement potential here by using a custom allocator or to make sure that all the underlying data
 			//  is put together and not spread across the heap (e.g. if InternalData is a string or a vector)
 
-			static constexpr uint64_t NUM_SLOTS = numSlots;
-			std::array<Slot<SlotTag>, NUM_SLOTS> _slotArray;
-			std::array<uint32_t, NUM_SLOTS> _frameIDs;
+			static constexpr uint64_t _NUM_SLOTS = numSlots;
+			std::array<Slot<SlotTag, SlotDataType>, _NUM_SLOTS> _slotArray;
+			std::array<uint32_t, _NUM_SLOTS> _frameIDs;
 			uint64_t _usedCount;
 			uint64_t _head; // Writes/pushes happen here
 			uint64_t _tail; // Reads/pops happen here

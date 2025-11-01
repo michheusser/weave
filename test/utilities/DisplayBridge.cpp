@@ -70,6 +70,7 @@ namespace test
 				LOG_ERROR("Failed to show frame.");
 				return {weave::error::Type::Display, 0};
 			}
+			return weave::error::Result::success();
 		}
 
 		weave::error::Result DisplayBridge::_showFrame(const cv::Mat& frameBuffer, const std::string& title, const uint32_t frameID, const bool wait) noexcept

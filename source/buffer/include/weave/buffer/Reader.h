@@ -12,20 +12,20 @@ namespace weave
 {
 	namespace buffer
 	{
-		template <typename ChannelTag, constants::PolicyType policy, size_t numSlots>
+		template <typename ChannelTag, typename SlotDataType, size_t numSlots, buffer::constants::PolicyType policyType>
 		class Reader
 		{
 		public:
 			using RingBufferTag = ChannelTag;
 			using SlotTag = ChannelTag;
-			using StorageType = typename Slot<SlotTag>::StorageType;
+			using StorageType = typename Slot<SlotTag, SlotDataType>::StorageType;
 
 			explicit Reader(std::shared_mutex& mutex, std::condition_variable_any& conditionVariableRead, std::condition_variable_any& conditionVariableWrite,
-			                RingBuffer<RingBufferTag, numSlots>& queueBuffer) noexcept : _mutex(mutex), _conditionVariableRead(conditionVariableRead), _conditionVariableWrite(conditionVariableWrite),
+			                RingBuffer<RingBufferTag, SlotDataType, numSlots>& queueBuffer) noexcept : _mutex(mutex), _conditionVariableRead(conditionVariableRead), _conditionVariableWrite(conditionVariableWrite),
 			                                                           _queueBuffer(queueBuffer), _state(constants::ReaderState::Released)
 			{
 				// In the future, we might want more sophisticated reading (e.g. reading without marking as read, etc.) so here we might change to std::shared_lock/std::condition_variable_any::notify_all()
-				ReaderAcquirer<ChannelTag, policy, numSlots>::acquire(_mutex, _conditionVariableRead, _queueBuffer, _state);
+				ReaderAcquirer<ChannelTag, SlotDataType, numSlots, policyType>::acquire(_mutex, _conditionVariableRead, _queueBuffer, _state);
 			}
 
 			// Copying is not allowed, because in a SCSP context, I cannot have two active readers or two active writers.
@@ -85,7 +85,7 @@ namespace weave
 			std::shared_mutex& _mutex;
 			std::condition_variable_any& _conditionVariableRead;
 			std::condition_variable_any& _conditionVariableWrite;
-			RingBuffer<RingBufferTag, numSlots>& _queueBuffer;
+			RingBuffer<RingBufferTag, SlotDataType, numSlots>& _queueBuffer;
 			// Reader's State
 			constants::ReaderState _state;
 		};

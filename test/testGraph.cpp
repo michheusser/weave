@@ -2,8 +2,6 @@
 // All rights reserved
 // https://github.com/michheusser
 
-#include "specializations/SlotTraitsSpecialization.h"
-
 #include <weave/graph/Builder.h>
 #include "modules/Constants.h"
 #include "modules/Configuration.h"
@@ -21,6 +19,9 @@
 #include "buffer//Constants.h"
 #include "buffer/Configuration.h"
 #include "buffer/Context.h"
+
+#include "slots/Image.h"
+#include "slots/InferenceTensor.h"
 
 #include "utilities/DisplayBridge.h"
 
@@ -45,7 +46,6 @@ struct ClientSecondImageNormalizer
 struct ClientImageDisplayer
 {};
 
-
 struct ServerImageReceiver
 {};
 
@@ -58,6 +58,27 @@ struct ServerInferenceModel
 struct ServerImageSender
 {};
 
+// SlotData Tags
+struct ClientRawImageEdge
+{};
+
+struct ClientImageSendEdge
+{};
+
+struct ClientImageReceiveEdge
+{};
+
+struct ClientDisplayImageEdge
+{};
+
+struct ServerImageReceiveEdge
+{};
+
+struct ServerInferenceInputTensorEdge
+{};
+
+struct ServerImageSendEdge
+{};
 
 
 int main()
@@ -182,24 +203,24 @@ int main()
 	// Build
 	auto clientPipeline = weave::graph::Builder()
 		.addNode<ClientImageCapturer, module::Capturer>(clientImageCapturerContext)
-		.addEdge<ClientRawImageEdge, ClientImageCapturer, ClientFirstImageNormalizer, 16>(clientRawImageBufferContext)
+		.addEdge<ClientRawImageEdge, ClientImageCapturer, ClientFirstImageNormalizer, slot::Image, 16, weave::buffer::constants::PolicyType::Lossless>(clientRawImageBufferContext)
 		.addNode<ClientFirstImageNormalizer, module::Preprocessor>(clientFirstImageNormalizerContext)
-		.addEdge<ClientImageSendEdge, ClientFirstImageNormalizer, ClientImageSender, 16>(clientImageSendBufferContext)
+		.addEdge<ClientImageSendEdge, ClientFirstImageNormalizer, ClientImageSender, slot::Image, 16, weave::buffer::constants::PolicyType::Lossless>(clientImageSendBufferContext)
 		.addNode<ClientImageSender, module::ClientSender>(clientImageSenderContext)
 		.addNode<ClientImageReceiver, module::ClientReceiver>(clientImageReceiverContext)
-		.addEdge<ClientImageReceiveEdge, ClientImageReceiver, ClientSecondImageNormalizer, 16>(clientImageReceiveBufferContext)
+		.addEdge<ClientImageReceiveEdge, ClientImageReceiver, ClientSecondImageNormalizer, slot::Image, 16, weave::buffer::constants::PolicyType::Lossless>(clientImageReceiveBufferContext)
 		.addNode<ClientSecondImageNormalizer, module::Preprocessor>(clientSecondImageNormalizerContext)
-		.addEdge<ClientDisplayImageEdge, ClientSecondImageNormalizer, ClientImageDisplayer,16>(clientDisplayImageBufferContext)
+		.addEdge<ClientDisplayImageEdge, ClientSecondImageNormalizer, ClientImageDisplayer, slot::Image, 16, weave::buffer::constants::PolicyType::Lossless>(clientDisplayImageBufferContext)
 		.addNode<ClientImageDisplayer, module::Displayer>(clientImageDisplayerContext)
 		.build();
 
 	auto serverPipeline = weave::graph::Builder()
 		.addNode<ServerImageReceiver, module::ServerReceiver>(serverImageReceiverContext)
-		.addEdge<ServerImageReceiveEdge, ServerImageReceiver, ServerInferenceInputProcessor, 16>(serverImageReceiveBufferContext)
+		.addEdge<ServerImageReceiveEdge, ServerImageReceiver, ServerInferenceInputProcessor, slot::Image, 16, weave::buffer::constants::PolicyType::Lossless>(serverImageReceiveBufferContext)
 		.addNode<ServerInferenceInputProcessor, module::InferenceInputProcessor>(serverInferenceInputProcessorContext)
-		.addEdge<ServerInferenceInputTensorEdge, ServerInferenceInputProcessor, ServerInferenceModel,16>(serverInferenceInputTensorContext)
+		.addEdge<ServerInferenceInputTensorEdge, ServerInferenceInputProcessor, ServerInferenceModel,slot::InferenceTensor, 16, weave::buffer::constants::PolicyType::Lossless>(serverInferenceInputTensorContext)
 		.addNode<ServerInferenceModel, module::InferenceModel>(serverInferenceModelContext)
-		.addEdge<ServerImageSendEdge, ServerInferenceModel, ServerImageSender,16>(serverImageSendBufferContext)
+		.addEdge<ServerImageSendEdge, ServerInferenceModel, ServerImageSender,slot::Image, 16, weave::buffer::constants::PolicyType::Lossless>(serverImageSendBufferContext)
 		.addNode<ServerImageSender, module::ServerSender>(serverImageSenderContext)
 		.build();
 
@@ -213,7 +234,7 @@ int main()
 	clientPipeline.start();
 	serverPipeline.waitForShutdown([]
 	{
-		utilities::DisplayBridge::flushFrame();
+		(void)utilities::DisplayBridge::flushFrame();
 	});
 	return 0;
 }

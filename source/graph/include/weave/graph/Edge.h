@@ -14,13 +14,15 @@ namespace weave
 	{
 		template<typename EdgeDescriptorType>
 		struct ExtractEdgeDescriptorParams;
-		template<typename EdgeTag, typename FromNodeTag, typename ToNodeTag, size_t numSlots>
-		struct ExtractEdgeDescriptorParams<EdgeDescriptor<EdgeTag, FromNodeTag, ToNodeTag, numSlots> >
+		template<typename EdgeTag, typename FromNodeTag, typename ToNodeTag, typename SlotDataType, size_t numSlots, buffer::constants::PolicyType policyType>
+		struct ExtractEdgeDescriptorParams<EdgeDescriptor<EdgeTag, FromNodeTag, ToNodeTag, SlotDataType, numSlots, policyType> >
 		{
 			using Tag = EdgeTag;
 			using FromNode = FromNodeTag;
 			using ToNode = ToNodeTag;
+			using SlotData = SlotDataType;
 			static constexpr size_t slots = numSlots;
+			static constexpr buffer::constants::PolicyType policy = policyType;
 		};
 
 		template<typename T>
@@ -30,12 +32,13 @@ namespace weave
 		class Edge
 		{
 		public:
+			using SlotDataType = typename ExtractEdgeDescriptorParams<EdgeDescriptorType>::SlotData;
 			static constexpr size_t numSlots = ExtractEdgeDescriptorParams<EdgeDescriptorType>::slots;
-			static constexpr buffer::constants::PolicyType policy = buffer::constants::PolicyType::Lossless;
+			static constexpr buffer::constants::PolicyType policy = ExtractEdgeDescriptorParams<EdgeDescriptorType>::policy;
 
 			using EdgeTag = typename ExtractEdgeDescriptorParams<EdgeDescriptorType>::Tag;
 			using ChannelTag = EdgeTag;
-			using ContextType = typename buffer::Channel<ChannelTag, policy, numSlots>::ContextType;
+			using ContextType = typename buffer::Channel<ChannelTag, SlotDataType, numSlots, policy>::ContextType;
 			explicit Edge(ContextType& context) : _channel(context)
 			{}
 
@@ -45,7 +48,7 @@ namespace weave
 			Edge(Edge&&) = delete;
 			Edge& operator=(Edge&&) = delete;
 
-			buffer::Channel<ChannelTag, policy, numSlots>& getChannel() noexcept // TODO Decide if this is the best solution
+			buffer::Channel<ChannelTag, SlotDataType, numSlots, policy>& getChannel() noexcept // TODO Decide if this is the best solution
 			{
 				return _channel;
 			}
@@ -56,7 +59,7 @@ namespace weave
 			}
 
 			// TODO Later substitute by multiplexer with several buffers!
-			buffer::Channel<ChannelTag, policy, numSlots> _channel;
+			buffer::Channel<ChannelTag, SlotDataType, numSlots, policy> _channel;
 		};
 	}
 }

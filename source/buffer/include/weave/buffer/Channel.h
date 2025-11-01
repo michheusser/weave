@@ -20,15 +20,16 @@ namespace weave
 {
 	namespace buffer
 	{
-		template<typename ChannelTag, constants::PolicyType policy, size_t numSlots>
+		template<typename ChannelTag, typename SlotDataType, size_t numSlots, constants::PolicyType policyType>
 		class Channel
 		{
 		public:
-			static constexpr constants::PolicyType policyType = policy;
-			static constexpr size_t slots = numSlots;
 			using Tag = ChannelTag;
+			using SlotData = SlotDataType;
+			static constexpr size_t slots = numSlots;
+			static constexpr constants::PolicyType policy = policyType;
 			using RingBufferTag = ChannelTag;
-			using ContextType = typename RingBuffer<RingBufferTag, numSlots>::ContextType;
+			using ContextType = typename RingBuffer<RingBufferTag, SlotDataType, numSlots>::ContextType;
 			explicit Channel(const ContextType& context)
 			{
 				_initialize(context);
@@ -40,14 +41,14 @@ namespace weave
 			Channel(Channel&&) = delete;
 			Channel& operator=(Channel&&) = delete;
 
-			Reader<ChannelTag, policy, numSlots> reader() noexcept
+			Reader<ChannelTag, SlotDataType, slots, policy> reader() noexcept
 			{
-				return Reader<ChannelTag, policy, numSlots>(_mutex, _conditionVariableRead, _conditionVariableWrite, _ringBuffer);
+				return Reader<ChannelTag, SlotDataType, slots, policy>(_mutex, _conditionVariableRead, _conditionVariableWrite, _ringBuffer);
 			}
 
-			Writer<ChannelTag, policy, numSlots> writer() noexcept
+			Writer<ChannelTag, SlotDataType, slots, policy> writer() noexcept
 			{
-				return Writer<ChannelTag, policy, numSlots>(_mutex, _conditionVariableRead, _conditionVariableWrite, _ringBuffer);
+				return Writer<ChannelTag, SlotDataType, slots, policy>(_mutex, _conditionVariableRead, _conditionVariableWrite, _ringBuffer);
 			}
 
 		private:
@@ -68,7 +69,7 @@ namespace weave
 			mutable std::shared_mutex _mutex;
 			mutable std::condition_variable_any _conditionVariableRead;
 			mutable std::condition_variable_any _conditionVariableWrite;
-			RingBuffer<RingBufferTag, numSlots> _ringBuffer;
+			RingBuffer<RingBufferTag, SlotDataType, numSlots> _ringBuffer;
 		};
 	}
 }

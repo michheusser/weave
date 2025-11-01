@@ -37,13 +37,15 @@ namespace weave
 
 		template<typename EdgeType>
 		struct ExtractDescriptorParamsFromEdge;
-		template<typename EdgeTag, typename FromNodeTag, typename ToNodeTag, size_t numSlots>
-		struct ExtractDescriptorParamsFromEdge<Edge<EdgeDescriptor<EdgeTag, FromNodeTag, ToNodeTag, numSlots> > >
+		template<typename EdgeTag, typename FromNodeTag, typename ToNodeTag, typename SlotDataType, size_t numSlots, buffer::constants::PolicyType policyType>
+		struct ExtractDescriptorParamsFromEdge<Edge<EdgeDescriptor<EdgeTag, FromNodeTag, ToNodeTag, SlotDataType, numSlots, policyType> > >
 		{
 			using Tag = EdgeTag;
 			using FromNode = FromNodeTag;
 			using ToNode = ToNodeTag;
+			using SlotData = SlotDataType;
 			static constexpr size_t slots = numSlots;
+			static constexpr buffer::constants::PolicyType policy = policyType;
 		};
 
 		template<typename GraphDescriptorType>
