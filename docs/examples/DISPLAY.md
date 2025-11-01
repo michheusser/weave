@@ -9,14 +9,12 @@ struct CapturerContext{int width; int height;};
 class Capturer
 {
 public:
-    explicit Capturer(const CapturerContext& context);
+    using ContextType = CapturerContext;
+    explicit Capturer(const ContextType& context);
     void initialize();
     weave::error::Result process(cv::Mat& frameBuffer) noexcept;
     ...
 };
-
-struct ResizerContext{...};
-class Resizer{...};
 
 struct ResizerContext{...};
 class Resizer{
@@ -35,7 +33,6 @@ class Displayer{
 We create our slots:
 ```cpp
 // Slots.h
-
 struct ImageSlotContext{...}
 class ImageSlot
 {
@@ -50,23 +47,15 @@ private:
 };
 ```
 
-We then create our tags and mappings:
+We then create our tags:
 ```cpp
-// TagsAndTraits.h
-
-#include "ProcessorModules.h"
-
+// Tags.h
 struct MyCapturerNode{};
 struct MyResizerNode{};
 struct MyDisplayerNode{};
-template<> struct weave::user::ProcessorTraits<MyCapturerNode>{using ModuleType = Capturer;};
-template<> struct weave::user::ProcessorTraits<MyResizerNode>{using ModuleType = Resizer;};
-template<> struct weave::user::ProcessorTraits<MyDisplayerNode>{using ModuleType = Displayer;};
 
 struct MyRawImageEdge{};
 struct MyResizedImageEdge{};
-template<> struct weave::user::SlotTraits<MyRawImageEdge>{using SlotDataType = ImageSlot;};
-template<> struct weave::user::SlotTraits<MyResizedImageEdge>{using SlotDataType = ImageSlot;};
 ```
 And finally we create the pipeline once all our types have been defined:
 ```cpp
@@ -83,11 +72,11 @@ ImageSlotContext resizedImageBufferContext = {640, 480};
 DisplayerConfig displayerConfig = {DEFAULT_DISPLAYER_MODE};
 
 auto pipeline = weave::graph::Builder()
-    .addNode<MyCapturerNode>(capturerConfig)
+    .addNode<MyCapturerNode, Capturer>(capturerConfig)
     .addEdge<MyRawImageEdge, MyCapturerNode, MyResizerNode, 16, PolicyType::Lossless>(rawImageBufferContext)
-    .addNode<MyResizerNode>(resizerConfig)
+    .addNode<MyResizerNode, Preprocessor>(resizerConfig)
     .addEdge<MyResizedImageEdge, MyResizerNode, MyDisplayerNode, 16, PolicyType::LossLess>(resizedImageBufferContext)
-    .addNode<MyDisplayerNode>(displayerConfig)
+    .addNode<MyDisplayerNode, Displayer>(displayerConfig)
     .build();
     
 pipeline.start();

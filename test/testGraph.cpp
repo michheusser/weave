@@ -80,9 +80,11 @@ struct ServerInferenceInputTensorEdge
 struct ServerImageSendEdge
 {};
 
+using namespace weave;
 
 int main()
 {
+
 	/***** NETWORK *****/
 	streaming::NetworkClientConfiguration networkClientConfiguration;
 	networkClientConfiguration.localAddress = streaming::constants::CLIENT_LOCAL_ADDRESS;
@@ -201,30 +203,31 @@ int main()
 	serverImageSenderContext.networkServer = networkServer;
 
 	// Build
-	auto clientPipeline = weave::graph::Builder()
+
+	auto clientPipeline = graph::Builder()
 		.addNode<ClientImageCapturer, module::Capturer>(clientImageCapturerContext)
-		.addEdge<ClientRawImageEdge, ClientImageCapturer, ClientFirstImageNormalizer, slot::Image, 16, weave::buffer::constants::PolicyType::Lossless>(clientRawImageBufferContext)
+		.addEdge<ClientRawImageEdge, ClientImageCapturer, ClientFirstImageNormalizer, slot::Image, 16, buffer::constants::PolicyType::Lossless>(clientRawImageBufferContext)
 		.addNode<ClientFirstImageNormalizer, module::Preprocessor>(clientFirstImageNormalizerContext)
-		.addEdge<ClientImageSendEdge, ClientFirstImageNormalizer, ClientImageSender, slot::Image, 16, weave::buffer::constants::PolicyType::Lossless>(clientImageSendBufferContext)
+		.addEdge<ClientImageSendEdge, ClientFirstImageNormalizer, ClientImageSender, slot::Image, 16, buffer::constants::PolicyType::Lossless>(clientImageSendBufferContext)
 		.addNode<ClientImageSender, module::ClientSender>(clientImageSenderContext)
 		.addNode<ClientImageReceiver, module::ClientReceiver>(clientImageReceiverContext)
-		.addEdge<ClientImageReceiveEdge, ClientImageReceiver, ClientSecondImageNormalizer, slot::Image, 16, weave::buffer::constants::PolicyType::Lossless>(clientImageReceiveBufferContext)
+		.addEdge<ClientImageReceiveEdge, ClientImageReceiver, ClientSecondImageNormalizer, slot::Image, 16, buffer::constants::PolicyType::Lossless>(clientImageReceiveBufferContext)
 		.addNode<ClientSecondImageNormalizer, module::Preprocessor>(clientSecondImageNormalizerContext)
-		.addEdge<ClientDisplayImageEdge, ClientSecondImageNormalizer, ClientImageDisplayer, slot::Image, 16, weave::buffer::constants::PolicyType::Lossless>(clientDisplayImageBufferContext)
+		.addEdge<ClientDisplayImageEdge, ClientSecondImageNormalizer, ClientImageDisplayer, slot::Image, 16, buffer::constants::PolicyType::Lossless>(clientDisplayImageBufferContext)
 		.addNode<ClientImageDisplayer, module::Displayer>(clientImageDisplayerContext)
 		.build();
 
-	auto serverPipeline = weave::graph::Builder()
+	auto serverPipeline = graph::Builder()
 		.addNode<ServerImageReceiver, module::ServerReceiver>(serverImageReceiverContext)
-		.addEdge<ServerImageReceiveEdge, ServerImageReceiver, ServerInferenceInputProcessor, slot::Image, 16, weave::buffer::constants::PolicyType::Lossless>(serverImageReceiveBufferContext)
+		.addEdge<ServerImageReceiveEdge, ServerImageReceiver, ServerInferenceInputProcessor, slot::Image, 16, buffer::constants::PolicyType::Lossless>(serverImageReceiveBufferContext)
 		.addNode<ServerInferenceInputProcessor, module::InferenceInputProcessor>(serverInferenceInputProcessorContext)
-		.addEdge<ServerInferenceInputTensorEdge, ServerInferenceInputProcessor, ServerInferenceModel,slot::InferenceTensor, 16, weave::buffer::constants::PolicyType::Lossless>(serverInferenceInputTensorContext)
+		.addEdge<ServerInferenceInputTensorEdge, ServerInferenceInputProcessor, ServerInferenceModel,slot::InferenceTensor, 16, buffer::constants::PolicyType::Lossless>(serverInferenceInputTensorContext)
 		.addNode<ServerInferenceModel, module::InferenceModel>(serverInferenceModelContext)
-		.addEdge<ServerImageSendEdge, ServerInferenceModel, ServerImageSender,slot::Image, 16, weave::buffer::constants::PolicyType::Lossless>(serverImageSendBufferContext)
+		.addEdge<ServerImageSendEdge, ServerInferenceModel, ServerImageSender,slot::Image, 16, buffer::constants::PolicyType::Lossless>(serverImageSendBufferContext)
 		.addNode<ServerImageSender, module::ServerSender>(serverImageSenderContext)
 		.build();
 
-	weave::utilities::SignalManager::installHandlers();
+	utilities::SignalManager::installHandlers();
 	networkServer->initialize();
 	networkClient->initialize();
 	networkServer->listen();

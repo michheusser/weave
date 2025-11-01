@@ -42,11 +42,11 @@ ImageSlotContext resizedImageBufferContext = {640, 480};
 DisplayerConfig displayerConfig = {DEFAULT_DISPLAYER_MODE};
 
 auto pipeline = weave::graph::Builder()
-    .addNode<MyCapturerNode>(capturerConfig)
+    .addNode<MyCapturerNode, Capturer>(capturerConfig)
     .addEdge<MyRawImageEdge, MyCapturerNode, MyResizerNode, 16, PolicyType::Lossless>(rawImageBufferContext)
-    .addNode<MyResizerNode>(resizerConfig)
+    .addNode<MyResizerNode, Resizer>(resizerConfig)
     .addEdge<MyResizedImageEdge, MyResizerNode, MyDisplayerNode, 16, PolicyType::LossLess>(resizedImageBufferContext)
-    .addNode<MyDisplayerNode>(displayerConfig)
+    .addNode<MyDisplayerNode, Displayer>(displayerConfig)
     .build();
     
 pipeline.start();
@@ -82,15 +82,16 @@ SenderBufferContext imageSenderContext;
 
 
 /**** PIPELINE BUILD ****/
+using weave::buffer::constants::PolicyType;
 
 auto serverPipeline = weave::graph::Builder()
-    .addNode<ServerImageReceiver>(imageReceiverContext)
+    .addNode<ServerImageReceiver, ServerReceiver>(imageReceiverContext)
     .addEdge<ServerImageReceiveEdge, ServerImageReceiver, ServerInferenceInputProcessor, 32, PolicyType::Lossless>(imageReceiveBufferContext)
-    .addNode<ServerInferenceInputProcessor>(inferenceInputProcessorContext)
-    .addEdge<ServerInferenceInputTensorEdge, ServerInferenceInputProcessor, ServerInferenceModel, 8, PolicyType::Realtime>(inferenceInputTensorContext)
-    .addNode<ServerInferenceModel>(inferenceModelContext)
+    .addNode<ServerInferenceInputProcessor, InferenceInputProcessor>(inferenceInputProcessorContext)
+    .addEdge<ServerInferenceInputTensorEdge, InferenceInputProcessor, ServerInferenceModel, 8, PolicyType::Realtime>(inferenceInputTensorContext)
+    .addNode<ServerInferenceModel, InferenceModel>(inferenceModelContext)
     .addEdge<ServerImageSendEdge, ServerInferenceModel, ServerImageSender, 16, PolicyType::Throttled>(imageSendBufferContext)
-    .addNode<ServerImageSender>(imageSenderContext)
+    .addNode<ServerImageSender, ServerSender>(imageSenderContext)
     .build();
 
 weave::utilities::SignalManager::installHandlers();
