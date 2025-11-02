@@ -80,7 +80,6 @@ struct ServerInferenceInputTensorEdge
 struct ServerImageSendEdge
 {};
 
-using namespace weave;
 
 int main()
 {
@@ -147,9 +146,7 @@ int main()
 	clientImageDisplayerContext.configuration.title = std::string(module::constants::DEFAULT_DISPLAY_TITLE);
 
 
-
 	/****** SERVER *******/
-
 	module::Context<module::constants::ModuleType::ServerReceiver> serverImageReceiverContext;
 	serverImageReceiverContext.networkBufferConfiguration.bufferSize = module::constants::BUFFER_SIZE;
 	serverImageReceiverContext.decoderConfiguration.flags = module::constants::DECODER_FLAGS;
@@ -160,7 +157,6 @@ int main()
 	serverImageReceiveBufferContext.configuration.frameWidth = module::constants::FRAME_WIDTH;
 	serverImageReceiveBufferContext.configuration.frameType = module::constants::FRAME_TYPE;
 
-	// FirstInferenceInputProcessorNode
 	module::Context<module::constants::ModuleType::InferenceInputProcessor> serverInferenceInputProcessorContext;
 	serverInferenceInputProcessorContext.configuration.rtype = module::constants::INPUT_FRAME_RTYPE;
 	serverInferenceInputProcessorContext.configuration.alpha = module::constants::INPUT_FRAME_ALPHA;
@@ -169,14 +165,12 @@ int main()
 	serverInferenceInputProcessorContext.configuration.mean = module::constants::INPUT_FRAME_MEAN;
 	serverInferenceInputProcessorContext.configuration.std = module::constants::INPUT_FRAME_STD;
 
-	// InferenceInputTensorEdge
 	buffer::Context<buffer::constants::BufferType::InferenceInputTensor> serverInferenceInputTensorContext;
 	serverInferenceInputTensorContext.configuration.height = module::constants::TENSOR_HEIGHT;
 	serverInferenceInputTensorContext.configuration.width = module::constants::TENSOR_WIDTH;
 	serverInferenceInputTensorContext.configuration.tensorAllocatorType = module::constants::TENSOR_ALLOCATOR_TYPE;
 	serverInferenceInputTensorContext.configuration.tensorMemoryType = module::constants::TENSOR_MEMORY_TYPE;
 
-	// FirstInferenceModelNode
 	module::Context<module::constants::ModuleType::InferenceModel> serverInferenceModelContext;
 	serverInferenceModelContext.configuration.loggingLevel = module::constants::ONNX_ENV_LOGGING_LEVEL;
 	serverInferenceModelContext.configuration.logid = module::constants::ONNX_ENV_LOGID;
@@ -190,7 +184,6 @@ int main()
 	serverInferenceModelContext.configuration.normalizeType = module::constants::OUTPUT_NORM_TYPE;
 	serverInferenceModelContext.configuration.normalizeDType = module::constants::OUTPUT_NORM_DTYPE;
 
-	// InferenceOutputImageEdge
 	buffer::Context<buffer::constants::BufferType::Image> serverImageSendBufferContext;
 	serverImageSendBufferContext.configuration.frameHeight = module::constants::FRAME_HEIGHT;
 	serverImageSendBufferContext.configuration.frameWidth = module::constants::FRAME_WIDTH;
@@ -204,30 +197,31 @@ int main()
 
 	// Build
 
-	auto clientPipeline = graph::Builder()
+	auto clientPipeline = weave::graph::Builder()
 		.addNode<ClientImageCapturer, module::Capturer>(clientImageCapturerContext)
-		.addEdge<ClientRawImageEdge, ClientImageCapturer, ClientFirstImageNormalizer, slot::Image, 16, buffer::constants::PolicyType::Lossless>(clientRawImageBufferContext)
+		.addEdge<ClientRawImageEdge, ClientImageCapturer, ClientFirstImageNormalizer, slot::Image, 16, weave::buffer::constants::PolicyType::Lossless>(clientRawImageBufferContext)
 		.addNode<ClientFirstImageNormalizer, module::Preprocessor>(clientFirstImageNormalizerContext)
-		.addEdge<ClientImageSendEdge, ClientFirstImageNormalizer, ClientImageSender, slot::Image, 16, buffer::constants::PolicyType::Lossless>(clientImageSendBufferContext)
+		.addEdge<ClientImageSendEdge, ClientFirstImageNormalizer, ClientImageSender, slot::Image, 16, weave::buffer::constants::PolicyType::Lossless>(clientImageSendBufferContext)
 		.addNode<ClientImageSender, module::ClientSender>(clientImageSenderContext)
 		.addNode<ClientImageReceiver, module::ClientReceiver>(clientImageReceiverContext)
-		.addEdge<ClientImageReceiveEdge, ClientImageReceiver, ClientSecondImageNormalizer, slot::Image, 16, buffer::constants::PolicyType::Lossless>(clientImageReceiveBufferContext)
+		.addEdge<ClientImageReceiveEdge, ClientImageReceiver, ClientSecondImageNormalizer, slot::Image, 16, weave::buffer::constants::PolicyType::Lossless>(clientImageReceiveBufferContext)
 		.addNode<ClientSecondImageNormalizer, module::Preprocessor>(clientSecondImageNormalizerContext)
-		.addEdge<ClientDisplayImageEdge, ClientSecondImageNormalizer, ClientImageDisplayer, slot::Image, 16, buffer::constants::PolicyType::Lossless>(clientDisplayImageBufferContext)
+		.addEdge<ClientDisplayImageEdge, ClientSecondImageNormalizer, ClientImageDisplayer, slot::Image, 16, weave::buffer::constants::PolicyType::Lossless>(clientDisplayImageBufferContext)
 		.addNode<ClientImageDisplayer, module::Displayer>(clientImageDisplayerContext)
 		.build();
 
-	auto serverPipeline = graph::Builder()
+	auto serverPipeline = weave::graph::Builder()
 		.addNode<ServerImageReceiver, module::ServerReceiver>(serverImageReceiverContext)
-		.addEdge<ServerImageReceiveEdge, ServerImageReceiver, ServerInferenceInputProcessor, slot::Image, 16, buffer::constants::PolicyType::Lossless>(serverImageReceiveBufferContext)
+		.addEdge<ServerImageReceiveEdge, ServerImageReceiver, ServerInferenceInputProcessor, slot::Image, 16, weave::buffer::constants::PolicyType::Lossless>(serverImageReceiveBufferContext)
 		.addNode<ServerInferenceInputProcessor, module::InferenceInputProcessor>(serverInferenceInputProcessorContext)
-		.addEdge<ServerInferenceInputTensorEdge, ServerInferenceInputProcessor, ServerInferenceModel,slot::InferenceTensor, 16, buffer::constants::PolicyType::Lossless>(serverInferenceInputTensorContext)
+		.addEdge<ServerInferenceInputTensorEdge, ServerInferenceInputProcessor, ServerInferenceModel,slot::InferenceTensor, 16, weave::buffer::constants::PolicyType::Lossless>(serverInferenceInputTensorContext)
 		.addNode<ServerInferenceModel, module::InferenceModel>(serverInferenceModelContext)
-		.addEdge<ServerImageSendEdge, ServerInferenceModel, ServerImageSender,slot::Image, 16, buffer::constants::PolicyType::Lossless>(serverImageSendBufferContext)
+		.addEdge<ServerImageSendEdge, ServerInferenceModel, ServerImageSender,slot::Image, 16, weave::buffer::constants::PolicyType::Lossless>(serverImageSendBufferContext)
 		.addNode<ServerImageSender, module::ServerSender>(serverImageSenderContext)
 		.build();
 
-	utilities::SignalManager::installHandlers();
+	TRACE_ENABLE_SAMPLING(100);
+	weave::utilities::SignalManager::installHandlers();
 	networkServer->initialize();
 	networkClient->initialize();
 	networkServer->listen();

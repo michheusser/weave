@@ -14,6 +14,8 @@ namespace weave
 		{
 			constexpr size_t MAX_RESERVOIR_SIZE = 1000;
 
+			constexpr uint64_t DEFAULT_SAMPLE_RATE = 1000;
+
 			constexpr std::string_view METRIC_FRAME_TYPE_STRING = "frame";
 			constexpr std::string_view METRIC_BYTE_TYPE_STRING = "byte";
 

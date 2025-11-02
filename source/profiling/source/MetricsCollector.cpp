@@ -89,7 +89,8 @@ namespace weave
 		void MetricsCollector::dump(const std::string& directory)
 		{
 			std::shared_lock<std::shared_mutex> lock(_mutex);
-			const std::string fileName = directory + "./" + _sessionName + "_METRICS.csv";
+			std::string directoryPath = directory.empty() ? "." : directory;
+			const std::string fileName = directoryPath + "/" + _sessionName + "_METRICS.csv";
 			MetricsPrinter::dumpToCsv(fileName, _statistics);
 		}
 	}

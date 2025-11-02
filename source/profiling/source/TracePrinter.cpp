@@ -24,8 +24,7 @@ namespace weave
 
 				// Print header for each tree
 				output << "Trace Tree (Thread: 0x" << std::hex << rootNode->threadID
-					<< ", Process: " << std::dec << rootNode->processID
-					<< ", Frame: " << rootNode->frameID << ")\n";
+					<< ", Process: " << std::dec << rootNode->processID << ")\n";
 
 				printNode(output, rootNode, "", true, true);
 
@@ -143,8 +142,10 @@ namespace weave
 						<< "    \"dur\": " << (duration / 1000) << ",\n"
 						<< "    \"tid\": \"" << tid_stream.str() << "\",\n"
 						<< "    \"pid\": " << node->processID << ",\n"
+
 						<< "    \"args\": {\n"
-						<< "      \"frameID\": " << node->frameID << "\n"
+						// Further metadata:
+						// << "      \"frameID\": " << node->frameID << "\n"
 						<< "    }\n"
 						<< "  }";
 

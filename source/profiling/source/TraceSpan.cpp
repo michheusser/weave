@@ -15,10 +15,16 @@ namespace weave
 	{
 		thread_local std::shared_ptr<TraceSpanDataNode> TraceSpan::_currentTraceSpanDataNode = nullptr;
 
-		TraceSpan::TraceSpan(const std::string& name) : _dataNode(std::make_shared<TraceSpanDataNode>())
+		TraceSpan::TraceSpan(const std::string& name)
 		{
 			try
 			{
+				if (!TraceContext::shouldTrace()) // We don't sample
+				{
+					_dataNode = nullptr;
+					return;
+				}
+				_dataNode = std::make_shared<TraceSpanDataNode>();
 				const std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
 
 				_dataNode->name = name;
@@ -44,8 +50,11 @@ namespace weave
 		{
 			try
 			{
+				if (!_dataNode) // Wasn't sampled
+				{
+					return;
+				}
 				const std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
-				_dataNode->frameID = TraceContext::getCurrentFrame(); // Saved here, since frameID might be set after the TRACE_FUNCTION macro which calls the constructor
 				_dataNode->endInNanoseconds = std::chrono::duration_cast<std::chrono::nanoseconds>(end.time_since_epoch()).count();
 				// We do not check for expired, since that would be implying that I don't trust my own design. Even for future modifications,
 				// modern C++ philosophy is: "Don't code defensively against your own design violations". It can also imply that a condition that

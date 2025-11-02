@@ -8,6 +8,8 @@
 #include <weave/profiling/TraceCollector.h>
 #include <weave/profiling/TraceSpan.h>
 
+#include "constants.h"
+
 namespace weave
 {
 	namespace profiling
@@ -25,16 +27,18 @@ namespace weave
 		public:
 			static void init(const std::string sessionName, const std::string sessionDescription);
 			static bool initialized();
+			static void enableSampling(uint64_t sampleRate = constants::DEFAULT_SAMPLE_RATE);
+			static bool shouldTrace();
 			static void addTraceSpanTree(const std::shared_ptr<TraceSpanDataNode>& traceSpanTree);
-			static uint64_t getCurrentFrame();
-			static void setCurrentFrame(uint32_t frameID);
 			static void dump(const std::string& directory = "");
 			static void display();
 
 		private:
 			static std::shared_mutex _mutex;
 			static std::shared_ptr<TraceCollector> _traceCollector;
-			static thread_local uint64_t _currentFrameID; // Every thread (worker) is working on one frame only at any given moment.
+			static bool _samplingEnabled;
+			static uint64_t _sampleRate;
+			static uint64_t _sampleCounter;
 		};
 
 		/**

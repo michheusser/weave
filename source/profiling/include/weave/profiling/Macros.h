@@ -16,7 +16,7 @@
 
 #ifdef WEAVE_ENABLE_MONITORING
 		#define TRACE_INIT(sessionName, sessionDescription) weave::profiling::TraceContext::init(sessionName, sessionDescription)
-		#define TRACE_SET_FRAME(frameID) weave::profiling::TraceContext::setCurrentFrame(frameID) // TODO Remove?
+		#define TRACE_ENABLE_SAMPLING(sampleRate) weave::profiling::TraceContext::enableSampling(sampleRate)
 		#define TRACE_FUNCTION(className) weave::profiling::TraceSpan traceSpanFrame##__LINE__ = weave::profiling::trace(std::string(className) + "::" + __FUNCTION__)
 		#define TRACE_DUMP(directory) weave::profiling::TraceContext::dump(directory)
 		#define TRACE_DISPLAY() weave::profiling::TraceContext::display()
@@ -44,7 +44,7 @@
 		}
 	#else
 		#define TRACE_INIT(sessionName, sessionDescription) ((void)0)
-		#define TRACE_SET_FRAME(frameID) ((void)0)
+		#define TRACE_ENABLE_SAMPLING(sampleRate) ((void)0)
 		#define TRACE_FUNCTION(className) ((void)0)
 		#define TRACE_DUMP() ((void)0)
 		#define TRACE_DISPLAY() ((void)0)

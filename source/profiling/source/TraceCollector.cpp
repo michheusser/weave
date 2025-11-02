@@ -25,7 +25,8 @@ namespace weave
 		void TraceCollector::dump(const std::string& directory)
 		{
 			std::shared_lock<std::shared_mutex> lock(_mutex);
-			const std::string fileName = directory + "/" + _sessionName + "_TRACE.json";
+			std::string directoryPath = directory.empty() ? "." : directory;
+			const std::string fileName = directoryPath + "/" + _sessionName + "_TRACE.json";
 			TracePrinter::dumpToJson(fileName, _traceSpanTrees);
 		}
 

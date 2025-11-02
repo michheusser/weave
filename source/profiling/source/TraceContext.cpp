@@ -12,7 +12,9 @@ namespace weave
 	{
 		std::shared_mutex TraceContext::_mutex;
 		std::shared_ptr<TraceCollector> TraceContext::_traceCollector = nullptr;
-		thread_local uint64_t TraceContext::_currentFrameID = 0;
+		bool TraceContext::_samplingEnabled = false;
+		uint64_t TraceContext::_sampleRate = 1;
+		uint64_t TraceContext::_sampleCounter = 0;
 
 		void TraceContext::init(const std::string sessionName, std::string sessionDescription)
 		{
@@ -24,6 +26,25 @@ namespace weave
 		{
 			const bool isInitialized = static_cast<bool>(_traceCollector);
 			return isInitialized;
+		}
+
+		void TraceContext::enableSampling(uint64_t sampleRate)
+		{
+			std::unique_lock lock(_mutex);
+			_samplingEnabled = true;
+			_sampleRate = sampleRate;
+		}
+
+		bool TraceContext::shouldTrace()
+		{
+			std::unique_lock lock(_mutex);
+			if (!_samplingEnabled)
+			{
+				return true; // Always trace if not sampling
+			}
+			++_sampleCounter;
+			bool result = _sampleCounter % _sampleCounter == 0;
+			return result;
 		}
 
 		void TraceContext::addTraceSpanTree(const std::shared_ptr<TraceSpanDataNode>& traceSpanTree)
@@ -41,16 +62,6 @@ namespace weave
 				LOG_ERROR(exception.what());
 				throw error::Exception("Failed");
 			}
-		}
-
-		uint64_t TraceContext::getCurrentFrame()
-		{
-			return _currentFrameID; // Thread local, no need for mutex
-		}
-
-		void TraceContext::setCurrentFrame(uint32_t frameID)
-		{
-			_currentFrameID = frameID; // Thread local, no need for mutex
 		}
 
 		void TraceContext::dump(const std::string& directory)
