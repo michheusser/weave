@@ -16,8 +16,6 @@ namespace test
 {
 	namespace module
 	{
-		uint64_t Capturer::nextFrameID = 1;
-
 		Capturer::Capturer(const Context<constants::ModuleType::ImageCapturer>& context) : _videoCapture(context.configuration.cameraID, context.configuration.captureAPI), _cameraID(context.configuration.cameraID)
 		// Constructor doesn't throw per default
 		{}
@@ -39,12 +37,6 @@ namespace test
 			LOG_DEBUG(
 				"Frame Captured. Height: " + std::to_string(static_cast<int>(_videoCapture.get(cv::CAP_PROP_FRAME_HEIGHT))) + ", Width: " + std::to_string(static_cast<int>(_videoCapture.get(cv::
 					CAP_PROP_FRAME_WIDTH))));
-			/*if (frameID) // TODO Deal with frame
-			{
-				*frameID = nextFrameID;
-			}*/
-			//TRACE_SET_FRAME(nextFrameID); // TODO Put back
-			++nextFrameID;
 			return weave::error::Result::success();
 		}
 	}

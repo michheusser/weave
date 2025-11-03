@@ -38,7 +38,7 @@ namespace weave
 			template<typename InputDataTupleType, typename OutputDataTupleType>
 			error::Result process(InputDataTupleType& inputDataTuple, OutputDataTupleType& outputDataTuple) noexcept
 			{
-				TRACE_FUNCTION("Process");
+				TRACE_FUNCTION(name);
 				error::Result result = _process(inputDataTuple, std::make_index_sequence<std::tuple_size_v<InputDataTupleType> >{}, outputDataTuple, std::make_index_sequence<std::tuple_size_v<OutputDataTupleType> >{});
 				if (!result.ok())
 				{

@@ -23,7 +23,7 @@ namespace weave
 				if (!rootNode) continue;
 
 				// Print header for each tree
-				output << "Trace Tree (Thread: 0x" << std::hex << rootNode->threadID
+				output << "Trace Tree (Thread: " << std::hex << rootNode->threadID
 					<< ", Process: " << std::dec << rootNode->processID << ")\n";
 
 				printNode(output, rootNode, "", true, true);

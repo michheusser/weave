@@ -4,9 +4,9 @@
 #ifndef VIDEO_CAPTURER_H
 #define VIDEO_CAPTURER_H
 
-#include "Configuration.h"
 #include <opencv2/videoio.hpp>
 #include <weave/error/Result.h>
+#include "Configuration.h"
 
 #include "Context.h"
 
@@ -27,9 +27,8 @@ namespace test
 		private:
 			cv::VideoCapture _videoCapture;
 			uint32_t _cameraID;
-			static uint64_t nextFrameID;
 		};
-	}
-}
+	} // namespace module
+} // namespace test
 
 #endif
