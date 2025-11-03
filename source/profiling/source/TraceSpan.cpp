@@ -19,14 +19,10 @@ namespace weave
 		{
 			try
 			{
-				if (!TraceContext::shouldTrace()) // We don't sample
-				{
-					_dataNode = nullptr;
-					return;
-				}
 				_dataNode = std::make_shared<TraceSpanDataNode>();
-				const std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
 
+				// Data
+				const std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
 				_dataNode->name = name;
 				_dataNode->threadID = std::this_thread::get_id();
 				_dataNode->processID = getpid();
@@ -37,6 +33,8 @@ namespace weave
 				{
 					_currentTraceSpanDataNode->children.push_back(_dataNode);
 				}
+
+				// Move down the current trace node from parent to current
 				_currentTraceSpanDataNode = _dataNode;
 			}
 			catch (error::Exception& exception)
@@ -50,10 +48,6 @@ namespace weave
 		{
 			try
 			{
-				if (!_dataNode) // Wasn't sampled
-				{
-					return;
-				}
 				const std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
 				_dataNode->endInNanoseconds = std::chrono::duration_cast<std::chrono::nanoseconds>(end.time_since_epoch()).count();
 				// We do not check for expired, since that would be implying that I don't trust my own design. Even for future modifications,
@@ -64,7 +58,11 @@ namespace weave
 				_currentTraceSpanDataNode = _dataNode->parent.lock();
 				if (!_currentTraceSpanDataNode) // Root node
 				{
-					TraceContext::addTraceSpanTree(_dataNode);
+					if (TraceContext::shouldTrace())
+					{
+						TraceContext::addTraceSpanTree(_dataNode);
+					}
+					TraceContext::increaseSampledRootCounter();
 				}
 			}
 			catch (error::Exception& exception)

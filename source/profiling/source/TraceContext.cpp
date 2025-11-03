@@ -14,7 +14,7 @@ namespace weave
 		std::shared_ptr<TraceCollector> TraceContext::_traceCollector = nullptr;
 		bool TraceContext::_samplingEnabled = false;
 		uint64_t TraceContext::_sampleRate = 1;
-		uint64_t TraceContext::_sampleCounter = 0;
+		uint64_t thread_local TraceContext::_sampledRootCounter = 0;
 
 		void TraceContext::init(const std::string sessionName, std::string sessionDescription)
 		{
@@ -37,14 +37,19 @@ namespace weave
 
 		bool TraceContext::shouldTrace()
 		{
-			std::unique_lock lock(_mutex);
+			std::shared_lock lock(_mutex);
 			if (!_samplingEnabled)
 			{
 				return true; // Always trace if not sampling
 			}
-			++_sampleCounter;
-			bool result = _sampleCounter % _sampleCounter == 0;
+			bool result = (_sampledRootCounter % _sampleRate) == 0;
 			return result;
+		}
+
+		void TraceContext::increaseSampledRootCounter()
+		{
+			// No mutex, since it's thread_local
+			++_sampledRootCounter;
 		}
 
 		void TraceContext::addTraceSpanTree(const std::shared_ptr<TraceSpanDataNode>& traceSpanTree)

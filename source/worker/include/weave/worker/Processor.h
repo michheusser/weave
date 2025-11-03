@@ -19,6 +19,7 @@ namespace weave
 		class Processor
 		{
 		public:
+			static constexpr std::string_view name = utilities::typeName<ProcessorTag>();
 			using ContextType = typename ModuleType::ContextType;
 			explicit Processor(const ContextType& context) : _module(context)
 			{}
@@ -37,6 +38,7 @@ namespace weave
 			template<typename InputDataTupleType, typename OutputDataTupleType>
 			error::Result process(InputDataTupleType& inputDataTuple, OutputDataTupleType& outputDataTuple) noexcept
 			{
+				TRACE_FUNCTION("Process");
 				error::Result result = _process(inputDataTuple, std::make_index_sequence<std::tuple_size_v<InputDataTupleType> >{}, outputDataTuple, std::make_index_sequence<std::tuple_size_v<OutputDataTupleType> >{});
 				if (!result.ok())
 				{

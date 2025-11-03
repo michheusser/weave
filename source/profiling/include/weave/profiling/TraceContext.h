@@ -29,6 +29,7 @@ namespace weave
 			static bool initialized();
 			static void enableSampling(uint64_t sampleRate = constants::DEFAULT_SAMPLE_RATE);
 			static bool shouldTrace();
+			static void increaseSampledRootCounter();
 			static void addTraceSpanTree(const std::shared_ptr<TraceSpanDataNode>& traceSpanTree);
 			static void dump(const std::string& directory = "");
 			static void display();
@@ -38,7 +39,7 @@ namespace weave
 			static std::shared_ptr<TraceCollector> _traceCollector;
 			static bool _samplingEnabled;
 			static uint64_t _sampleRate;
-			static uint64_t _sampleCounter;
+			static thread_local uint64_t _sampledRootCounter; // Samples happen homogeneously across workers, thus thread_local
 		};
 
 		/**

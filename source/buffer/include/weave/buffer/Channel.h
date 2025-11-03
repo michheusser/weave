@@ -16,6 +16,9 @@
 #include <weave/error/Exception.h>
 #include <weave/logging/Macros.h>
 
+#include "weave/profiling/Macros.h"
+#include "weave/utilities/Reflection.h"
+
 namespace weave
 {
 	namespace buffer
@@ -24,6 +27,7 @@ namespace weave
 		class Channel
 		{
 		public:
+			static constexpr std::string_view name = utilities::typeName<ChannelTag>();
 			using Tag = ChannelTag;
 			using SlotData = SlotDataType;
 			static constexpr size_t slots = numSlots;
@@ -43,11 +47,13 @@ namespace weave
 
 			Reader<ChannelTag, SlotDataType, slots, policy> reader() noexcept
 			{
+				TRACE_FUNCTION(name);
 				return Reader<ChannelTag, SlotDataType, slots, policy>(_mutex, _conditionVariableRead, _conditionVariableWrite, _ringBuffer);
 			}
 
 			Writer<ChannelTag, SlotDataType, slots, policy> writer() noexcept
 			{
+				TRACE_FUNCTION(name);
 				return Writer<ChannelTag, SlotDataType, slots, policy>(_mutex, _conditionVariableRead, _conditionVariableWrite, _ringBuffer);
 			}
 
