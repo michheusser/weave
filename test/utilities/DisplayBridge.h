@@ -24,13 +24,13 @@ namespace test
 				_mainThreadID = std::this_thread::get_id();
 			}
 
-			static weave::error::Result showFrame(const cv::Mat& frameBuffer, const std::string& title, const uint32_t frameID, const bool wait = false) noexcept;
+			static weave::error::Result showFrame(const cv::Mat& frameBuffer, const std::string& title, const bool wait = false) noexcept;
 			static void flushFrames();
 			static weave::error::Result flushFrame();
 		private:
-			static weave::error::Result _showFrame(const cv::Mat& frameBuffer, const std::string& title, const uint32_t frameID, const bool wait = false) noexcept;
+			static weave::error::Result _showFrame(const cv::Mat& frameBuffer, const std::string& title, const bool wait = false) noexcept;
 			static std::thread::id _mainThreadID;
-			static std::queue<std::tuple<const cv::Mat&, const std::string, const uint32_t, const bool>> _frameQueue;
+			static std::queue<std::tuple<const cv::Mat&, const std::string, const bool>> _frameQueue;
 			static std::condition_variable conditionVariable;
 			static std::mutex _mutex;
 		};
