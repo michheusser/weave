@@ -20,7 +20,7 @@ namespace test
 			explicit Decoder(const DecoderConfiguration& configuration);
 			~Decoder();
 			// TODO Further constructors/Destructors
-			weave::error::Result decodeBufferIntoFrame(const std::vector<uint8_t>& sourceBuffer, cv::Mat& destinationFrame, uint32_t* frameID = nullptr) const noexcept;
+			weave::error::Result decodeBufferIntoFrame(const std::vector<uint8_t>& sourceBuffer, cv::Mat& destinationFrame) const noexcept;
 
 		private:
 			DecoderConfiguration _configuration;

@@ -54,7 +54,7 @@ namespace weave
 			{
 				TRACE_FUNCTION(name);
 				METRICS_COUNT(name);
-				LOG_TRACE("{}: starting cycle...", std::string(name));
+				LOG_TRACE("{}: starting cycle...", name);
 
 				// Readers / Writers don't need to be references (they contain references)
 				using ReadersTupleType = typename ChannelsTupleToDataAccessTuple<InChannelTupleType>::ReaderTuple;
@@ -126,8 +126,7 @@ namespace weave
 			template<typename TupleType, size_t... Indices>
 			void _publish(TupleType& tuple, std::index_sequence<Indices...> sequence) const noexcept
 			{
-				int frameID = 0; // TODO Deal with frame
-				(std::get<Indices>(tuple).publish(frameID), ...);
+				(std::get<Indices>(tuple).publish(), ...);
 			}
 
 			Processor<ProcessorTag, ModuleType> _processor;

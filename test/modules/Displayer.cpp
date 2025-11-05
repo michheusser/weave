@@ -29,9 +29,8 @@ namespace test
 			weave::error::Result result = utilities::DisplayBridge::showFrame(frameBuffer, _title, false);
 			if (!result.ok())
 			{
-				uint32_t frameID = 0; // TODO Deal with frame
-				LOG_ERROR("Error displaying frame: " + std::to_string(frameID));
-				return {weave::error::Type::Display, frameID};
+				LOG_ERROR("Error displaying frame");
+				return {weave::error::Type::Display, 0};
 			}
 			return weave::error::Result::success();
 		}

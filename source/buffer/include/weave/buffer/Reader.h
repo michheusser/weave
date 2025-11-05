@@ -64,11 +64,6 @@ namespace weave
 				return _queueBuffer.front();
 			}
 
-			uint64_t getFrame() const noexcept
-			{
-				return _queueBuffer.frontFrame();
-			}
-
 			void release() noexcept
 			{
 				_queueBuffer.pop();

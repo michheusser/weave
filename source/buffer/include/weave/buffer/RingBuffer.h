@@ -78,10 +78,9 @@ namespace weave
 				--_usedCount;
 			}
 
-			void push(uint32_t frameID) noexcept
+			void push() noexcept
 			{
 				assert(!full());
-				_frameIDs[_head] = frameID;
 				_head = (_head + 1) % _NUM_SLOTS;
 				++_usedCount;
 			}
@@ -98,19 +97,11 @@ namespace weave
 				return _slotArray[_tail].data();
 			}
 
-			uint32_t frontFrame() const noexcept
-			{
-				assert(!empty());
-				return _frameIDs[_tail];
-			}
-
 		private:
 			// TODO In general a lot of improvement potential here by using a custom allocator or to make sure that all the underlying data
 			//  is put together and not spread across the heap (e.g. if InternalData is a string or a vector)
-
 			static constexpr uint64_t _NUM_SLOTS = numSlots;
 			std::array<Slot<SlotTag, SlotDataType>, _NUM_SLOTS> _slotArray;
-			std::array<uint32_t, _NUM_SLOTS> _frameIDs;
 			uint64_t _usedCount;
 			uint64_t _head; // Writes/pushes happen here
 			uint64_t _tail; // Reads/pops happen here

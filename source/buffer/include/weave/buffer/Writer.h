@@ -64,9 +64,9 @@ namespace weave
 				return _queueBuffer.newSlot();
 			}
 
-			void publish(uint32_t frameID) noexcept
+			void publish() noexcept
 			{
-				_queueBuffer.push(frameID);
+				_queueBuffer.push();
 				_state = constants::WriterState::Published;
 				_conditionVariableRead.notify_one(); // Readers right now change the state (change buffer to empty, so only one reader at a time)
 			}

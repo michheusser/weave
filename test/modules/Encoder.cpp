@@ -19,10 +19,9 @@ namespace test
 
 		weave::error::Result Encoder::encodeFrameIntoBuffer(const cv::Mat& sourceFrame, std::vector<uint8_t>& destinationBuffer) const noexcept
 		{
-			const uint32_t frameID = 0; // TODO Deal with frames
 			if (sourceFrame.empty())
 			{
-				return {weave::error::Type::EmptyBuffer, frameID}; // Empty frame
+				return {weave::error::Type::EmptyBuffer, 0}; // Empty frame
 			}
 			std::vector<uint8_t> encodedImageBuffer; // TODO Performance improvement potential (maybe making it static)
 			// No compression (e.g. with .png) should output a constant encoded frame size. If the input buffer
@@ -30,12 +29,11 @@ namespace test
 			// const_cast<cv::Mat&>(sourceFrame);
 			cv::imencode(_encodingFormat, sourceFrame, encodedImageBuffer, _encodingParameters);
 			MessageHeader messageHeader;
-			messageHeader.frameID = frameID;
 			messageHeader.payloadSize = encodedImageBuffer.size();
 			size_t totalMessageSize = encodedImageBuffer.size() + sizeof(MessageHeader);
 			if (totalMessageSize > destinationBuffer.size())
 			{
-				return {weave::error::Type::BufferOverflow, frameID}; // Destination buffer too small for encoded data message
+				return {weave::error::Type::BufferOverflow, 0}; // Destination buffer too small for encoded data message
 			}
 			std::memcpy(destinationBuffer.data(), &messageHeader, sizeof(MessageHeader));
 			std::memcpy(destinationBuffer.data() + sizeof(MessageHeader), encodedImageBuffer.data(), encodedImageBuffer.size());

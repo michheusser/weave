@@ -18,7 +18,7 @@ namespace test
 		Decoder::~Decoder()
 		{}
 
-		weave::error::Result Decoder::decodeBufferIntoFrame(const std::vector<uint8_t>& sourceBuffer, cv::Mat& destinationFrame, uint32_t* frameID) const noexcept
+		weave::error::Result Decoder::decodeBufferIntoFrame(const std::vector<uint8_t>& sourceBuffer, cv::Mat& destinationFrame) const noexcept
 		{
 			const int flags = _configuration.flags;
 			// This overload reuses the cv::Mat as a buffer, sparing re-allocations when image size doesn't change
@@ -27,7 +27,7 @@ namespace test
 			size_t expectedTotalMessageSize = sizeof(MessageHeader) + messageHeader.payloadSize;
 			if (sourceBuffer.size() < messageHeader.payloadSize + sizeof(MessageHeader))
 			{
-				return {weave::error::Type::BufferOverflow, messageHeader.frameID}; // Source buffer too small for expected payload size.
+				return {weave::error::Type::BufferOverflow, 0}; // Source buffer too small for expected payload size.
 			}
 			LOG_DEBUG("Total data size: " + std::to_string(expectedTotalMessageSize) + " bytes");
 			LOG_DEBUG("Image data to decode: " + std::to_string(messageHeader.payloadSize) + " bytes");
@@ -36,12 +36,7 @@ namespace test
 			cv::imdecode(encodedImageBuffer, flags, &destinationFrame);
 			if (destinationFrame.empty())
 			{
-				return {weave::error::Type::Decoding, messageHeader.frameID};
-			}
-			//TRACE_SET_FRAME(messageHeader.frameID);
-			if (frameID)
-			{
-				*frameID = messageHeader.frameID;
+				return {weave::error::Type::Decoding, 0};
 			}
 			return weave::error::Result::success();
 		}

@@ -78,7 +78,7 @@ namespace weave
 					}
 					if (i == Policy::numAttempts)
 					{
-						ringBuffer.pop(); // we discard oldest frame without reading
+						ringBuffer.pop(); // we discard oldest data slot without reading
 					}
 					else
 					{

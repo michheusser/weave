@@ -12,7 +12,6 @@ namespace test
 		struct MessageHeader
 		{
 			uint32_t payloadSize; // Size of actual data
-			uint32_t frameID;
 			// uint32_t type;    // TODO Later frame/result/etc
 			//uint64_t timestamp; // for latency measurement
 		};

@@ -144,7 +144,7 @@ namespace weave
 						<< "    \"pid\": " << node->processID << ",\n"
 
 						<< "    \"args\": {\n"
-						// Further metadata:
+						// Further metadata e.g.:
 						// << "      \"frameID\": " << node->frameID << "\n"
 						<< "    }\n"
 						<< "  }";

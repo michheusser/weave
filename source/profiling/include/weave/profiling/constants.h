@@ -16,8 +16,8 @@ namespace weave
 
 			constexpr uint64_t DEFAULT_SAMPLE_RATE = 1000;
 
-			constexpr std::string_view METRIC_FRAME_TYPE_STRING = "frame";
-			constexpr std::string_view METRIC_BYTE_TYPE_STRING = "byte";
+			constexpr std::string_view METRIC_COUNT_TYPE_STRING = "Count";
+			constexpr std::string_view METRIC_BYTE_TYPE_STRING = "Byte";
 
 			constexpr std::string_view DEFAULT_CLIENT_SESSION_NAME = "ClientProfilingSession_";
 			constexpr std::string_view DEFAULT_CLIENT_SESSION_DESCRIPTION = "Client profiling session for future reference";
